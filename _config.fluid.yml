@@ -878,3 +878,13 @@ static_prefix:
   twikoo: https://cdn.jsdelivr.net/npm/twikoo@0.1.15/dist/
 
   hint: /lib/hint/
+
+
+## 博客源文件备份
+## npm install hexo-git-backup --save
+backup:
+  type: git
+  theme: fluid
+  message: Back up my blog
+  repository:
+    github: git@github.com:jtwang7/jtwang7.github.io.git,hexo
