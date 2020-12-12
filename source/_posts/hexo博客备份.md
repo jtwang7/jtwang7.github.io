@@ -1,5 +1,5 @@
 ---
-title: React Portal 实战——登陆弹窗
+title: hexo博客备份
 date: 2020-12-08 22:06
 tags: [Hexo]
 categories: [hexo]
@@ -35,7 +35,7 @@ theme：你要备份的主题名称
 message：自定义提交信息
 repository：仓库名，注意仓库地址后面要添加一个分支名，比如我创建了一个 hexo 分支
 3. 在github仓库新建分支，分支名与上述配置对应
-4. 使用以下命令备份你的博客：
+4. 此时github仓库中应存在 master(或main)和hexo ，在提交的时候只需在 master 中使用以下命令备份你的博客即可：
 ```
 $ hexo backup
 ```
