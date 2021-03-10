@@ -6,7 +6,7 @@ categories: Vue
 excerpt: "轨迹目的地预测系统"项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。该篇记录地图服务API挂载到Vue框架的具体操作，并总结归纳外部实例在Vue实例挂载过程。
 ---
 
-# Vue+高德API
+# Vue异步加载高德API
 ## 高德地图服务JS API异步加载
 [高德地图服务JS API官方文档](https://developer.amap.com/api/javascript-api/guide/abc/prepare)
 ### Step1: 创建挂载容器
