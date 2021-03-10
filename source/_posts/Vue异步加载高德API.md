@@ -1,9 +1,11 @@
 ---
 title: Vue.js挂载(高德)地图服务API
 date: 2021-03-10 20:26
-tags: [Vue,API]
+tags: 
+- Vue
+- API
 categories: Vue
-excerpt: "轨迹目的地预测系统"项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。该篇记录地图服务API挂载到Vue框架的具体操作，并总结归纳外部实例在Vue实例挂载过程。
+excerpt: 轨迹目的地预测系统项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。该篇记录地图服务API挂载到Vue框架的具体操作，并总结归纳外部实例在Vue实例挂载过程。
 ---
 
 # Vue异步加载高德API

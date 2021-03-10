@@ -1,9 +1,13 @@
 ---
 title: Vue全局注册与异步加载
 date: 2021-03-10 21:40
-tags: [Vue,async,Promise,ES6]
+tags: 
+- Vue
+- async
+- ES6
+- Promise
 categories: Vue
-excerpt: "轨迹目的地预测系统"项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。项目开发过程中，遇到异步加载插件无法正常显示的问题，后排查原因发现是插件未完成全局注册就被调用于实例挂载，特此记录。
+excerpt: 轨迹目的地预测系统项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。项目开发过程中，遇到异步加载插件无法正常显示的问题，后排查原因发现是插件未完成全局注册就被调用于实例挂载，特此记录。
 ---
 
 # Vue全局注册与异步加载
