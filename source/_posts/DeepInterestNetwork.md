@@ -4,7 +4,6 @@ date: 2021/3/12 13:52
 tags: 深度学习
 categories: Deep Learning
 excerpt: Deep Interest Network(DIN)是阿里的精准定向检索及基础算法团队，在2017年6月提出的。它针对电子商务领域(e-commerce industry)的CTR预估，充分利用/挖掘用户历史行为数据中的信息对当前数据进行预估，对笔者的轨迹预测研究有一定的借鉴意义。
-keywords: 试试我生日可能会有效？
 password: 1021
 ---
 
