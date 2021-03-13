@@ -1,5 +1,5 @@
 ---
-title: Hexo博客deploy 失败：显示 errno 10054
+title: Hexo博客deploy失败(显示 errno 10054)
 date: 2021-03-13 19:34
 tags: hexo
 categories: hexo
