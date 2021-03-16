@@ -3,7 +3,7 @@ title: Egg官方文档阅读笔记：Egg.js内置基础对象
 date: 2021-03-13 19:25
 tags: Egg
 categories: Egg
-excerpt: 不想写简介的一天。
+excerpt: Egg内置对象继承于Koa并进行了一定的拓展，内置对象无论是在Koa还是Egg中都十分重要，由于初学Egg又不具备一定的Koa基础，直接上手代码会云里雾里。于是乎，抽出了一定的时间阅读Egg的官方文档，大致了解了下Egg内的基础对象究竟是什么，关系是什么，并根据自己的思考做了相应的总结。
 ---
 
 
@@ -186,3 +186,25 @@ module.exports = {
 };
 ```
 注意：Helper 是个类，我们抽离的可复用方法是通过`app/extend/helper.js` 中的模块打包为对象导出后，遵循框架扩展的原则与内置helper对象合并得到的。需要通过 helper 对象访问内部自定义方法。
+
+
+## 总结
+内置对象间的引用看似复杂，实际上都大同小异：
+从**获取方式**上对它们做了相应的总结
+
+**通过类内this获取：**
+
+1. 对于从Koa继承的对象(app,ctx)，Egg的扩展内置对象均对其做了封装，即在类内都能直接通过this获取。
+2. 从Koa继承的(request,response)请求级别对象，本身就被Koa的(ctx)对象调用，因此在Egg的其他内置对象类也可以通过ctx调用request,response。
+
+**各内置对象间的调用：**
+
+1. ctx 可以通过 `ctx.app` 返回 app 对象的引用
+2. ctx 上可挂载 service 和一些插件即配置信息
+
+**其他方式：**
+
+1. exports暴露函数时传参：所有被Loader加载的文件暴露函数时，均会默认传入 app 对象作为参数
+2. 中间件定义时，默认传入ctx对象作为参数
+
+总体来说，app(全局对象) 和 ctx(每次请求均被实例化) 几乎是全局存在的，在其他内置对象内可通过this调用，app 可被 ctx 返回，app 可在exports函数时作为参数传入，ctx 可作为中间件参数传入。request/response 通过 ctx 调用。Controller 和 Service 均包含五大属性(ctx,app,config,service,logger)，此外Service全部会被挂载在 ctx 对象上，通过 ctx 对象也可以访问 service。

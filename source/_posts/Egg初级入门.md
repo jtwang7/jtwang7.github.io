@@ -5,7 +5,7 @@ tags:
 - Egg
 - MySQL
 categories: Egg
-excerpt: 不想写简介的一天。
+excerpt: 项目需要前后端交互数据，仅需要用到接口制作，数据库连接等基本操作，故对Egg做了一点了解，根据其他教程写了这篇文章，记录了Egg操作数据库最基本的流程，可简单实现当前项目需求。
 ---
 
 # Egg初级入门
@@ -105,15 +105,7 @@ module.exports = app => {
     router.get('/user/:id', controller.user.info);
 }
 ```
-**学习疑问记录：**
-
-1. app 是什么？
-2. controller.user.info 是怎么执行的？
-
-**解答：**
-
-1. 待解答
-2. `controller.user.info`是Router回调函数所指向的app的controller下面的对象。该路径可以解析为：`controller` 是`app`的一个属性对象， eggjs 会在启动的时候调用`this.loadController();`方法，去加载整个应用`app/controller`文件下的所有的js 文件， 会将文件名作为属性名称，挂载在`app.controller` 对象上，分析 `/controller` 目录下js文件，其都将继承类作为借口export(暴露)出来了，因此，可以通过**类.方法名**的方式使用类内方法了，连在一起就写为了形如 `controller.user.findAll` 的方式来引用Controller 下面的方法了。
+`controller.user.info`是Router回调函数所指向的app的controller下面的对象。该路径可以解析为：`controller` 是`app`的一个属性对象， eggjs 会在启动的时候调用`this.loadController();`方法，去加载整个应用`app/controller`文件下的所有的js 文件， 会将文件名作为属性名称，挂载在`app.controller` 对象上，分析 `/controller` 目录下js文件，其都将继承类作为借口export(暴露)出来了，因此，可以通过**类.方法名**的方式使用类内方法了，连在一起就写为了形如 `controller.user.findAll` 的方式来引用Controller 下面的方法了。
 
 #### app/controller/**
 在 controller 目录下实现对应的 Controller 方法
@@ -130,15 +122,6 @@ class UserController extends Controller {
 
 module.exports = UserController;
 ```
-**学习疑问记录：**
-
-1. Controller 类内方法都是异步方法吗？
-2. ctx 是什么？
-
-**解答：**
-
-1. 待解答
-2. 待解答
 
 定义完路由规则和对应方法后，我们就算完成了一个最简单的Router定义。效果：用户向`/user/xxx`执行 GET 请求时，user.js 内的相应方法就会执行。
 
@@ -213,10 +196,19 @@ exports.mysql = {
   package: 'egg-mysql',
 };
 ```
+在当前版本中，`plugin.js`文件统一以对象导出，因此可以写为：
+```
+module.exports = {
+  mysql: {
+    enable: true,
+    package: 'egg-mysql',
+  }
+};
+```
 **环境配置(数据库连接信息)：**
 单数据源(只访问一个MySQL数据库实例)
 ```
-// config/config.${env}.js
+// config/config.default.js
 exports.mysql = {
   // 单数据库信息配置
   client: {
@@ -237,6 +229,49 @@ exports.mysql = {
   agent: false,
 };
 ```
+当前 config.default.js 配置文件中，统一用 `module.exports` 导出对象，因此也可以写在 config 中：
+```
+module.exports = appInfo => {
+  const config = exports = {
+    mysql: {
+      client: {
+        // host
+        host: 'localhost',
+        // 端口号
+        port: '3306',
+        // 用户名
+        user: 'root',
+        // 密码
+        password: 'root',
+        // 数据库名
+        database: 'trajsystem',
+      },
+      // 是否加载到 app 上，默认开启
+      app: true,
+      // 是否加载到 agent 上，默认关闭
+      agent: false,
+    }
+  };
+
+  // use for cookie sign key, should change to your own and keep security
+  config.keys = appInfo.name + '_1615607271496_3440';
+
+  // add your middleware config here
+  config.middleware = [];
+
+  // add your user config here
+  const userConfig = {
+    // myAppName: 'egg',
+  };
+
+  return {
+    ...config,
+    ...userConfig,
+  };
+};
+```
+注意此处的写法，`=`从右向左赋值，因此配置对象首先赋值给`exports(exports={mysql:{...}, ...})`，之后 config 在获得 exports 对象。在最后返回值的时候，用了ES6的展开语法`...`将 config 展开后抛出。按照我的理解，config 展开后应该抛出形如`exports.mysql`的形式。因此上述写法和之前将环境配置单独导出类似。
+
 **单实例使用方式：** `await app.mysql.query(sql, values);`
 
 多数据源(应用需要访问多个MySQL数据源)
