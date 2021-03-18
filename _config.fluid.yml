@@ -334,7 +334,8 @@ scroll_top_arrow:
 
 # 头图滚动视差
 # Banner image scrolling parallax
-banner: parallax
+banner: 
+  parallax: true
 
 
 #---------------------------
