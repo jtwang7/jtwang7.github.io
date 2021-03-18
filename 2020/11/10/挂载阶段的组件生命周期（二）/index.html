@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="前言学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推胡子大哈的React小书，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>React小书学习笔记 —— 挂载阶段的组件生命周期（二） - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="React小书学习笔记 —— 挂载阶段的组件生命周期（二）">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-10 11:58" pubdate>
+        2020年11月10日 中午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      44
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">React小书学习笔记 —— 挂载阶段的组件生命周期（二）</h1>
+            
+            <div class="markdown-body">
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/hu-zi-da-ha">胡子大哈</a>的<a target="_blank" rel="noopener" href="http://huziketang.mangojuice.top/books/react/lesson18">React小书</a>，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！</p>
+<a id="more"></a>
+
+<h1 id="挂载阶段的组件生命周期（二）"><a href="#挂载阶段的组件生命周期（二）" class="headerlink" title="挂载阶段的组件生命周期（二）"></a>挂载阶段的组件生命周期（二）</h1><p>参考教程：React小书–第18节(挂载阶段的组件生命周期(二)）<br>教程作者：<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/hu-zi-da-ha">胡子大哈</a><br>参考链接：<a target="_blank" rel="noopener" href="http://huziketang.mangojuice.top/books/react/lesson18">React小书</a><br><strong>本文搭配原文教程食用，风味更佳~!</strong></p>
+<hr>
+<p>经过上一节的讲述，你大概已经知道挂载阶段组件各生命周期有哪些，包括其排布的方式，调用的顺序等等，这节我们将接下来将讨论对于一个组件来说，其挂载阶段生命周期的几个方法(constructor ; componentWillMount; componentDidMount; componentWillUnmount)在一个组件的出生到死亡的过程里面起了什么样的作用。</p>
+<h2 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor()"></a>constructor()</h2><p>一般来说， constructor 里主要做一些<strong>关于组件自身状态的初始化工作</strong>。即所有组件的 state 的初始化工作都是放在 constructor 里面的，具体代码如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">xxx</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    constructor() &#123;<br>        <span class="hljs-keyword">super</span>()<br>        <span class="hljs-keyword">this</span>.state = &#123;<br>            xx:yy,<br>            xx:yy,<br>            ...<br>        &#125;<br>    &#125;<br>    <br>    ...<br><br>    render() &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="componentWillMount"><a href="#componentWillMount" class="headerlink" title="componentWillMount()"></a>componentWillMount()</h2><p>小书中提到，componentWillMount 生命周期主要用于一些组件启动的动作，比如Ajax 数据的拉取操作、一些定时器的启动等，此外，书中还举了一个Ajax的例子：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">...<br>  componentWillMount () &#123;<br>    ajax.get(<span class="hljs-string">&#x27;http://json-api.com/user&#x27;</span>, <span class="hljs-function"><span class="hljs-params">(userData)</span> =&gt;</span> &#123;<br>      <span class="hljs-built_in">this</span>.setState(&#123; userData &#125;)<br>    &#125;)<br>  &#125;<br>...<br></code></pre></td></tr></table></figure>
+<p><strong>但是！问题来了：</strong> 上一节我们不是说componentWillMount是在render前执行，无法触发setState的二次渲染吗？那这例子又是什么例子呢？对此，这里引出另一篇参考文献(<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018082225">React componentwillmount和componentdidmount请求数据</a>)来深入了解一下。<br>首先要明确一点，<strong>在componentWillMount中执行this.setState是不会触发二次渲染的。</strong> 它也只会在挂载过程中被调用一次，它的作用和constructor没有太大差异。<br>在componentWillMount中请求后台数据是无法保证更早得到数据的，因为componentWillMout是在render函数执行前执行的，虽然请求是在第一次render之前发送的，但是返回并不能保证在render之前完成(即按照js异步的特点，在请求数据时，render已经开始异步工作了)，render不会等你慢慢请求.所以在渲染的时候没有办法等到数据到来再去setState触发二次渲染。<br>那为什么小书中说可以用 componentWillMount 进行 Ajax 数据拉取的操作呢？这是因为在服务端渲染的场景中componentDidMount是不会被执行的，因此可以在componnetWillMount中发送AJAX请求，注意这里是发送请求，而非发送并接收到请求，举个例子：你尝试过自己给自己送信吗？如果你要自己给自己送信会怎么办？方法很简单，你写一封信从浙江寄到武汉，寄完马上乘动车从浙江出发，到达武汉后等着这封信送到你手中就可以了，当然这封信可能会比你早到，那么你去邮局取件完事。componentWillMount 和 render 的关系也是如此，componentWillMount 先发送请求，然后程序就开始执行 render，至于请求怎么处理的和 render 执行不存在冲突，render 完成后等待请求结果或者获取结果即可。<br>顺便说一句在es6中,使用extend component的方式里的constructor函数和componentWillMount是通用的作用,所以你在构造函数里初始化了组件的状态就不必在WillMount做重复的事情了.React中不推荐在componentWillMount中发送异步请求。</p>
+<p>以下是对该片引文的重点提取。</p>
+<ol>
+<li>componentWillMount 是一个同步操作，即你只有进行了 componentWillMount 才能进行后续的 render 等一系列操作。</li>
+<li>componentWillMount 在 render 前执行，所以 componentWillMount 中执行 this.setState 无法触发二次渲染(此时组件自身都没被渲染)。</li>
+<li>componentWillMount 可以执行一些不依赖于组件渲染的操作，比如定时器启动，请求发送等。</li>
+</ol>
+<p>引文还将 componentWillMount 和 componentDidMount 做了对比，相比于 componentWillMount ，componentDidMount 这个生命周期函数在是在render之后调用一次,component已经初始化完成了。在生产时,componentDidMount生命周期函数是最好的时间去请求数据,其中最重要原因:使用componentDidMount第一个好处就是这个一定是在组件初始化完成之后,再会请求数据,因此不会报什么警告或者错误,我们正常请教数据完成之后一般都会setState。</p>
+<h2 id="componentWillUnmout"><a href="#componentWillUnmout" class="headerlink" title="componentWillUnmout()"></a>componentWillUnmout()</h2><p>componentWillUnmount 生命周期主要在组件销毁前(注意是销毁前，可以看前一篇，是先执行 componentWillUnmout，后在页面删除组件)，执行一些清场工作，比如清楚定时器等。在 React 中，组件生命周期是 js 自己控制的，父组件不要子组件了，那么子组件就可以卸载了，就这么简单。React 管理 DOM 的过程，可以理解为每个组件 render() 返回的虚拟 DOM 会被 React 整理到一个树里面，按照它们之间相互依赖的关系，把相应的组件 mount 起来。然后可能父组件状态变化之后， render() 不返回某个子组件了，那么这个子组件就会被 React unmount 掉。</p>
+<h2 id="动态时钟实战"><a href="#动态时钟实战" class="headerlink" title="动态时钟实战"></a>动态时钟实战</h2><p>下面记录了不堪入目的代码实战过程：</p>
+<h3 id="step1：创建React"><a href="#step1：创建React" class="headerlink" title="step1：创建React"></a>step1：创建React</h3><figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-string">npx </span><span class="hljs-built_in">create-react-app</span> <span class="hljs-string">clock</span><br><span class="hljs-string">cd </span><span class="hljs-string">clock</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="step2：定义时钟组件"><a href="#step2：定义时钟组件" class="headerlink" title="step2：定义时钟组件"></a>step2：定义时钟组件</h3><p>创建 Clock.js <strong>(注意大写，语法规范：导出类名的文件开头首字母大写)</strong><br>编写代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs javascript">Clock.js代码：<br><span class="hljs-keyword">import</span> React,&#123;Component&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Clock</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>()<br>        <span class="hljs-built_in">this</span>.state = &#123;<br>            date: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        &lt;div&gt;<br>            &lt;h1&gt;<br>                &lt;p&gt;现在时间是&lt;/p&gt;<br>                &#123;<span class="hljs-built_in">this</span>.state.date.toLocaleTimeString()&#125;<br>            &lt;/h1&gt;<br>        &lt;/div&gt;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Clock;<br>--------------------------------------------------------------<br>index.js代码：<br><span class="hljs-keyword">import</span> reportWebVitals <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./reportWebVitals&#x27;</span>;<br><br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;<br><span class="hljs-keyword">import</span> Clock <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./Clock&#x27;</span>;<br><br>ReactDOM.render(<br>  &lt;React.StrictMode&gt;<br>    &lt;Clock /&gt;<br>  &lt;/React.StrictMode&gt;,<br>  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>)<br>);<br><br><span class="hljs-comment">// If you want to start measuring performance in your app, pass a function</span><br><span class="hljs-comment">// to log results (for example: reportWebVitals(console.log))</span><br><span class="hljs-comment">// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals</span><br>reportWebVitals();<br></code></pre></td></tr></table></figure>
+<p>稍作解释：<br>Clock.js 中首先要引入<code>import React,&#123;Component&#125; from &#39;react&#39;;</code>(基本每个React组件都要引用)，创建组件，在组件构造函数生命周期中初始化 state 状态(初始化一个对象)，<code>new Date()</code>定义了一个 Date 对象，在 render 中调用 Date 对象的<code>.toLocaleTimeString()</code>方法，根据本地时间格式，把 Date 对象的时间部分转换为字符串。可结合“Date 对象”一起学习。最后 <code>export default xxx</code>导出组件类<br>index.js 主要包含了 <code>ReactDOM.render()</code> 方法，需要 <code>import React from &#39;react&#39;;import ReactDOM from &#39;react-dom&#39;;import Clock from &#39;./Clock&#39;;</code>，然后导入组件进行渲染。</p>
+<p>ok! <code>npm start</code>运行~<br><img src="/img/posts_img/20201110103616469_23459.png" srcset="/img/loading.gif"><br>what!!!出错了，好像render()没有return，大意了。加上return后再运行(注意return后加 <strong><code>()</code></strong> )。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript">Clock.js代码：<br><span class="hljs-keyword">import</span> React,&#123;Component&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Clock</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>()<br>        <span class="hljs-built_in">this</span>.state = &#123;<br>            date: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;h1&gt;<br>                    &lt;p&gt;现在时间是&lt;/p&gt;<br>                    &#123;<span class="hljs-built_in">this</span>.state.date.toLocaleTimeString()&#125;<br>                &lt;/h1&gt;<br>            &lt;/div&gt;<br>        )<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Clock;<br></code></pre></td></tr></table></figure>
+<p><img src="/img/posts_img/20201110103942355_23640.png" srcset="/img/loading.gif"></p>
+<h3 id="step3：实现时间动态："><a href="#step3：实现时间动态：" class="headerlink" title="step3：实现时间动态："></a>step3：实现时间动态：</h3><p>完美！但是现在时间是静态的，我们需要加上一个定时器，放在 componentWillMount() 生命周期中，每隔多少秒就重新更新一次state状态（实际操作过程中，发现vscode竟然没有自动提示componentWillMount()，果然是被淘汰了呀，不过幸好还能用）。<br><img src="/2020/11/10/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%BA%8C%EF%BC%89/_posts/img/20201110104750052_1966.png" srcset="/img/loading.gif"><br>上述意思大致是：componentWillMount 被重命名为了 UNSAFE_componentWillMount，React 建议少用 componentWillMount，因为初始化状态可以在 constructor 中进行，其余的可以在 componentDidMount 中进行，所以没 componentWillMount 啥事了。</p>
+<p>扯远了，继续撸代码，上步我们加了一个 componentWillMount，里面装了个定时器setInterval()，每个1000ms重新更新一下状态并渲染(this.setState)，这里由于每秒都会渲染一次，所以不用担心componentWillMount 无法二次渲染的问题。</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">...<br>componentWillMount() &#123;<br>    <span class="hljs-built_in">this</span>.timer = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>        <span class="hljs-built_in">this</span>.setState(&#123;date: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()&#125;)<br>    &#125;,<span class="hljs-number">1000</span>)<br>&#125;<br>...<br></code></pre></td></tr></table></figure>
+
+<h3 id="step4：时间隐藏与显示"><a href="#step4：时间隐藏与显示" class="headerlink" title="step4：时间隐藏与显示"></a>step4：时间隐藏与显示</h3><p>至此我们实现了时钟的动态展示，下一步我们实现时间的隐藏：<br>在 index.js 中新建一个 Index 类，用来包裹 Clock 组件，并设置一些隐藏的功能。代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs javascript">index.js：<br><span class="hljs-keyword">import</span> reportWebVitals <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./reportWebVitals&#x27;</span>;<br><br><span class="hljs-keyword">import</span> React,&#123;Component&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;  <span class="hljs-comment">//加上了&#123;Component&#125;</span><br><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;<br><span class="hljs-keyword">import</span> Clock <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./Clock&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Index</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">super</span>()<br>    <span class="hljs-built_in">this</span>.state = &#123;<br>      isShowClock: <span class="hljs-literal">true</span><br>    &#125;<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">handleShowOrHide</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.setState(&#123;<br>      isShowClock: !<span class="hljs-built_in">this</span>.state.isShowClock<br>    &#125;)<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-keyword">return</span> (<br>      &lt;div&gt;<br>        &#123;<span class="hljs-built_in">this</span>.state.isShowClock?<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Clock</span> /&gt;</span></span>:<span class="hljs-literal">null</span>&#125;<br>        &lt;button onClick=&#123;<span class="hljs-built_in">this</span>.handleShowOrHide.bind(<span class="hljs-built_in">this</span>)&#125;&gt;显示/隐藏&lt;/button&gt;<br>      &lt;/div&gt;<br>    )<br>  &#125;<br>&#125;<br><br>ReactDOM.render(<br>  &lt;React.StrictMode&gt;<br>    &lt;Index /&gt;<br>  &lt;/React.StrictMode&gt;,<br>  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>)<br>);<br><br><span class="hljs-comment">// If you want to start measuring performance in your app, pass a function</span><br><span class="hljs-comment">// to log results (for example: reportWebVitals(console.log))</span><br><span class="hljs-comment">// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals</span><br>reportWebVitals();<br></code></pre></td></tr></table></figure>
+<p>需要注意的几点：</p>
+<ol>
+<li>this.setState()是一个方法，传入一个state对象，即用新的state更新上一时间的state状态(注意是更新而非替换，若新的状态不在原来的状态内，则是添加操作)。</li>
+<li>组件中调用状态值都要用 <code>this.state.属性名</code> 的形式。</li>
+<li>关注<code>&lt;div&gt;&#123;...&#125;&lt;/div&gt;</code>的形式，这是典型的JSX书写，即HTML中嵌入JS代码。任何函数及表达式在JSX中都要写入 <strong><code>&#123;&#125;</code></strong> 内，例如<code>onClick=&#123;...函数...&#125;</code></li>
+<li>注意 <code>.bind(this)</code>，组件内部函数没有绑定 this 对象，所以需要人为绑定。箭头函数例外，箭头函数会自动指向 this。</li>
+</ol>
+<p>更新完之后，我们运行代码：<br><img src="/img/posts_img/20201110114320822_23996.png" srcset="/img/loading.gif"><br><img src="/img/posts_img/20201110114332942_23846.png" srcset="/img/loading.gif"></p>
+<h3 id="step5：添加componentWillUnmout，清除定时器"><a href="#step5：添加componentWillUnmout，清除定时器" class="headerlink" title="step5：添加componentWillUnmout，清除定时器"></a>step5：添加componentWillUnmout，清除定时器</h3><p>隐藏和显示的功能我们已经实现了，但是F12调试发现居然报错了！<br><img src="/img/posts_img/20201110114426671_5798.png" srcset="/img/loading.gif"><br>报错原因大致是：没有 unmount 的组件，容易造成内存泄露。结合小书学习我们可知，定时器在每次组件移除时并没有被清除，下一次组件生成时又创建了一个新的定时器，时钟隐藏的时候，定时器的回调函数还在不停地尝试 setState，由于 setState 只能在已经挂载或者正在挂载的组件上调用，所以 React.js 开始疯狂报错。这时候componentWillUnmount 就可以派上用场了，它的作用就是在组件销毁的时候，做这种清场的工作。例如清除该组件的定时器和其他的数据清理工作。我们给 Clock 添加 componentWillUnmount，在组件销毁的时候清除该组件的定时器：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Clock</span>.</span></span>js:<br>...<br>component<span class="hljs-constructor">WillUnmount()</span> &#123;<br>    clear<span class="hljs-constructor">Interval(<span class="hljs-params">this</span>.<span class="hljs-params">timer</span>)</span><br>&#125;<br>...<br></code></pre></td></tr></table></figure>
+<p>注意：这行代码是写在 Clock.js 下的。<br>至此，我们完成了实战，时间能动态走动，且能隐藏或显示，并且不会报错。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们一般会把组件的 state 的初始化工作放在 constructor 里面去做；<br>在 componentWillMount 进行组件的启动工作，例如 Ajax 数据拉取、定时器的启动；<br>组件从页面上销毁的时候，有时候需要一些数据的清理，例如定时器的清理，就会放在 componentWillUnmount 里面去做。</p>
+<p>没有提到的 componentDidMount 将在后续讲解。一般来说，有些组件的启动工作是依赖 DOM 的，例如动画的启动，而 componentWillMount 的时候组件还没挂载完成，所以没法进行这些启动工作，这时候就可以把这些操作放在 componentDidMount 当中。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/React/">React</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/React/">React</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/16/ref%20%E5%92%8C%20React.js%20%E4%B8%AD%E7%9A%84%20DOM%20%E6%93%8D%E4%BD%9C/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">React小书学习笔记 —— ref 和 React.js 中的 DOM 操作</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/09/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%B8%80%EF%BC%89/">
+                        <span class="hidden-mobile">React小书学习笔记 —— 挂载阶段的组件生命周期（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/11/10/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%BA%8C%EF%BC%89/';
+        this.page.identifier = '/2020/11/10/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%BA%8C%EF%BC%89/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

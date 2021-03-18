@@ -1,0 +1,626 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="Redux是一个用来管理管理数据状态和UI状态的JavaScript应用工具。在当前页面复杂度越来越高的互联时代，React组件的状态管理以及状态提升给管理带来了极大的难度，而Redux就是降低管理难度的。但注意的一点是，Redux除了支持React之外，还能支持Angular、jQuery甚至纯JavaScript。本专题将结合博主“技术胖”的Redux免费教程内容，对自身学习做一个总体的总结，">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>Redux UI界面与业务逻辑分离 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Redux UI界面与业务逻辑分离">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-03 11:23" pubdate>
+        2020年12月3日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redux UI界面与业务逻辑分离</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Redux-UI界面与业务逻辑分离"><a href="#Redux-UI界面与业务逻辑分离" class="headerlink" title="Redux UI界面与业务逻辑分离"></a>Redux UI界面与业务逻辑分离</h1><p>视频教程：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1w441137ss?p=1">技术胖 Redux 免费教程</a><br>参考链接：<a target="_blank" rel="noopener" href="https://jspang.com/detailed?id=48#toc230">技术胖 Redux 教程笔记汇总</a><br><strong>本文搭配原文教程食用，风味更佳~!</strong></p>
+<hr>
+<p><strong>UI界面与业务逻辑分离的必要性</strong></p>
+<ol>
+<li>让项目更容易维护。</li>
+<li>多人协作，实现超大型项目的开发和快速上线。比如两个人同时写一个模块，一个写UI部分，一个写业务逻辑部分，之后两个人在一起整合。</li>
+</ol>
+<h2 id="分离步骤"><a href="#分离步骤" class="headerlink" title="分离步骤"></a>分离步骤</h2><ol>
+<li><code>src/</code> 文件夹下新建 <code>TodoListUI.js</code>，用于存储 UI 界面代码</li>
+<li>将 JSX 代码迁移到 <code>TodoListUI.js</code></li>
+<li>UI组件与业务逻辑组件整合</li>
+<li>进阶：无状态组件编写UI界面</li>
+</ol>
+<h2 id="实战代码"><a href="#实战代码" class="headerlink" title="实战代码"></a>实战代码</h2><h3 id="TodoListUI-js"><a href="#TodoListUI-js" class="headerlink" title="TodoListUI.js"></a>TodoListUI.js</h3><ul>
+<li>在src目录下新建一个文件<code>TodoListUI.js</code>, <code>imrc ccc</code>快速生成页面的基本结构.</li>
+<li>去<code>TodoList.js</code>里把<code>JSX</code>拷贝过来，并在<code>TodoList.js</code>中引入<code>&lt;TodoListUI /&gt;</code>标签。此时<code>TodoListUI</code>中并没有组件所需要的<code>state</code>(状态信息)，接下来需要改造父组件进行值传递。</li>
+<li>父组件通过属性传值的形式(props)，把需要的值传递给子组件，子组件接收这些值，进行相应的绑定就可以了。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-comment">// 别忘了引入antd组件</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; Input, Button, List &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoListUI</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &#123;<span class="hljs-comment">/* 迁移UI界面JSX代码 */</span>&#125;<br>                &lt;div style=&#123;&#123; <span class="hljs-attr">margin</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;&gt;<br>                    &lt;Input<br>                        <span class="hljs-comment">// - placeholder=&#123;this.state.inputValue&#125; </span><br>                        <span class="hljs-comment">// + placeholder=&#123;this.props.inputValue&#125;</span><br>                        <span class="hljs-comment">// 属性值从TodoList组件通过 &lt;TodoListUI /&gt; 的props传入</span><br>                        placeholder=&#123;<span class="hljs-built_in">this</span>.props.inputValue&#125;<br>                        style=&#123;&#123; <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;250px&quot;</span>, <span class="hljs-attr">marginRight</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;<br>                        onChange=&#123;<span class="hljs-built_in">this</span>.props.inputChangeValue&#125;<br>                    /&gt;<br>                    &lt;Button<br>                        type=<span class="hljs-string">&quot;primary&quot;</span><br>                        onClick=&#123;<span class="hljs-built_in">this</span>.props.addItem&#125;<br>                    &gt;添加&lt;/Button&gt;<br>                &lt;/div&gt;<br>                &lt;div style=&#123;&#123; <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;325px&quot;</span>, <span class="hljs-attr">margin</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;&gt;<br>                    &lt;List<br>                        size=<span class="hljs-string">&quot;small&quot;</span><br>                        bordered<br>                        dataSource=&#123;<span class="hljs-built_in">this</span>.props.list&#125;<br>                        <span class="hljs-comment">/*</span><br><span class="hljs-comment">                        不能写成(item, index) =&gt; (&lt;List.Item onClick=&#123;(index) =&gt; &#123; this.props.deleteItem(index) &#125;&#125;&gt;&#123;item&#125;&lt;/List.Item&gt;)</span><br><span class="hljs-comment">                        因为在onClick=&#123;&#125;代码块中，又重新声明了一个index，此时this.props.deleteItem(index)取的是代码块内的index</span><br><span class="hljs-comment">                        正确写法如下，将(index)=&gt;&#123;&#125;改为()=&gt;&#123;&#125;，让外层代码块的index传入进来。</span><br><span class="hljs-comment">                        */</span><br>                        <span class="hljs-comment">// this.props.deleteItem.bind(this,index) 在这里无法使用，因为无法绑定到TodoList组件的this</span><br>                        <span class="hljs-comment">// 所以推荐将 .bind(this) 写入原组件的 constructor</span><br>                        renderItem=&#123;<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> &#123; <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List.Item</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> &#123; this.props.deleteItem(index) &#125;&#125;&gt;&#123;item&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">List.Item</span>&gt;</span></span>) &#125;&#125;<br>                    /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoListUI;<br></code></pre></td></tr></table></figure>
+
+<h3 id="TodoList-js"><a href="#TodoList-js" class="headerlink" title="TodoList.js"></a>TodoList.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store/index&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; inputChangeValueAction, addItemAction, deleteItemAction &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./store/actionCreators&quot;</span><br><span class="hljs-comment">// 引入 UI 界面代码</span><br><span class="hljs-keyword">import</span> TodoListUI <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./TodoListUI&#x27;</span><br><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoList</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.inputChangeValue = <span class="hljs-built_in">this</span>.inputChangeValue.bind(<span class="hljs-built_in">this</span>)<br>        <span class="hljs-built_in">this</span>.addItem = <span class="hljs-built_in">this</span>.addItem.bind(<span class="hljs-built_in">this</span>)<br>        <span class="hljs-built_in">this</span>.deleteItem = <span class="hljs-built_in">this</span>.deleteItem.bind(<span class="hljs-built_in">this</span>)<br>        <span class="hljs-built_in">this</span>.state = store.getState()<br><br>        <span class="hljs-built_in">this</span>.storeChange = <span class="hljs-built_in">this</span>.storeChange.bind(<span class="hljs-built_in">this</span>)<br>        store.subscribe(<span class="hljs-built_in">this</span>.storeChange)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">inputChangeValue</span>(<span class="hljs-params">e</span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> action = inputChangeValueAction(e.target.value)<br>        store.dispatch(action)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">addItem</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> action = addItemAction()<br>        store.dispatch(action)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">deleteItem</span>(<span class="hljs-params">index</span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> action = deleteItemAction(index)<br>        store.dispatch(action)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">storeChange</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">this</span>.setState(store.getState())<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &#123;<span class="hljs-comment">/* 用组件替代 */</span>&#125;<br>                &lt;TodoListUI<br>                    inputValue=&#123;<span class="hljs-built_in">this</span>.state.inputValue&#125;<br>                    inputChangeValue=&#123;<span class="hljs-built_in">this</span>.inputChangeValue&#125;<br>                    addItem=&#123;<span class="hljs-built_in">this</span>.addItem&#125;<br>                    list=&#123;<span class="hljs-built_in">this</span>.state.list&#125;<br>                    deleteItem=&#123;<span class="hljs-built_in">this</span>.deleteItem&#125;<br>                /&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoList;<br></code></pre></td></tr></table></figure>
+
+<h2 id="无状态组件"><a href="#无状态组件" class="headerlink" title="无状态组件"></a>无状态组件</h2><p>无状态组件其实就是一个函数，它不用再继承任何的类（class），也不存在state（状态）。当我们需要的组件<strong>不需要其余业务逻辑</strong>的时候，即只是构造<strong>单纯的UI组件</strong>时，把其改成无状态组件可以提高程序性能。</p>
+<ol>
+<li>不在需要引入React中的{ Component }。</li>
+<li>用一个TodoListUI函数代替组件继承, 里边只返回JSX的部分。</li>
+<li>函数传递一个props参数，之后修改里边的所有props，去掉this (因为函数中已经没有 this 了，原 this 指向的是继承类)。</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// - import React, &#123; Component &#125; from &#x27;react&#x27;;</span><br><span class="hljs-comment">// Component 不需要，但是 React 在 React 项目中必须引入</span><br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; Input, Button, List &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span>;<br><br><span class="hljs-comment">// 无状态组件是个函数，返回 UI 界面的 JSX </span><br><span class="hljs-keyword">const</span> TodoListUI = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> (<br>        &lt;div&gt;<br>            &#123;<span class="hljs-comment">/* </span><br><span class="hljs-comment">            此处将props打印到控制台，发现props为obj对象</span><br><span class="hljs-comment">            即&lt;TodoListUI /&gt;组件在属性传递时，是将所有属性打包成了一个对象进行传递的。</span><br><span class="hljs-comment">            */</span>&#125;<br>            &#123;<span class="hljs-built_in">console</span>.log(props)&#125;<br>            &lt;div style=&#123;&#123; <span class="hljs-attr">margin</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;&gt;<br>                &lt;Input<br>                    <span class="hljs-comment">// - this.props.inputValue</span><br>                    <span class="hljs-comment">// + props.inputValue</span><br>                    placeholder=&#123;props.inputValue&#125;<br>                    style=&#123;&#123; <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;250px&quot;</span>, <span class="hljs-attr">marginRight</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;<br>                    onChange=&#123;props.inputChangeValue&#125;<br>                /&gt;<br>                &lt;Button<br>                    type=<span class="hljs-string">&quot;primary&quot;</span><br>                    onClick=&#123;props.addItem&#125;<br>                &gt;添加&lt;/Button&gt;<br>            &lt;/div&gt;<br>            &lt;div style=&#123;&#123; <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;325px&quot;</span>, <span class="hljs-attr">margin</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;&gt;<br>                &lt;List<br>                    size=<span class="hljs-string">&quot;small&quot;</span><br>                    bordered<br>                    dataSource=&#123;props.list&#125;<br>                    renderItem=&#123;<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> &#123; <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List.Item</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;()</span> =&gt;</span> &#123; props.deleteItem(index) &#125;&#125;&gt;&#123;item&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">List.Item</span>&gt;</span></span>) &#125;&#125;<br>                /&gt;<br>            &lt;/div&gt;<br>        &lt;/div&gt;<br>    );<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoListUI;<br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/React/">React</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/React/">React</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Redux/">Redux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/12/04/React+Redux%E5%AE%9E%E7%8E%B0%E5%B0%8F%E4%B9%A6%E8%AF%84%E8%AE%BA%E5%AE%9E%E6%88%98/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">React+Redux实现小书评论实战(一~三)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/02/Redux%E5%B7%A5%E7%A8%8B%E4%BC%98%E5%8C%96/">
+                        <span class="hidden-mobile">Redux工程优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/12/03/Redux%20UI%E7%95%8C%E9%9D%A2%E4%B8%8E%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E5%88%86%E7%A6%BB/';
+        this.page.identifier = '/2020/12/03/Redux%20UI%E7%95%8C%E9%9D%A2%E4%B8%8E%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E5%88%86%E7%A6%BB/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

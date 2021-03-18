@@ -1,0 +1,616 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="轨迹目的地预测系统项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。项目开发过程中，遇到异步加载插件无法正常显示的问题，后排查原因发现是插件未完成全局注册就被调用于实例挂载，特此记录。">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>Vue全局注册与异步加载 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Vue全局注册与异步加载">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-10 21:40" pubdate>
+        2021年3月10日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      24
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Vue全局注册与异步加载</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Vue全局注册与异步加载"><a href="#Vue全局注册与异步加载" class="headerlink" title="Vue全局注册与异步加载"></a>Vue全局注册与异步加载</h1><h2 id="应用需求描述"><a href="#应用需求描述" class="headerlink" title="应用需求描述"></a>应用需求描述</h2><p>单独封装一个地图控件，实现开关控制地图插件的显示。当开关状态为ON时，在地图上显示相应的地图插件，当开关状态为OFF时，隐藏地图插件。<br><img src="/img/posts_img/20210310215211593_26729.png" srcset="/img/loading.gif"></p>
+<h2 id="Vue-代码"><a href="#Vue-代码" class="headerlink" title="Vue 代码"></a>Vue 代码</h2><p><strong>MapPlugin.vue:</strong> 整体插件框封装</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;map-plugin&quot;</span>&gt;</span><br>    //预留插槽，开发者可向内插入任意数目插件<br>    <span class="hljs-tag">&lt;<span class="hljs-name">slot</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><br><span class="javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="javascript">  name: <span class="hljs-string">&quot;MapPlugin&quot;</span>,</span><br>  <br>&#125;;<br><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><br><span class="css"><span class="hljs-selector-id">#map-plugin</span> &#123;</span><br>  width: 180px;<br>  min-height: 100px;<br><br>  padding: 0 20px;<br>  margin-left: 10px;<br><br><span class="css">  <span class="hljs-selector-tag">border</span>: 3<span class="hljs-selector-tag">px</span> <span class="hljs-selector-tag">ridge</span> <span class="hljs-selector-id">#515a6ece</span>;</span><br>  border-radius: 5px 25px;<br><br>  display: flex;<br>  flex-direction: column;<br><br>  position: fixed;<br>  bottom: 40px;<br>  left: 0;<br>&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>PluginItem.vue:</strong> 单个插件封装</p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span></span><br><span class="xml">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;plugin-item&quot;</span>&gt;</span></span><br><span class="xml">    </span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">text</span> &#125;&#125;</span><br><span class="xml">    //使用了iView UI的 i-switch 封装组件</span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">i-switch</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;switch1&quot;</span> @<span class="hljs-attr">on-change</span>=<span class="hljs-string">&quot;change&quot;</span> <span class="hljs-attr">size</span>=<span class="hljs-string">&quot;large&quot;</span>&gt;</span></span><br><span class="xml">      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">&quot;open&quot;</span>&gt;</span>ON<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="xml">      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">&quot;close&quot;</span>&gt;</span>OFF<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;/<span class="hljs-name">i-switch</span>&gt;</span></span><br><span class="xml">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span><br><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span></span><br><span class="xml">export default &#123;</span><br><span class="xml">  name: &quot;PluginItem&quot;,</span><br><span class="xml">  props: &#123;</span><br><span class="xml">    text: &#123;</span><br><span class="xml">      type: String,</span><br><span class="xml">      default: &quot;&quot;,</span><br><span class="xml">    &#125;,</span><br><span class="xml">    callback: Function,</span><br><span class="xml">  &#125;,</span><br><span class="xml">  data() &#123;</span><br><span class="xml">    return &#123;</span><br><span class="xml">      switch1: false,</span><br><span class="xml">    &#125;;</span><br><span class="xml">  &#125;,</span><br><span class="xml">  methods: &#123;</span><br><span class="xml">    change(status) &#123;</span><br><span class="xml">      //   console.log(status);</span><br><span class="xml">      let cn = &quot;&quot;;</span><br><span class="xml">      if (status) &#123;</span><br><span class="xml">        cn = &quot;开&quot;;</span><br><span class="xml">      &#125; else &#123;</span><br><span class="xml">        cn = &quot;关&quot;;</span><br><span class="xml">      &#125;</span><br><span class="xml">      this.$Message.info(&quot;开关状态：&quot; + cn);</span><br><span class="xml">    &#125;,</span><br><span class="xml">  &#125;,</span><br><span class="xml">  //watch 侦听 switch1 变量状态变化，发生变化时调用函数 callback</span><br><span class="xml">  //callback 函数外部传入</span><br><span class="xml">  //watch 使用细节参考 Vue.js 官网</span><br><span class="xml">  watch: &#123;</span><br><span class="xml">    switch1: function (newValue, oldValue) &#123;</span><br><span class="xml">      this.callback(newValue);</span><br><span class="xml">    &#125;,</span><br><span class="xml">  &#125;,</span><br><span class="xml">&#125;;</span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span></span><br><span class="xml">.plugin-item &#123;</span><br><span class="xml">  display: flex;</span><br><span class="xml">  justify-content: space-between;</span><br><span class="xml">  padding: 10px 10px;</span><br><span class="xml">&#125;</span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+<h3 id="定制封装个性化插件组件"><a href="#定制封装个性化插件组件" class="headerlink" title="定制封装个性化插件组件"></a>定制封装个性化插件组件</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs xml"><br><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">MapPlugin</span>&gt;</span><br>    //向预留插槽内插入PluginItem.vue封装的插件<br>    <span class="hljs-tag">&lt;<span class="hljs-name">PluginItem</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;比例尺&quot;</span> <span class="hljs-attr">:callback</span>=<span class="hljs-string">&quot;getScale&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">PluginItem</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;鹰眼控件&quot;</span> <span class="hljs-attr">:callback</span>=<span class="hljs-string">&quot;getOverView&quot;</span> /&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">PluginItem</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;工具条&quot;</span> <span class="hljs-attr">:callback</span>=<span class="hljs-string">&quot;getToolBar&quot;</span> /&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">MapPlugin</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><br><span class="javascript"><span class="hljs-keyword">import</span> &#123; MapPlugin, PluginItem &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;components/common/plugin&quot;</span>;</span><br><span class="javascript"><span class="hljs-keyword">import</span> &#123; getPlugin &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./getPlugin&quot;</span>;</span><br><br><span class="javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="javascript">  name: <span class="hljs-string">&quot;ModelOnePlugin&quot;</span>,</span><br>  components: &#123;<br>    MapPlugin,<br>    PluginItem,<br>  &#125;,<br>  methods: &#123;<br><span class="javascript">    <span class="hljs-comment">// 填坑1：this.$plugin 在页面挂在完成前没有创建，需要用异步方法，等待 this.$plugin 赋值后获取值并执行</span></span><br>    /**填坑2：<br><span class="javascript">     * <span class="hljs-built_in">this</span> 指向问题. Vue 方法等定义中，若用箭头函数，<span class="hljs-built_in">this</span> 指向上级父作用域，因此值为 <span class="hljs-literal">undefined</span> (打印可知)</span><br><span class="javascript">     * 获取 Vue 实例的 <span class="hljs-built_in">this</span>，需要通过 <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;&#125; 声明函数。同理在 getPlugin.js 中定义的箭头函数，<span class="hljs-built_in">this</span> =&gt; <span class="hljs-literal">undefined</span></span><br><span class="javascript">     * 解决 <span class="hljs-built_in">this</span> 指向：最有效的办法就是获取正确的 <span class="hljs-built_in">this</span> 指向并将它保存到变量内使用。</span><br>     */<br><span class="javascript">    getScale: <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">active</span>) </span>&#123;</span><br><span class="javascript">      <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>);</span><br><span class="javascript">      <span class="hljs-keyword">let</span> vueinstance = <span class="hljs-built_in">this</span>;</span><br><span class="javascript">      <span class="hljs-keyword">let</span> obj = <span class="hljs-keyword">await</span> getPlugin(vueinstance);</span><br>      if (active) &#123;<br><span class="javascript">        <span class="hljs-comment">// .show() 插件展示</span></span><br>        obj.scale.show();<br><span class="javascript">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="javascript">        <span class="hljs-comment">// .hide() 插件隐藏</span></span><br>        obj.scale.hide();<br>      &#125;<br>    &#125;,<br><span class="javascript">    getOverView: <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">active</span>) </span>&#123;</span><br><span class="javascript">      <span class="hljs-keyword">let</span> vueinstance = <span class="hljs-built_in">this</span>;</span><br><span class="javascript">      <span class="hljs-keyword">let</span> obj = <span class="hljs-keyword">await</span> getPlugin(vueinstance);</span><br>      if (active) &#123;<br><span class="javascript">        <span class="hljs-comment">// .show() 插件展示</span></span><br>        obj.overview.show();<br><span class="javascript">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="javascript">        <span class="hljs-comment">// .hide() 插件隐藏</span></span><br>        obj.overview.hide();<br>      &#125;<br>    &#125;,<br><span class="javascript">    getToolBar: <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">active</span>) </span>&#123;</span><br><span class="javascript">      <span class="hljs-keyword">let</span> vueinstance = <span class="hljs-built_in">this</span>;</span><br><span class="javascript">      <span class="hljs-keyword">let</span> obj = <span class="hljs-keyword">await</span> getPlugin(vueinstance);</span><br>      if (active) &#123;<br><span class="javascript">        <span class="hljs-comment">// .show() 插件展示</span></span><br>        obj.toolbar.show();<br><span class="javascript">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="javascript">        <span class="hljs-comment">// .hide() 插件隐藏</span></span><br>        obj.toolbar.hide();<br>      &#125;<br>    &#125;,<br>  &#125;,<br>&#125;;<br><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>getPlugin 函数单独封装</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">const getPlugin = <span class="hljs-function"><span class="hljs-params">(vueinstance)</span> =&gt;</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(vueinstance);<br>    <span class="hljs-regexp">//</span> 此处箭头函数内 <span class="hljs-built_in">this</span> 上级作用域仍为一个箭头函数，值为 <span class="hljs-literal">undefined</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">(resolve, reject)</span> =&gt;</span> &#123;<br>        <span class="hljs-keyword">if</span> (vueinstance.$plugin) &#123;<br>            resolve(vueinstance.$plugin)<br>        &#125;<br>    &#125;)<br>&#125;<br><br><span class="hljs-keyword">export</span> &#123;<br>    getPlugin,<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h2><p>MapPlugin.vue 和 PluginItem.vue 两个组件封装了通用的插件框和插件<br>主要细节在于插件组件的使用：<br><strong>问题描述一：</strong><br>由于我们采用自己封装的通用插件组件，因此在定制特定功能的插件时，我们需要传入相对应的插件对象，这些插件对象为高德地图创建出来的插件实例。<strong>注意：</strong> 在挂载高德地图实例的时候，我们就提到过，外部实例挂载在Vue实例上，需要等待Vue实例完全挂载。在地图实例挂载时，在mounted中回调创建实例的函数是为了防止Vue实例未挂载完全就执行实例的创建，从而地图实例缺少挂载容器而挂在失败的问题。而在插件实例挂载中，我们本意是在创建通用插件时，传入相应的插件实例从而完成插件个性化定制。但是此时插件实例还未被创建(只有在mounted后执行)，因此用同步方法传递实例自然是失败了。<br><strong>解决方法：</strong><br>用异步方法传递插件实例，插件实例创建后，本文方法将插件实例统一放到对象内并通过<code>Vue.prototype.$xxx</code>全局注册，在插件中通过异步方法获取该全局对象，即用<code>Promise</code>对象包裹异步操作，当检测到<code>$plugin</code>(本文注册的全局对象)时，通过<code>resolve()</code>落定Promise状态为fulFilled，这样我们就能获得包含有插件实例的全局对象，然后对通用插件进行个性化配置。</p>
+<p><strong>问题描述二：</strong><br>上述代码中，我们要特别注意 this 的指向问题，在 Vue 的 methods 定义中，使用箭头函数，由于 this 会指向最近外层作用域<code>&#123;&#125;</code>，因为methods并没有 this，所以值为 undefined。我们需要用 <code>function() &#123;&#125;</code> 来定义，这样定义的函数的 this 会指向 Vue 实例。同理，单独封装的 <code>getPlugin.js</code> 中的箭头函数 this 经过判断也是 undefined，需要做进一步处理保证其获得的是 Vue 实例。<br><strong>解决方法：</strong><br>为了避免多次判断 this 指向，我们可以在明确 this 指向的地方，用变量保存 this 值，然后通过参数传递该变量，用该变量来作为 this 使用。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Vue/">Vue</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6/">ES6</a>
+                    
+                      <a class="hover-with-bg" href="/tags/async/">async</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Promise/">Promise</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/10/hexo%E6%96%87%E7%AB%A0%E6%A0%87%E9%A2%98%E9%97%AE%E9%A2%98/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">hexo发布文章报错问题记录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/10/Vue%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD%E9%AB%98%E5%BE%B7API/">
+                        <span class="hidden-mobile">Vue.js挂载(高德)地图服务API</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2021/03/10/Vue%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD/';
+        this.page.identifier = '/2021/03/10/Vue%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,725 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="网页设计，动画渐入渐出效果，CSS布局心得，React-thunk中间件，setTimeout延迟事件保留状态，页面滚动事件监听...，透过这扇窗，你将从这看到一片全新的前端世界。">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>页面设计 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="页面设计">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-12 12:23" pubdate>
+        2020年12月12日 中午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      108
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">页面设计</h1>
+            
+            <div class="markdown-body">
+              <h1 id="页面设计"><a href="#页面设计" class="headerlink" title="页面设计"></a>页面设计</h1><p>项目 GitHub 地址：<a target="_blank" rel="noopener" href="https://github.com/jtwang7/group_website.git">group_website</a></p>
+<h2 id="方法-重难点"><a href="#方法-重难点" class="headerlink" title="方法+重难点"></a>方法+重难点</h2><h3 id="CSS脱离文档流后同级元素上移问题"><a href="#CSS脱离文档流后同级元素上移问题" class="headerlink" title="CSS脱离文档流后同级元素上移问题"></a>CSS脱离文档流后同级元素上移问题</h3><p>参考链接：<a target="_blank" rel="noopener" href="https://www.html.cn/qa/css3/18193.html">css固定定位脱离文档流怎么解决？</a><br>某元素脱离文档流后，同级元素位置上移的原因是因为没有给父级层设置相应的高度。当子级元素没有脱离文档流时，父DIV会因为子DIV的高度而被撑起来，然而当子DIV设置绝对定位或固定定位时，父DIV不会再根据子DIV的高度撑起来，也就是我们常说的脱离文档流。<br>解决方法1：强行给父级DIV设置相应的高度，这个方案的缺点是不够灵活，需要自己计算要设置的高度</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-selector-class">.parent</span>&#123;<br>	<span class="hljs-comment">/*解决方法1：css强制设置父模块宽度高度*/</span><br>	<span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>	...<br>&#125;<br><span class="hljs-selector-class">.son</span>&#123;<br>	<span class="hljs-comment">/*设置固定定位*/</span><br>	<span class="hljs-attribute">position</span>:fixed;<br>	<span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;<br>	<span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>解决方法2：在合适的位置设置占位元素。没有在父元素设置元素高度直观，不建议采用。<br><strong>解决方法3：使用JS设置父级DIV的高度等于子DIV (推荐)</strong></p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs qml"><span class="hljs-built_in">window</span>.onload = ()=&gt;(<br>    <span class="hljs-keyword">let</span> son = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;son&#x27;</span>);<br>    <span class="hljs-keyword">let</span> <span class="hljs-built_in">parent</span> = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;parent&#x27;</span>);<br>    <span class="hljs-comment">//不兼容IE9以前的浏览器，IE9 以前用 son.currentStyle 获取</span><br>    <span class="hljs-built_in">parent</span>.style.height = <span class="hljs-built_in">window</span>.getComputedStyle(<span class="hljs-string">&#x27;son&#x27;</span>).height;<br>)<br></code></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/Window/getComputedStyle">window.getComputedStyle()</a>: 以对象形式返回目标的所有CSS样式值<br><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onload">window.onload()</a>: MDN文档中说明，onload 事件触发发生在所有 DOM 资源加载完成后，此时所有元素在DOM中均已完成挂载，不用担心 onload 事件触发后调用函数无作用对象的问题。<br><strong>在 React 中用 ref 属性来获取 dom 元素进行操作</strong></p>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml">//在组件完成挂载时，添加 window.onload 监听事件，它在所有 DOM 资源加载完成后调用函数执行。</span><br><span class="xml">componentDidMount() &#123;</span><br><span class="xml">    window.onload = ()=&gt;&#123;</span><br><span class="xml">        this.parent.style.height = window.getComputedStyle(this.son).height</span><br><span class="xml">    &#125;</span><br><span class="xml">&#125;</span><br><span class="xml">...</span><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span></span></span><br><span class="xml">    style=</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">position:</span> <span class="hljs-string">&quot;relative&quot;</span> &#125;&#125;</span><br><span class="xml">    //获取DOM元素</span><br><span class="xml">    ref=&#123;(parent) =&gt; &#123; this.parent = parent &#125;&#125;</span><br><span class="xml">&gt;</span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">img</span></span></span><br><span class="xml">        style=</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">position:</span> <span class="hljs-string">&quot;absolute&quot;</span>, zIndex: -1, width: <span class="hljs-string">&quot;100vw&quot;</span>, height: <span class="hljs-string">&quot;1080px&quot;</span> &#125;&#125;</span><br><span class="xml">        src=&#123;headerPng&#125;</span><br><span class="xml">        alt=&quot;&quot;</span><br><span class="xml">        //获取DOM元素</span><br><span class="xml">        ref=&#123;(son) =&gt; &#123; this.son = son &#125;&#125;</span><br><span class="xml">    /&gt;</span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">Titles</span> /&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">DropdownMenu</span> <span class="hljs-attr">isActive</span>=<span class="hljs-string">&#123;this.state.isActive&#125;</span> /&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=</span></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">position:</span> <span class="hljs-string">&quot;relative&quot;</span> &#125;&#125;</span><span class="xml"><span class="hljs-tag">&gt;</span></span><br><span class="xml">    //去除了占位元素： - <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;titlePlaceHolder&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">PageOne</span> /&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<p>渲染结果：<br><img src="/img/posts_img/20201213093355087_31820.png" srcset="/img/loading.gif"></p>
+<h3 id="this-指向问题"><a href="#this-指向问题" class="headerlink" title="this 指向问题"></a>this 指向问题</h3><p>参考链接：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/felearn/p/this-zhi-xiang-wen-ti.html">this 指向问题</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dongcanliang/p/7054176.html">this 指向详细解析</a><br>这里只对实战中遇到的 this 做简要分析，具体的需要详细学习。<br><strong>DOM事件处理函数</strong><br>(1)当函数被当做监听事件处理函数时， 其 this 指向触发该事件的元素 （针对于addEventListener事件）<br>(2)代码被内联处理函数调用时，它的this指向监听器所在的DOM元素,当代码被包括在函数内部执行时，其this指向等同于函数直接调用的情况</p>
+<p><strong>setTimeout &amp; setInterval</strong><br>对于延时函数内部的回调函数的this指向全局对象window</p>
+<p><strong>箭头函数中的 this</strong><br>(1)由于箭头函数不绑定this， 它会捕获其所在上下文的this值， 作为自己的this值。<strong>因此常被用于调用函数，改变函数的this指向，不容易出错。</strong><br>(2)方法的箭头函数this指向全局window对象，而普通函数则指向调用它的对象,箭头函数没有this</p>
+<p>举例：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; dispatch(&#123; type: <span class="hljs-string">&quot;close_isActive_delay&quot;</span> &#125;) &#125;, <span class="hljs-number">300</span>)<br></code></pre></td></tr></table></figure>
+<p>上述例子中，不能直接使用dispatch函数，因为在setTimeout中this指向全局对象window，使用箭头函数后自动关联上下文，this最终指向监听事件的DOM元素。(正确性有待商榷，对this不是很了解)</p>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">├─ group_website<br>│  └─ src<br>│     ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">App</span>.</span></span>css<br>│     ├─ components<br>│     │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DropdownMenu</span>.</span></span>js<br>│     │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DropdownSubTitle</span>.</span></span>js<br>│     │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DropdownTitle</span>.</span></span>js<br>│     │  ├─ page1<br>│     │  │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PageOne</span>.</span></span>js<br>│     │  │  └─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PageOneText</span>.</span></span>js<br>│     │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">SubTitle</span>.</span></span>js<br>│     │  └─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Titles</span>.</span></span>js<br>│     ├─ images<br>│     │  ├─ header.png<br>│     │  ├─ pgoneBackground.png<br>│     │  └─ testImg.jpg<br>│     ├─ index.js<br>│     ├─ store<br>│     │  ├─ index.js<br>│     │  └─ reducer.js<br>│     ├─ style<br>│     │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DropdownMenu</span>.</span></span>css<br>│     │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DropdownTitle</span>.</span></span>css<br>│     │  ├─ page1<br>│     │  │  └─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">PageOne</span>.</span></span>css<br>│     │  ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">SubTitle</span>.</span></span>css<br>│     │  └─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Titles</span>.</span></span>css<br>│     └─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Website</span>.</span></span>js<br>└─ package-lock.json<br></code></pre></td></tr></table></figure>
+<p>项目入口 js 文件为 <code>Website.js</code>，CSS样式存储于 <code>/store</code>文件夹下，页面组件存储于<code>/components</code>文件夹中。</p>
+<h2 id="下拉菜单"><a href="#下拉菜单" class="headerlink" title="下拉菜单"></a>下拉菜单</h2><h3 id="Website-js"><a href="#Website-js" class="headerlink" title="Website.js"></a>Website.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> DropdownMenu <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./components/DropdownMenu&#x27;</span><br><span class="hljs-keyword">import</span> Titles <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./components/Titles&#x27;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;./App.css&quot;</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store/index&#x27;</span><br><span class="hljs-keyword">import</span> headerPng <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./images/header.png&#x27;</span><br><span class="hljs-keyword">import</span> PageOne <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./components/page1/PageOne&#x27;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Website</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = store.getState()<br>        <span class="hljs-built_in">this</span>.storeChange = <span class="hljs-built_in">this</span>.storeChange.bind(<span class="hljs-built_in">this</span>)<br>        store.subscribe(<span class="hljs-built_in">this</span>.storeChange)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">storeChange</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">this</span>.setState(store.getState())<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div&gt;<br>                    &lt;div style=&#123;&#123; <span class="hljs-attr">position</span>: <span class="hljs-string">&quot;relative&quot;</span> &#125;&#125;&gt;<br>                        &lt;img style=&#123;&#123;<span class="hljs-attr">position</span>:<span class="hljs-string">&quot;absolute&quot;</span>,<span class="hljs-attr">zIndex</span>:-<span class="hljs-number">1</span>,<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;100vw&quot;</span>,<span class="hljs-attr">height</span>:<span class="hljs-string">&quot;1080px&quot;</span>&#125;&#125; src=&#123;headerPng&#125; alt=<span class="hljs-string">&quot;&quot;</span> /&gt;<br>                        &lt;Titles /&gt;<br>                        &lt;DropdownMenu isActive=&#123;<span class="hljs-built_in">this</span>.state.isActive&#125; /&gt;<br>                    &lt;/div&gt;<br>                    &lt;div style=&#123;&#123;<span class="hljs-attr">position</span>:<span class="hljs-string">&quot;relative&quot;</span>&#125;&#125;&gt;<br>                        &lt;div className=<span class="hljs-string">&quot;titlePlaceHolder&quot;</span>&gt;&lt;/div&gt;<br>                        &lt;PageOne /&gt;<br>                    &lt;/div&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Website;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">z-index设置：</span><br><span class="hljs-comment">1. 设置z-index的元素必须设置position:(relative/fixed/absolute)，若不对位置有调整或特殊要求，可以单设一个relative。</span><br><span class="hljs-comment">2. 将要在z轴排序的元素用&lt;div&gt;包裹，同时在父级元素上也要设position。</span><br><span class="hljs-comment">3. 根据需要对不同的子元素设置z-index，排序。</span><br><span class="hljs-comment">***关键：所有参与的元素(包括父元素)都要设置position</span><br><span class="hljs-comment">*/</span><br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">脱离文档流后元素上移问题：</span><br><span class="hljs-comment">1. 同级元素脱离文档流后，在整体布局上不占位置。</span><br><span class="hljs-comment">2. 若要保证其他元素原有布局，用&lt;div&gt;创建一个具有原同级元素大小的元素充当占位元素。</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<h4 id="重难点分析"><a href="#重难点分析" class="headerlink" title="重难点分析"></a>重难点分析</h4><p><strong>页面布局</strong></p>
+<ol>
+<li>如何让组件脱离文档流？方法一：设置<code>position:(&quot;fixed&quot;/&quot;absolute&quot;)</code>，方法二：设置<code>display:float</code>，不过目前常用的是 flex 布局，一般用不到 float 浮动布局。</li>
+<li>脱离文档流的好处和坏处？好处：脱离文档流可以释放元素占据的空间，让同级以及子级元素浮动到顶部，在设置图片背景的时候常用，如实战代码中的<code>&lt;img style=&#123;&#123;position:"absolute",zIndex:-1,width:"100vw",height:"1080px"&#125;&#125; src=&#123;headerPng&#125; alt=&quot;&quot; /&gt;</code>。坏处：脱离文档流后后续的布局会被打乱，很难调整。</li>
+<li>如何克服脱离文档流后后续元素上移问题：用<code>&lt;div&gt;</code>创建一个具有原同级元素大小的元素充当占位元素，或者给父级元素设置相应的高度。实战中代码使用如下：<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml">//设置position:&quot;absolute&quot;后脱离文档流</span><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=</span></span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">position:</span> <span class="hljs-string">&quot;relative&quot;</span> &#125;&#125;</span><span class="xml"><span class="hljs-tag">&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">style</span>=</span></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">position:&quot;absolute&quot;</span>,zIndex:-1,width:&quot;100vw&quot;,height:&quot;1080px&quot;&#125;&#125;</span><span class="xml"><span class="hljs-tag"> <span class="hljs-attr">src</span>=<span class="hljs-string">&#123;headerPng&#125;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;&quot;</span> /&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">Titles</span> /&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">DropdownMenu</span> <span class="hljs-attr">isActive</span>=<span class="hljs-string">&#123;this.state.isActive&#125;</span> /&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=</span></span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">position:&quot;relative&quot;</span>&#125;&#125;</span><span class="xml"><span class="hljs-tag">&gt;</span></span><br><span class="xml">    //设置一个div元素，大小与上述div最大尺寸相同，占据原有位置</span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&quot;titlePlaceHolder&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="xml">    <span class="hljs-tag">&lt;<span class="hljs-name">PageOne</span> /&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></code></pre></td></tr></table></figure></li>
+<li>脱离文档流的元素位置设置：<code>position:(&quot;fixed&quot;/&quot;absolute&quot;)</code>属性都是相对于父级的<code>position:&quot;relative&quot;</code>进行定位的。若要进行位置定位，在父级元素单独设置<code>position:&quot;relative&quot;</code>即可。</li>
+<li>关于 z-index 属性设置：在设置背景的时候，往往会遇到背景遮盖了优先需要显示的部分，这就需要调整 z-index 的属性，z-index 越大，显示的优先级越高。<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs fortran">z-<span class="hljs-built_in">index</span>设置：<br>设置z-<span class="hljs-built_in">index</span>的(每一个)元素必须设置<span class="hljs-keyword">position</span>:(relative/fixed/absolute)，若不对位置有调整或特殊要求，可以单设一个relative。<br>将要在z轴排序的元素用&lt;div&gt;包裹，同时在父级元素上也要设<span class="hljs-keyword">position</span>。<br>根据需要对不同的子元素设置z-<span class="hljs-built_in">index</span>，排序。<br>***关键：所有参与的元素(包括父元素)都要设置<span class="hljs-keyword">position</span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h3 id="Title-js"><a href="#Title-js" class="headerlink" title="Title.js"></a>Title.js</h3><p><img src="/img/posts_img/20201213093805783_19881.png" srcset="/img/loading.gif"></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../style/Titles.css&quot;</span><br><span class="hljs-keyword">import</span> SubTitle <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./SubTitle&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Titles</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;&#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> titleInfo = [<br>            &#123;<br>                titleText: <span class="hljs-string">&quot;Title1&quot;</span>,<br>                id:<span class="hljs-number">1</span>,<br>                subTitleProps: [<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;百度&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.baidu.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;搜狗&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.sogou.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;360搜索&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.so.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;火狐&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://start.firefoxchina.cn/&quot;</span>, &#125;,<br>                ],<br>            &#125;,<br>            &#123;<br>                titleText: <span class="hljs-string">&quot;Title2&quot;</span>,<br>                id:<span class="hljs-number">2</span>,<br>                subTitleProps: [<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;百度&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.baidu.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;搜狗&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.sogou.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;360搜索&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.so.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;火狐&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://start.firefoxchina.cn/&quot;</span>, &#125;,<br>                ],<br>            &#125;,<br>            &#123;<br>                titleText: <span class="hljs-string">&quot;Title3&quot;</span>,<br>                id:<span class="hljs-number">3</span>,<br>                subTitleProps: [<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;百度&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.baidu.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;搜狗&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.sogou.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;360搜索&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.so.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;火狐&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://start.firefoxchina.cn/&quot;</span>, &#125;,<br>                ],<br>            &#125;,<br>            &#123;<br>                titleText: <span class="hljs-string">&quot;Title4&quot;</span>,<br>                id:<span class="hljs-number">4</span>,<br>                subTitleProps: [<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;百度&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.baidu.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;搜狗&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.sogou.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;360搜索&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://www.so.com/&quot;</span>, &#125;,<br>                    &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;火狐&quot;</span>, <span class="hljs-attr">href</span>: <span class="hljs-string">&quot;https://start.firefoxchina.cn/&quot;</span>, &#125;,<br>                ],<br>            &#125;,<br>        ]<br><br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div className=<span class="hljs-string">&quot;titleContainer&quot;</span>&gt;<br>                    &lt;div className=<span class="hljs-string">&quot;leftPlaceHolder&quot;</span>&gt;&lt;/div&gt;<br>                    &lt;div className=<span class="hljs-string">&quot;rightPlaceHolder&quot;</span>&gt;<br>                        &#123;<br>                            titleInfo.map(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> &#123;<br>                                <span class="hljs-keyword">return</span> (<br>                                    &lt;SubTitle<br>                                        key=&#123;index&#125;<br>                                        titleText=&#123;item.titleText&#125;<br>                                        params=&#123;item.subTitleProps&#125;<br>                                        index=&#123;item.id&#125;<br>                                        /&gt;)<br>                            &#125;)<br>                        &#125;<br>                    &lt;/div&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Titles;<br></code></pre></td></tr></table></figure>
+
+<h4 id="重难点分析-1"><a href="#重难点分析-1" class="headerlink" title="重难点分析"></a>重难点分析</h4><p><strong>组件使用思想</strong><br>React 尽量将具有相同功能的组件单独编写，一些内容变化可以通过传参的方式，事先声明存储内容的参数数组进行遍历，如上述代码所示。若功能完全一致的组件可以声明为高阶组件进行复用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript">titleInfo.map(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> (<br>        &lt;SubTitle<br>            key=&#123;index&#125;<br>            titleText=&#123;item.titleText&#125;<br>            params=&#123;item.subTitleProps&#125;<br>            index=&#123;item.id&#125;<br>            /&gt;)<br>&#125;)<br></code></pre></td></tr></table></figure>
+<ol>
+<li>注意 <code>&#123;&#125;</code>是需要用<code>return()</code>返回内容的，这里也可以用<code>()=&gt;()</code>的ES6写法，默认省略<code>return</code>，自动返回括号内的内容。</li>
+<li>通过传递<code>props</code>的方式修改通用组件<code>&lt;SubTitle /&gt;</code>中的部分内容，实现组件的高度复用。</li>
+<li>页面布局的小技巧：<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">&lt;div <span class="hljs-attribute">className</span>=<span class="hljs-string">&quot;leftPlaceHolder&quot;</span>&gt;&lt;/div&gt;<br>&lt;div <span class="hljs-attribute">className</span>=<span class="hljs-string">&quot;rightPlaceHolder&quot;</span>&gt;<br></code></pre></td></tr></table></figure>
+布局前实现用空<code>&lt;div&gt;</code>进行空间分配，再在相应空间内进行布局。</li>
+</ol>
+<h3 id="SubTitle-js"><a href="#SubTitle-js" class="headerlink" title="SubTitle.js"></a>SubTitle.js</h3><p><img src="/img/posts_img/20201213093842983_11703.png" srcset="/img/loading.gif"></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> React, &#123; Component &#125; from <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> DropdownTitle from <span class="hljs-string">&#x27;./DropdownTitle&#x27;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../style/SubTitle.css&quot;</span><br><span class="hljs-keyword">import</span> store from <span class="hljs-string">&#x27;../store/index&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SubTitle</span> <span class="hljs-title">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-keyword">constructor</span>(props) &#123;<br>        <span class="hljs-keyword">super</span>(props);<br>        <span class="hljs-keyword">this</span>.state = store.getState()<br>        <span class="hljs-keyword">this</span>.storeChange = <span class="hljs-keyword">this</span>.storeChange.bind(<span class="hljs-keyword">this</span>)<br>        store.subscribe(<span class="hljs-keyword">this</span>.storeChange)<br><br>        <span class="hljs-keyword">this</span>.handleMouseOver = <span class="hljs-keyword">this</span>.handleMouseOver.bind(<span class="hljs-keyword">this</span>)<br>        <span class="hljs-keyword">this</span>.handleMouseOut = <span class="hljs-keyword">this</span>.handleMouseOut.bind(<span class="hljs-keyword">this</span>)<br>    &#125;<br><br>    handleMouseOver() &#123;<br>        <span class="hljs-keyword">const</span> action = &#123;<br>            type: <span class="hljs-string">&quot;open_isActive_delay&quot;</span>,<br>            id: <span class="hljs-keyword">this</span>.props.index,<br>        &#125;<br>        store.dispatch(action)<br>    &#125;<br><br>    handleMouseOut() &#123;<br>        <span class="hljs-keyword">const</span> delayAction = () =&gt; (dispatch, getState) =&gt; &#123;<br>            <span class="hljs-comment">// setTimeout里用箭头函数调用dispatch函数，目的是绑定this，这里不能用bind方法，因为这样绑定的this是全局的，无效</span><br>            let timer = setTimeout(() =&gt; &#123; dispatch(&#123; type: <span class="hljs-string">&quot;close_isActive_delay&quot;</span> &#125;) &#125;, <span class="hljs-number">300</span>)<br>            console.log(<span class="hljs-keyword">this</span>.state.isActive)<br>            dispatch(&#123; type: <span class="hljs-string">&quot;add_timer&quot;</span>, timer &#125;)<br>        &#125;<br>        store.dispatch(delayAction())<br>    &#125;<br><br>    storeChange() &#123;<br>        <span class="hljs-keyword">this</span>.setState(store.getState())<br>    &#125;<br><br>    render() &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div className=<span class="hljs-string">&quot;subTitleContainer&quot;</span>&gt;<br>                &lt;div&gt;<br>                    &lt;a<br>                        className=<span class="hljs-string">&quot;textFont&quot;</span><br>                        onMouseOver=&#123;(e) =&gt; &#123;<br>                            <span class="hljs-keyword">this</span>.handleMouseOver()<br>                        &#125;&#125;<br>                        onMouseOut=&#123;(e) =&gt; &#123;<br>                            <span class="hljs-keyword">this</span>.handleMouseOut()<br>                        &#125;&#125;<br>                        <span class="hljs-comment">//this.state.id是鼠标移动到某一title时传递的id</span><br>                        <span class="hljs-comment">//this.props.index是组件遍历渲染时分配的id</span><br>                        <span class="hljs-comment">//即当两者相匹配时，证明该title被鼠标激活，此时修改样式</span><br>                        <span class="hljs-comment">//将其他title从白色设为灰色，同时将激活的title设为天蓝色</span><br>                        style=&#123;<br>                            <span class="hljs-keyword">this</span>.state.isActive ?<br>                                ((<span class="hljs-keyword">this</span>.state.id === <span class="hljs-keyword">this</span>.props.index) ?&#123; color: <span class="hljs-string">&quot;#44DAFF&quot;</span> &#125; : &#123; color: <span class="hljs-string">&quot;#666666&quot;</span> &#125;)<br>                                : &#123; color: <span class="hljs-string">&quot;white&quot;</span> &#125;<br>                        &#125;<br>                    &gt;&#123;<span class="hljs-keyword">this</span>.props.titleText&#125;&lt;/a&gt;<br>                &lt;/div&gt;<br>                &lt;DropdownTitle<br>                    params=&#123;<span class="hljs-keyword">this</span>.props.params&#125;<br>                    index=&#123;<span class="hljs-keyword">this</span>.props.index&#125;<br>                /&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br>export default SubTitle;<br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">redux中怎么使用setTimeout? redux-thunk中间件</span><br><span class="hljs-comment">此处用setTimeout()做延迟操作，使用户有足够时间移动到子选项</span><br><span class="hljs-comment">注意omMouseOut里面的异步操作，setTimeout执行时，会执行this.setState()，而非等待setTimeout执行完。</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="重难点分析-2"><a href="#重难点分析-2" class="headerlink" title="重难点分析"></a>重难点分析</h4><p><strong>Redux-thunk</strong><br>在导航栏设计时需要考虑用户拖动鼠标的时间，假设不设置 setTimeout 延时，会导致用户鼠标离开标题后，直接触发 onMouseOut 事件，将导航栏关闭，无法点击导航栏的子选项。因此我们要给用户一定的时间从主标题移动到子标题，当用户移动到子标题时，触发子标题上的 onMouseOver 事件，清除 setTimeout 延时并维持 isActive 状态为 true。<br>由于涉及到多级的状态管理，因此使用了 Redux ，但是在 Redux 中<code>const action = &#123;type:&quot;...&quot;,...&#125;</code>只能传递对象，无法加入 <code>setTimeout()</code> 异步函数，因此我们又需要引入中间件Redux-thunk。thunk 中间件主要处理一些状态的异步操作问题：例如 setTimeout 延时, axios 请求等。<br><strong>thunk 的基础和原理在这里不过多的介绍，可以参考：</strong><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/152237565">redux-thunk最简单的讲解，7行代码用就完事了</a><br>精炼：<br><strong>执行同步action：</strong></p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">decrement</span>(<span class="hljs-params"></span>)</span>&#123;<br>  <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;INCREMENT&#x27;</span>, <span class="hljs-attr">payload</span>: <span class="hljs-number">1</span> &#125;<br>&#125;<br>const mapDispatchToProps = <span class="hljs-function">(<span class="hljs-params">dispatch</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">return</span> &#123;<br>     increment: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> dispatch(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;INCREMENT&#x27;</span>, <span class="hljs-attr">payload</span>: <span class="hljs-number">1</span>&#125;),<br>     decrement: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> dispatch( decrement() )<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>执行异步action：</strong></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">const delayAction =<span class="hljs-function"> <span class="hljs-params">()</span> =&gt;</span><span class="hljs-function"> (<span class="hljs-params">dispatch</span>, <span class="hljs-params">getState</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">let</span> timer = set<span class="hljs-constructor">Timeout(()</span> =&gt; &#123; dispatch(&#123; <span class="hljs-keyword">type</span>: <span class="hljs-string">&quot;close_isActive_delay&quot;</span> &#125;) &#125;, <span class="hljs-number">300</span>)<br>    dispatch(&#123; <span class="hljs-keyword">type</span>: <span class="hljs-string">&quot;add_timer&quot;</span>, timer &#125;)<br>&#125;<br>store.dispatch(delay<span class="hljs-constructor">Action()</span>)<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>注意事项<br>dispatch内必须是一个扁平化的object，或者是能直接返回一个{type:’REDUCERS’,payload:data}的函数</p>
+</blockquote>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/290001259/answer/467650797">在什么场景下需要用到redux的middleware,thunk？</a><br>精炼：<br>thunk 函数接收两个参数，其都是 Redux 的方法名</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs coq">(dispatch, getState) =&gt; &#123;&#125;<br></code></pre></td></tr></table></figure>
+<p>thunk 可以通过 getState 方法获取 store 仓库中的所有状态，并可以在执行完自定义函数操作后将结果 dispatch 到 store 仓库中。</p>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/85403048">理解redux-thunk</a><br><a target="_blank" rel="noopener" href="https://jspang.com/detailed?id=48#toc264">技术胖-Redux-thunk</a><br>thunk 的使用方法：</p>
+<ol>
+<li>安装 redux-thunk<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">npm <span class="hljs-keyword">install</span> <span class="hljs-comment">--save redux-thunk</span><br></code></pre></td></tr></table></figure></li>
+<li>配置 redux-thunk<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">//在redux中使用中间件，首先要引入applyMiddleware</span><br><span class="hljs-keyword">import</span> &#123; createStore , applyMiddleware &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux&#x27;</span> <br><span class="hljs-comment">//引入redux-thunk库</span><br><span class="hljs-keyword">import</span> thunk <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux-thunk&#x27;</span><br><span class="hljs-comment">//创建数据存储仓库</span><br><span class="hljs-keyword">const</span> store = createStore( reducer, applyMiddleware(thunk))<br></code></pre></td></tr></table></figure></li>
+<li>使用 thunk<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">const func1 = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (dispatch, getState) =&gt; &#123;<br>    let timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; dispatch(&#123; type: <span class="hljs-string">&quot;close_isActive_delay&quot;</span> &#125;) &#125;, <span class="hljs-number">300</span>)<br>    dispatch(&#123; type: <span class="hljs-string">&quot;add_timer&quot;</span>, timer &#125;)<br>&#125;<br>store.dispatch(func1())<br></code></pre></td></tr></table></figure>
+这里创建一个func1的函数，其返回一个 <strong>thunk 函数</strong>，thunk 函数接收两个参数，并在内部写业务逻辑，得到的 action 对象通过 dispatch 注入，并最后将 thunk 函数通过 dispatch 注入到 store 中。这里有一个点需要注意：即为什么要在 thunk 函数外嵌套一层函数，而不是直接将 thunk 函数注入到 store 中？这是因为外层嵌套函数后可以传入一些自定义的参数，由于 thunk 函数接收的两个参数是固定的，因此就有必要嵌套一层函数使得 thunk 函数可以使用用户自定义的一些业务逻辑参数，例如<code>const func1 = (myname) =&gt; (dispatch, getState) =&gt; &#123;...&#125;</code></li>
+</ol>
+<p><strong>注意<code>store.dispatch(func1())</code>中注入的是函数的调用而非函数名。</strong><br>当然上述函数定义也可以写为：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">const func1 = <span class="hljs-function"><span class="hljs-params">(xxx)</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> (<br>        (dispatch, getState) =&gt; &#123;<br>            let timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; dispatch(&#123; type: <span class="hljs-string">&quot;close_isActive_delay&quot;</span> &#125;) &#125;, <span class="hljs-number">300</span>)<br>            dispatch(&#123; type: <span class="hljs-string">&quot;add_timer&quot;</span>, timer &#125;)<br>        &#125;<br>    )<br>&#125;<br>store.dispatch(func1())<br></code></pre></td></tr></table></figure>
+
+<h3 id="DropdownMenu-js"><a href="#DropdownMenu-js" class="headerlink" title="DropdownMenu.js"></a>DropdownMenu.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> &#123; createPortal &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../style/DropdownMenu.css&quot;</span><br><span class="hljs-keyword">import</span> &#123; CSSTransition &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-transition-group&#x27;</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../store/index&#x27;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DropdownMenu</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;&#125;<br>        <span class="hljs-keyword">const</span> dom = <span class="hljs-built_in">window</span>.document<br>        <span class="hljs-built_in">this</span>.node = dom.createElement(<span class="hljs-string">&quot;div&quot;</span>)<br>        dom.body.appendChild(<span class="hljs-built_in">this</span>.node)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">componentWillUnmount</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">window</span>.document.body.removeChild(<span class="hljs-built_in">this</span>.node)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> createPortal((<br>            &lt;div<br>                className=<span class="hljs-string">&quot;menuContainer&quot;</span><br>            &gt;<br>                &lt;CSSTransition<br>                    <span class="hljs-keyword">in</span>=&#123;<span class="hljs-built_in">this</span>.props.isActive&#125;<br>                    timeout=&#123;<span class="hljs-number">200</span>&#125;<br>                    classNames=&#123;&#123;<br>                        enter: <span class="hljs-string">&quot;menuEnter&quot;</span>,<br>                        enterActive: <span class="hljs-string">&quot;menuEnterActive&quot;</span>,<br>                        enterDone: <span class="hljs-string">&quot;menuEnterDone&quot;</span>,<br>                        exit: <span class="hljs-string">&quot;menuExit&quot;</span>,<br>                        exitActive: <span class="hljs-string">&quot;menuExitActive&quot;</span>,<br>                        exitDone: <span class="hljs-string">&quot;menuExitDone&quot;</span>,<br>                    &#125;&#125;<br>                &gt;<br>                    &lt;div className=<span class="hljs-string">&quot;dropDownMenu&quot;</span>&gt;&lt;/div&gt;<br>                &lt;/CSSTransition&gt;<br>            &lt;/div&gt;<br>        ), <span class="hljs-built_in">this</span>.node);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> DropdownMenu;<br></code></pre></td></tr></table></figure>
+<h4 id="重难点分析-3"><a href="#重难点分析-3" class="headerlink" title="重难点分析"></a>重难点分析</h4><p>主要实践了 React-Portal，其实这里可以用脱离文档流加定位的方式实现，只是单纯的为练习而使用，React-Portal 具体使用可以参考先前的文章。</p>
+<h2 id="页面滚动动画"><a href="#页面滚动动画" class="headerlink" title="页面滚动动画"></a>页面滚动动画</h2><h3 id="PageOneText-js"><a href="#PageOneText-js" class="headerlink" title="PageOneText.js"></a>PageOneText.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../style/page1/PageOne.css&quot;</span><br><span class="hljs-keyword">import</span> &#123; Typography &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;antd&#x27;</span>;<br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../store&#x27;</span>; <span class="hljs-comment">//可省略index.js</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../style/page1/PageOne.css&quot;</span><br><span class="hljs-keyword">import</span> testImg <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../images/testImg.jpg&#x27;</span><br><br><span class="hljs-keyword">const</span> &#123; Title &#125; = Typography;<br><span class="hljs-keyword">const</span> &#123; Paragraph &#125; = Typography;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageOneText</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = store.getState()<br>        <span class="hljs-built_in">this</span>.storeChange = <span class="hljs-built_in">this</span>.storeChange.bind(<span class="hljs-built_in">this</span>)<br>        store.subscribe(<span class="hljs-built_in">this</span>.storeChange)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">handleScroll</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.documentElement.scrollTop &gt; <span class="hljs-number">900</span>) &#123;<br>            <span class="hljs-keyword">const</span> action = &#123;<br>                type: <span class="hljs-string">&quot;handle_scroll&quot;</span>,<br>            &#125;<br>            store.dispatch(action)<br>        &#125;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.documentElement.scrollTop &lt; <span class="hljs-number">550</span>) &#123;<br>            <span class="hljs-keyword">const</span> action = &#123;<br>                type: <span class="hljs-string">&quot;handle_noscroll&quot;</span>,<br>            &#125;<br>            store.dispatch(action)<br>        &#125;<br>        <span class="hljs-comment">// console.log(document.documentElement.scrollTop)</span><br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">storeChange</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">this</span>.setState(store.getState())<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">componentDidMount</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-comment">// 挂载 onscroll 监听事件，object.onscroll = function()</span><br>        <span class="hljs-built_in">window</span>.onscroll = <span class="hljs-function">() =&gt;</span> &#123; <span class="hljs-built_in">this</span>.handleScroll() &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div className=<span class="hljs-string">&quot;textContainer&quot;</span>&gt;<br>                &lt;img className=&#123;<span class="hljs-string">`<span class="hljs-subst">$&#123;<span class="hljs-built_in">this</span>.state.pgoneClassNames.img&#125;</span>`</span>&#125; src=&#123;testImg&#125; alt=<span class="hljs-string">&quot;&quot;</span> /&gt;<br>                &lt;Title className=&#123;<span class="hljs-string">`title <span class="hljs-subst">$&#123;<span class="hljs-built_in">this</span>.state.pgoneClassNames.title&#125;</span>`</span>&#125;&gt;&#123;<span class="hljs-built_in">this</span>.props.title&#125;&lt;/Title&gt;<br>                &lt;Paragraph<br>                    ellipsis=&#123;&#123; <span class="hljs-attr">rows</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">expandable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">symbol</span>: <span class="hljs-string">&#x27;more&#x27;</span> &#125;&#125;<br>                    className=&#123;<span class="hljs-string">`texts paragraph <span class="hljs-subst">$&#123;<span class="hljs-built_in">this</span>.state.pgoneClassNames.text&#125;</span>`</span>&#125;<br>                &gt;<br>                    &#123;<span class="hljs-built_in">this</span>.props.text&#125;<br>                &lt;/Paragraph&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> PageOneText;<br><br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment">页面滚动动画机制：</span><br><span class="hljs-comment">页面滚动时界面会不断渲染，因此在componentDidMount生命周期中可以监听scrollTop页面位置，作为动画入场条件。</span><br><span class="hljs-comment">*/</span><br></code></pre></td></tr></table></figure>
+<h4 id="重难点分析-4"><a href="#重难点分析-4" class="headerlink" title="重难点分析"></a>重难点分析</h4><p><strong>页面滚动事件</strong></p>
+<ol>
+<li>处理页面滚动的函数<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">handleScroll</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">if</span> (document<span class="hljs-selector-class">.documentElement</span><span class="hljs-selector-class">.scrollTop</span> &gt; <span class="hljs-number">900</span>) &#123;<br>        const action = &#123;<br>            type: <span class="hljs-string">&quot;handle_scroll&quot;</span>,<br>        &#125;<br>        store.dispatch(action)<br>    &#125;<br>    <span class="hljs-keyword">if</span> (document<span class="hljs-selector-class">.documentElement</span><span class="hljs-selector-class">.scrollTop</span> &lt; <span class="hljs-number">550</span>) &#123;<br>        const action = &#123;<br>            type: <span class="hljs-string">&quot;handle_noscroll&quot;</span>,<br>        &#125;<br>        store.dispatch(action)<br>    &#125;<br>    <span class="hljs-comment">// console.log(document.documentElement.scrollTop)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/documentElement">document.documentElement</a>返回document文档的根节点元素，例如HTML文档则返回<code>&lt;html&gt;</code>元素节点。<br>通过<code>document.documentElement.scrollTop</code>可以获得HTML文档滚动条距离其顶部的高度，由于显示分辨率的不同，scrollTop也不同，具体调试滚动阈值的时候可以通过<code>console.log(document.documentElement.scrollTop)</code>来实时打印确定。</li>
+</ol>
+<blockquote>
+<p>题外话：document.documentElement和document.body区别<br>body是DOM对象里的body子节点，即body标签<br>documentElement 是整个节点树的根节点root</p>
+</blockquote>
+<ol start="2">
+<li>挂载监听事件<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">componentDidMount</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-comment">// 挂载 onscroll 监听事件，object.onscroll = function()</span><br>    <span class="hljs-built_in">window</span>.onscroll = <span class="hljs-function">() =&gt;</span> &#123; <span class="hljs-built_in">this</span>.handleScroll() &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+上述<code>handleScroll()</code>只定义了监听事件的处理函数，我们还需要在合适的位置将监听函数挂载。通常用<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/onscroll">window.onScroll</a>为当前页面的页面滚动事件添加事件处理函数。<br>我们将页面滚动监听放在<code>componentDidMount</code>中，在页面组件渲染完成后挂载监听事件，当用户滚动页面时会不断触发监听事件所添加的事件处理函数<code>handleScroll</code>，当滚动距离超过阈值时，执行动画操作。</li>
+</ol>
+<h3 id="PageOne-js"><a href="#PageOne-js" class="headerlink" title="PageOne.js"></a>PageOne.js</h3><p>用于包裹<code>&lt;PageOneText /&gt;</code>组件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../../style/page1/PageOne.css&quot;</span><br><span class="hljs-keyword">import</span> PageOneText <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./PageOneText&#x27;</span><br><span class="hljs-keyword">import</span> testImg <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../images/testImg.jpg&#x27;</span><br><span class="hljs-keyword">import</span> pgoneBackground <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../../images/pgoneBackground.png&#x27;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageOne</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;&#125;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> itemList = [<br>            &#123;<br>                title: <span class="hljs-string">&quot;h1. Title1&quot;</span>,<br>                text: <span class="hljs-string">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\</span><br><span class="hljs-string">                XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\</span><br><span class="hljs-string">                XXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxx\</span><br><span class="hljs-string">                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\</span><br><span class="hljs-string">                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>,<br>                imgSrc: testImg,<br>            &#125;,<br>            &#123;<br>                title: <span class="hljs-string">&quot;h2. Title2&quot;</span>,<br>                text: <span class="hljs-string">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\</span><br><span class="hljs-string">                XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\</span><br><span class="hljs-string">                XXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxx\</span><br><span class="hljs-string">                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\</span><br><span class="hljs-string">                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>,<br>                imgSrc: testImg,<br>            &#125;,<br>            &#123;<br>                title: <span class="hljs-string">&quot;h3. Title3&quot;</span>,<br>                text: <span class="hljs-string">&quot;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\</span><br><span class="hljs-string">                XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\</span><br><span class="hljs-string">                XXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxx\</span><br><span class="hljs-string">                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\</span><br><span class="hljs-string">                xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;</span>,<br>                imgSrc: testImg,<br>            &#125;,<br>        ]<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div className=<span class="hljs-string">&quot;pgOnePlaceholder&quot;</span>&gt;<br>                &lt;img<br>                    src=&#123;pgoneBackground&#125;<br>                    style=&#123;&#123;<br>                        opacity: <span class="hljs-number">1</span>,<br>                        width: <span class="hljs-string">&quot;100%&quot;</span>,<br>                        height: <span class="hljs-string">&quot;100%&quot;</span>,<br>                        position: <span class="hljs-string">&quot;absolute&quot;</span>, <span class="hljs-comment">//脱离文档流，但是基于父级position:&quot;relative&quot;定位，置于背景的一种方法</span><br>                    &#125;&#125;<br>                    alt=<span class="hljs-string">&quot;&quot;</span> /&gt;<br>                &#123;<br>                    itemList.map(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> (<br>                        &lt;PageOneText<br>                            key=&#123;index&#125;<br>                            imgSrc=&#123;item.imgSrc&#125;<br>                            title=&#123;item.title&#125;<br>                            text=&#123;item.text&#125; /&gt;<br>                    ))<br>                &#125;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> PageOne;<br></code></pre></td></tr></table></figure>
+
+
+<h1 id="CSS-动画"><a href="#CSS-动画" class="headerlink" title="CSS 动画"></a>CSS 动画</h1><p>关于 CSS 动画，这里单独拿出一块来讲，因为这块踩的坑比较多。<br>我在使用 CSS 动画时，前期采用了 React 官方的一个动画库 <code>react-transition-group</code> ，但是由于教程比较少，一些问题得不到解决，所以后面改用了 CSS 的 keyframe 帧动画。</p>
+<h2 id="CSSTransition"><a href="#CSSTransition" class="headerlink" title="CSSTransition"></a>CSSTransition</h2><p><a target="_blank" rel="noopener" href="https://reactcommunity.org/react-transition-group/css-transition">react-transition-group CSSTransition</a><br>使用方法：</p>
+<ol>
+<li>安装 react-transition-group<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs q">npm install --<span class="hljs-built_in">save</span> react-transition-<span class="hljs-built_in">group</span><br></code></pre></td></tr></table></figure></li>
+<li>配置 react-transition-group<figure class="highlight capnproto"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs capnproto"><span class="hljs-keyword">import</span> &#123; CSSTransition &#125; <span class="hljs-keyword">from</span> &#x27;react-transition-<span class="hljs-keyword">group</span>&#x27;<br></code></pre></td></tr></table></figure></li>
+<li>使用 CSSTransition<br>用<code>&lt;CSSTransition&gt;&lt;/ CSSTransition&gt;</code>标签包裹需要动画的组件(只能是一个整体，即多个子组件需要用<code>&lt;div&gt;</code>包裹)<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">CSSTransition</span></span><br><span class="hljs-tag">    <span class="hljs-attr">in</span>=<span class="hljs-string">&#123;&#125;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">classNames</span>=<span class="hljs-string">&#123;&#125;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">timeout</span>=<span class="hljs-string">&#123;200&#125;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">onEnter</span>=<span class="hljs-string">&#123;(el)</span>=&gt;</span>(...)&#125;<br>    ...<br>&gt;<br>    <span class="hljs-tag">&lt;<span class="hljs-name">subComponent</span> /&gt;</span><br><span class="hljs-tag">&lt;/ <span class="hljs-attr">CSSTransition</span>&gt;</span><br></code></pre></td></tr></table></figure>
+<code>&lt;CSSTransition&gt;</code> 标签参数参考官方文档，必要的参数为<code>in, classNames, timeout</code>，in 参数接收 true/false，表示动画执行的条件；classNames 参数设定动画的CSS样式；timeout 设定动画执行时间。<br>classNames 要区别于 className，其次，classNames 有两种声明方式：<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs clean">classNames = &#123;&#123;<br>    enter: <span class="hljs-string">&quot;xx&quot;</span>,<br>    enterActive: <span class="hljs-string">&quot;xxx&quot;</span>,<br>    enterDone: <span class="hljs-string">&quot;xxxx&quot;</span>,<br>&#125;&#125;<br>##########<br>.xx &#123;&#125;<br>.xxx &#123;&#125;<br>.xxxx &#123;&#125;<br></code></pre></td></tr></table></figure>
+或者<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs clean">classNames = <span class="hljs-string">&quot;xx&quot;</span><br>##########<br>.xx-enter &#123;&#125;<br>.xx-enter-active &#123;&#125;<br>.xx-enter-done &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="使用CSSTransition的一些坑"><a href="#使用CSSTransition的一些坑" class="headerlink" title="使用CSSTransition的一些坑"></a>使用CSSTransition的一些坑</h2><p>无法设置目标的初始状态，例如一些淡入淡出的效果，目标未进行动画的时候理论上应该隐藏在用户视野之外。但在使用CSSTransition动画时，若设置目标 <code>opacity:0</code>，则无法播放动画效果。<br><strong>可能原因：</strong><br>目标还未挂载渲染时候，<code>&lt;CSSTransition&gt;</code>已经挂载，后续的CSS样式遮盖了动画效果。目前没有什么比较好的解决方法。此外，目标组件内容若是接收传递的props，也会出现上述问题。因此，在PageOne 页面制作的时候，采用了 keyframe 帧动画。</p>
+<h1 id="CSS-Keyframes"><a href="#CSS-Keyframes" class="headerlink" title="CSS Keyframes"></a>CSS Keyframes</h1><p>参考链接：<br><a target="_blank" rel="noopener" href="https://www.w3cplus.com/css3/CSS3-animation.html">CSS动画 </a></p>
+<h2 id="定义关键帧"><a href="#定义关键帧" class="headerlink" title="定义关键帧"></a>定义关键帧</h2><p><code>@keyframes 关键帧名称 &#123;&#125;</code><br>其中 <code>0%, 100%</code> 代表关键帧位置；<code>opacity</code> 表示透明度，<code>transform</code> 表示相对于目标初始位置的位移。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-keyword">@keyframes</span> leftToRight &#123;<br>    0%&#123;<br>        <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0</span>;<br>        <span class="hljs-attribute">transform</span>:<span class="hljs-built_in">translateX</span>(-<span class="hljs-number">100%</span>);<br>    &#125;<br>    100%&#123;<br>        <span class="hljs-attribute">opacity</span>: <span class="hljs-number">1</span>;<br>        <span class="hljs-attribute">transform</span>:<span class="hljs-built_in">translateX</span>(<span class="hljs-number">0</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">@keyframes</span> topToBottom &#123;<br>    0%&#123;<br>        <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0</span>;<br>        <span class="hljs-attribute">transform</span>:<span class="hljs-built_in">translateY</span>(-<span class="hljs-number">100%</span>);<br>    &#125;<br>    100%&#123;<br>        <span class="hljs-attribute">opacity</span>: <span class="hljs-number">1</span>;<br>        <span class="hljs-attribute">transform</span>:<span class="hljs-built_in">translateY</span>(<span class="hljs-number">0</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="定义animation动画"><a href="#定义animation动画" class="headerlink" title="定义animation动画"></a>定义animation动画</h2><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/cssref/pr_animation.asp">CSS3 animation</a><br><code>animation: name duration timing-function delay iteration-count direction fill-mode;</code>包含以下几个参数：</p>
+<ol>
+<li>name: keyframes 的动画样式名称</li>
+<li>duration: 动画时长</li>
+<li>timing-function: ease-in 快进慢出；ease-out 慢进快出；ease-in-out；…</li>
+<li>delay：动画延迟，等待n秒后开始动画 <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/cssref/pr_animation-delay.asp">animation-delay</a></li>
+<li>iteration-count：循环播放次数</li>
+<li>direction：方向</li>
+<li>fill-mode：规定动画在播放之前或之后，其动画效果是否可见。 none | forwards | backwards | <strong>both</strong>; <a target="_blank" rel="noopener" href="https://www.w3school.com.cn/cssref/pr_animation-fill-mode.asp">CSS3 animation-fill-mode</a></li>
+</ol>
+<p>其中 animation-fill-mode 是解决动画目标初始化的关键，当 animation-fill-mode 设定为 both 时，以上述代码为例，动画播放前，目标元素动画效果可见，其为<code>opacity:0; transform:translateX(-100%)</code>，即隐藏，而动画播放结束后，目标元素动画效果将会停留在关键帧<code>100%</code>的地方，即显示。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.item_row</span> &#123;<br>    <span class="hljs-attribute">animation</span>: leftToRight <span class="hljs-number">1000ms</span> both ease-out;<br>&#125;<br><br><span class="hljs-selector-class">.item_delay_row</span> &#123;<br>    <span class="hljs-attribute">animation</span>: leftToRight <span class="hljs-number">1000ms</span> ease-out <span class="hljs-number">100ms</span> both;<br>&#125;<br><br><span class="hljs-selector-class">.item_column</span> &#123;<br>    <span class="hljs-attribute">animation</span>: topToBottom <span class="hljs-number">1500ms</span> both ease-out;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="定义触发动画的监听事件"><a href="#定义触发动画的监听事件" class="headerlink" title="定义触发动画的监听事件"></a>定义触发动画的监听事件</h2><p>监听事件由上述的页面滚动触发。首先我们需要设定一个充当占位的样式(可为空)，此处<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/cssref/pr_class_visibility.asp">visibility</a>设为hidden表示该元素不可见但仍保留其布局空间。当监听事件触发时，我们向className中添加相应动画的CSS样式，替换原有的占位样式即可。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-class">.hidden</span> &#123;<br>    <span class="hljs-attribute">visibility</span>: hidden;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&#123;</span>`$&#123;<span class="hljs-attr">this.state.pgoneClassNames.img</span>&#125;`&#125; <span class="hljs-attr">src</span>=<span class="hljs-string">&#123;testImg&#125;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;&quot;</span> /&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Title</span> <span class="hljs-attr">className</span>=<span class="hljs-string">&#123;</span>`<span class="hljs-attr">title</span> $&#123;<span class="hljs-attr">this.state.pgoneClassNames.title</span>&#125;`&#125;&gt;</span>&#123;this.props.title&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">Title</span>&gt;</span></span><br><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Paragraph</span></span></span><br><span class="xml">    ellipsis=</span><span class="hljs-template-variable">&#123;&#123; <span class="hljs-name">rows:</span> <span class="hljs-number">5</span>, expandable: <span class="hljs-literal">true</span>, symbol: <span class="hljs-string">&#x27;more&#x27;</span> &#125;&#125;</span><br><span class="xml">    className=&#123;`texts paragraph $&#123;this.state.pgoneClassNames.text&#125;`&#125;</span><br><span class="xml">&gt;</span><br><span class="xml">    &#123;this.props.text&#125;</span><br><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">Paragraph</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+<p>采用 CSS Keyframes 的另一个好处是能够将动画 CSS 样式和初始 CSS 样式分开，例如下述代码<code>title $&#123;xxx&#125;</code>，用 ES6 模板字符串的方式，title 是固定的初始样式，<code>$&#123;xxx&#125;</code>内可以传入动态的动画样式。</p>
+<h1 id="CSS-样式布局心得"><a href="#CSS-样式布局心得" class="headerlink" title="CSS 样式布局心得"></a>CSS 样式布局心得</h1><p>调整CSS样式心得：</p>
+<ol>
+<li>从网页打开F12，选择元素查看其className进行定位。</li>
+<li>width,height 宽高100%(或百分比设置)针对的是上一级元素(父级元素)，<br>因此若多余空白的<div>包裹应将其删除，或者将上级空白div设置宽高100%。</div></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/React/">React</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/CSS/">CSS</a>
+                    
+                      <a class="hover-with-bg" href="/tags/React/">React</a>
+                    
+                      <a class="hover-with-bg" href="/tags/React-Portal/">React-Portal</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Redux/">Redux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Redux-thunk/">Redux-thunk</a>
+                    
+                      <a class="hover-with-bg" href="/tags/CSS-animation/">CSS-animation</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/06/CSS%E5%9F%BA%E7%A1%80/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CSS基础</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/08/hexo%E5%8D%9A%E5%AE%A2%E5%A4%87%E4%BB%BD/">
+                        <span class="hidden-mobile">hexo博客备份</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/12/12/%E7%BD%91%E9%A1%B5%E8%AE%BE%E8%AE%A1/';
+        this.page.identifier = '/2020/12/12/%E7%BD%91%E9%A1%B5%E8%AE%BE%E8%AE%A1/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

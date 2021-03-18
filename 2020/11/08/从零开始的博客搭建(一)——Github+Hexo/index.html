@@ -1,0 +1,656 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="前言创建博客的初衷是为了记录和总结自己的学习心得，也希望将自己的一些经历分享给同样在努力奋斗的你。本篇将带着你一步步搭建专属于你的博客网站。在学习之前，你需要具备以下前提：1. 拥有一个专属于你的GitHub 2. 电脑上需安装有Git 3. 需要安装node.js并完成相应的环境配置">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>从零开始的博客(一) - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="从零开始的博客(一)">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-08 19:22" pubdate>
+        2020年11月8日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">从零开始的博客(一)</h1>
+            
+            <div class="markdown-body">
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>创建博客的初衷是为了记录和总结自己的学习心得，也希望将自己的一些经历分享给同样在努力奋斗的你。本篇将带着你一步步搭建专属于你的博客网站。在学习之前，你需要具备以下前提：1. 拥有一个专属于你的GitHub 2. 电脑上需安装有Git 3. 需要安装node.js并完成相应的环境配置</p>
+<a id="more"></a>
+
+<h1 id="从零开始的博客搭建-一-——GitHub-Hexo"><a href="#从零开始的博客搭建-一-——GitHub-Hexo" class="headerlink" title="从零开始的博客搭建(一)——GitHub+Hexo"></a>从零开始的博客搭建(一)——GitHub+Hexo</h1><p><strong><em>努力的意义就是以后的日子，放眼望去全部都是自己喜欢的人和事。</em></strong></p>
+<hr>
+<p>创建博客的初衷是为了记录和总结自己的学习心得，也希望将自己的一些经历分享给同样在努力奋斗的你。本篇将带着你一步步搭建专属于你的博客网站。<br><strong>在学习之前，你需要具备以下前提：</strong></p>
+<p><strong>1. 拥有一个专属于你的GitHub</strong><br><strong>2. 电脑上需安装有Git</strong><br><strong>3. 需要安装node.js并完成相应的环境配置</strong></p>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>Hexo 是目前比较常用的静态博客搭建框架，除 Hexo 外，比较常用的还有 jekyll, hugo 等，可以酌情选择，本篇则以 GitHub + Hexo 搭建博客。</p>
+<h3 id="第一步：在GitHub上创建仓库"><a href="#第一步：在GitHub上创建仓库" class="headerlink" title="第一步：在GitHub上创建仓库"></a>第一步：在GitHub上创建仓库</h3><p>登录你的 GitHub 账号，进入该页面：</p>
+<p><img src="/img/posts_img/20201108195954111_21042.png" srcset="/img/loading.gif"></p>
+<p>进入 Repository 仓库，点击 New 创建新的仓库，转入下图页面。</p>
+<p><img src="/img/posts_img/20201108200309207_10161.png" srcset="/img/loading.gif"></p>
+<p>你需要填写仓库名称**(你的用户名+<code>.github.io</code>)**，然后点击创建 Create repository 即可。</p>
+<h3 id="第二步：安装Hexo"><a href="#第二步：安装Hexo" class="headerlink" title="第二步：安装Hexo"></a>第二步：安装Hexo</h3><p>首先在你想要存放博客文件的位置创建一个文件夹，例如我的博客在本机中的路径为 <code>G:\myBlog</code>，打开 myBlog 文件夹，鼠标右键打开 Git Bush Here (前提是你要成功安装Git)，输入 npm 命令安装 Hexo：<code>npm install -g hexo-cli</code>。<br>安装完成后，输入 <code>hexo init</code> 初始化博客。<br>其次，输入 <code>hexo g</code> 静态部署。<br>至此，网页已经部署完成了，我们可以输入 <code>hexo s</code> 命令查看，此时浏览器输入 <code>http://localhost:4000</code> 就可以查看到 Hexo 的初始页面啦。</p>
+<p><strong>小结：</strong></p>
+<ol>
+<li>新建文件夹，在该文件夹下右击打开 Git Bush Here</li>
+<li><code>npm install -g hexo-cli</code></li>
+<li><code>hexo init</code></li>
+<li><code>hexo g</code></li>
+<li><code>hexo s</code> (可跳过)</li>
+</ol>
+<blockquote>
+<p>啥？你问我 <code>hexo g</code> 和 <code>hexo s</code> 的具体作用？转载一下这篇博客，讲的很清楚啦，后续出现的一些命令这里也有说明：<a target="_blank" rel="noopener" href="https://blog.csdn.net/dxxzst/article/details/76135935">Hexo 常用命令</a></p>
+</blockquote>
+<h3 id="第三步：将Hexo部署到GitHub"><a href="#第三步：将Hexo部署到GitHub" class="headerlink" title="第三步：将Hexo部署到GitHub"></a>第三步：将Hexo部署到GitHub</h3><p>我们已经在 myBlog 中安装了 Hexo 框架，但这些仍是在本机上的一些操作，我们需要把它部署到之前创建的 GitHub 仓库上。<br>同样是在 myBlog 文件夹中，用笔记本的方式打开 <code>_config.yml</code> 文件。</p>
+<blockquote>
+<p>该文件配置了你博客的相关的内容，关于 <code>_config.yml</code> 文件中的配置参数解释，可以参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zemprogram/article/details/104288872">hexo根目录下的_config.yml配置解释</a><br><strong>所有参数中，冒号 <code>:</code> 后面都要带上空格。</strong></p>
+</blockquote>
+<p>将 <code>_config.yml</code> 文件下拉至底部，修改 deploy (部署)配置参数，如图：</p>
+<p><img src="/img/posts_img/20201108202628168_13089.png" srcset="/img/loading.gif"></p>
+<p>其中 type 为部署的方法，repository 为部署的仓库名称(即我们此前创建的仓库clone地址)，branch 为分支(默认主支 master)<br>repository 仓库地址直接从 clone 复制，首先进入你创建的仓库，然后按下步操作进行：</p>
+<p><img src="/img/posts_img/20201108203039449_16182.png" srcset="/img/loading.gif"></p>
+<p>回到 myBlog 文件夹中，右击 Git Bush Here，安装 Git 部署插件，输入命令 <code>npm install hexo-deployer-git --save</code>。<br>然后分别输入 <code>hexo clean</code>, <code>hexo g</code>, <code>hexo d</code>。<br>完成上述步骤后，打开浏览器，我们就可以用 <code>https://your_user_name.github.io</code> (此处为 <code>jtwang7.github.io</code>) 代替 <code>http://localhost:4000</code> 打开博客了。</p>
+<p><strong>小结：</strong></p>
+<ol>
+<li>打开 myBlog 目录中的 <code>_config.yml</code> 配置参数文件，修改 deploy 参数。</li>
+<li>在 myBlog 路径下，<code>npm install hexo-deployer-git --save</code></li>
+<li><code>hexo clean</code> #清除缓存文件 db.json 和已生成的静态文件 public</li>
+<li><code>hexo g</code> #生成网站静态文件到默认设置的 public 文件夹(hexo generate 的缩写)</li>
+<li><code>hexo d</code> #自动生成网站静态文件，并部署到设定的仓库(hexo deploy 的缩写)</li>
+</ol>
+<h3 id="第四步：购买-解析域名，制作个性化的访问地址"><a href="#第四步：购买-解析域名，制作个性化的访问地址" class="headerlink" title="第四步：购买/解析域名，制作个性化的访问地址"></a>第四步：购买/解析域名，制作个性化的访问地址</h3><p>走到上一步，我们已经可以用 <code>https://jtwang7.github.io</code> 访问博客了，但是本着对 .com 的执着，在<a target="_blank" rel="noopener" href="https://cloud.tencent.com/?fromSource=gwzcw.2212127.2212127.2212127&utm_medium=cpd&utm_id=gwzcw.2212127.2212127.2212127">腾讯云</a>上购买了一个 .com 的域名，具体购买过程就不细说了，按照网站提示操作就行，除了腾讯云外，也可以在<a target="_blank" rel="noopener" href="https://wanwang.aliyun.com/">万网</a>，<a target="_blank" rel="noopener" href="https://sg.godaddy.com/zh/offers/domains/godaddycom?isc=gennbacn07&countryview=1&currencyType=CNY&utm_source=baidu&utm_medium=cpc&utm_term=Title&utm_campaign=zh-cn_corp_sem_x_b_x_bz_001&utm_content=Brandzone%20PC&gclid=CIXh9LjPmecCFdOavAoddDkHcw&gclsrc=ds">Godaddy</a>上购买。<br>主要讲一下域名解析的一些过程，以腾讯云为例。<br>首先进入腾讯云控制台，点击域名注册进入域名控制台管理。</p>
+<p><img src="/img/posts_img/20201108204915553_22845.png" srcset="/img/loading.gif"></p>
+<p>第二步点击解析。</p>
+<p><img src="/img/posts_img/20201108204944145_13319.png" srcset="/img/loading.gif"></p>
+<p>第三步添加以下两条解析记录，其中 IPV4 地址可以通过ping得到，具体方法是：打开cmd输入下面命令：<code>ping jtwang7.github.io</code> #ping + 你的 GitHub 仓库地址</p>
+<p><img src="/img/posts_img/20201108205233329_15863.png" srcset="/img/loading.gif"></p>
+<p>至此，在腾讯云上的域名解析已经完成了，我们看到在记录里，有一个记录类型为 CNAME，接下来我们要打开 myBlog 文件夹的 source 文件夹，添加 CNAME 文件，可以先创建一个CNAME.txt文件，打开后写上你的域名，即你购买时申请的域名，(不要加www否则每次访问都必须加www，但如果不带有www，以后访问的时候带不带www都可以访问)，保存后记得要重命名，将.txt删除。</p>
+<p><img src="/img/posts_img/20201108205644657_21100.png" srcset="/img/loading.gif"><br><img src="/img/posts_img/20201108205702960_15023.png" srcset="/img/loading.gif"></p>
+<p>最后，回到 myBlog 文件夹下，依次输入 <code>hexo clean</code>, <code>hexo g</code>, <code>hexo d</code>。<br>打开 GitHub，查看 CNAME 文件是否在项目中，如图：</p>
+<p><img src="/img/posts_img/20201108210014793_7086.png" srcset="/img/loading.gif"></p>
+<p>若没有该文件，则点击 <code>Settings</code>，在 GitHub Pages 中查看域名是否保存，若域名没有自动填写，则手动将其填上并保存，则项目中会出现 CNAME 文件，若还没有 CNAME 文件，则点击 <code>Add file</code>，自行添加即可。</p>
+<p>![]/img/posts_img/20201108210255514_19277.png)<br>![]/img/posts_img/20201108210359154_32401.png)<br>![]/img/posts_img/20201108210335057_9425.png)</p>
+<p>现在，你可以用你自己的域名来访问博客了~</p>
+<p><strong>小结：</strong></p>
+<ol>
+<li>购买域名</li>
+<li>解析域名</li>
+<li>在 myBlog/source/ 中添加 CNAME 文件</li>
+<li>回到 myBlog 文件夹，Git Bush Here</li>
+<li><code>hexo clean</code></li>
+<li><code>hexo g</code></li>
+<li><code>hexo d</code></li>
+<li>检查 GitHub 是否有 CNAME 文件，若无，则在 GitHub 中添加域名</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/hexo/">hexo</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/hexo/">hexo</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/08/%E8%A7%A3%E5%86%B3hexo%E6%97%A0%E6%B3%95%E4%B8%8A%E4%BC%A0md%E4%B8%AD%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E7%9A%84%E9%97%AE%E9%A2%98/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">从零开始的博客</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/11/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA(%E4%B8%80)%E2%80%94%E2%80%94Github+Hexo/';
+        this.page.identifier = '/2020/11/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA(%E4%B8%80)%E2%80%94%E2%80%94Github+Hexo/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

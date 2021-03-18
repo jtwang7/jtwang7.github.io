@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="上一次简单介绍了 react-router-dom 的简单实用方法，后续又进一步观看了技术胖的 react-router 教程讲解，并结合当前项目实现了多页面路由跳转的功能，本章主要介绍和记录整个代码编写过程、思路以及编写过程中踩过的一些坑。">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>React Router 路由 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="React Router 路由">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-07 21:28" pubdate>
+        2020年12月7日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      60
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">React Router 路由</h1>
+            
+            <div class="markdown-body">
+              <h1 id="React-Router-路由"><a href="#React-Router-路由" class="headerlink" title="React Router 路由"></a>React Router 路由</h1><h2 id="React-Router-开发环境搭建"><a href="#React-Router-开发环境搭建" class="headerlink" title="React Router 开发环境搭建"></a>React Router 开发环境搭建</h2><ol>
+<li>安装React脚手架工具（若之前安装过了可以省略）<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">npm <span class="hljs-keyword">install</span> -g <span class="hljs-keyword">create</span>-react-app<br></code></pre></td></tr></table></figure></li>
+<li>创建项目<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">D:  <span class="hljs-regexp">//</span>进入D盘<br>mkdir ReactRouterDemo   <span class="hljs-regexp">//</span>创建ReactRouterDemo文件夹<br>cd ReactRouterDemo      <span class="hljs-regexp">//</span>进入文件夹<br>create-react-app demo01  <span class="hljs-regexp">//</span>用脚手架创建React项目<br>cd demo01   <span class="hljs-regexp">//</span>等项目创建完成后，进入项目目录<br>npm  start  <span class="hljs-regexp">//</span>预览项目，可跳过该步<br></code></pre></td></tr></table></figure></li>
+<li>安装 React Router<br>在终端<code>Ctrl+丶</code>的项目目录下：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">npm <span class="hljs-keyword">install</span> <span class="hljs-comment">--save react-router-dom</span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="React-Router-使用"><a href="#React-Router-使用" class="headerlink" title="React Router 使用"></a>React Router 使用</h2><h2 id="创建多个组件作为路由跳转的目标组件"><a href="#创建多个组件作为路由跳转的目标组件" class="headerlink" title="创建多个组件作为路由跳转的目标组件"></a>创建多个组件作为路由跳转的目标组件</h2><p><strong>组件目录树: 新建<code>components</code>文件夹存放组件</strong></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">demo_router_01<br>└─ src<br>  ├─ components<br>     ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Analysis</span>.</span></span>js<br>     ├─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Home</span>.</span></span>js<br>     └─ <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Person</span>.</span></span>js<br></code></pre></td></tr></table></figure>
+<p><strong><code>Home.js</code></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> homePng <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../images/Home.png&quot;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;../index.css&#x27;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Home</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;&#125;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div className=<span class="hljs-string">&quot;homePage&quot;</span>&gt;<br>                    &lt;img className=<span class="hljs-string">&quot;img&quot;</span> src=&#123;homePng&#125; alt=<span class="hljs-string">&quot;&quot;</span> /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Home;<br></code></pre></td></tr></table></figure>
+<p><strong><code>Analysis.js</code></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> analysisPng <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../images/Analysis.png&quot;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;../index.css&#x27;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Analysis</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;  &#125;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123; <br>        <span class="hljs-keyword">return</span> ( <br>            &lt;div&gt;<br>                &lt;img className=<span class="hljs-string">&quot;img&quot;</span> src=&#123;analysisPng&#125; alt=<span class="hljs-string">&quot;&quot;</span> /&gt;<br>            &lt;/div&gt;<br>         );<br>    &#125;<br>&#125;<br> <br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Analysis;<br></code></pre></td></tr></table></figure>
+<p><strong><code>Person.js</code></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> personPng <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../images/Person.png&quot;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;../index.css&#x27;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;  &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123; <br>        <span class="hljs-keyword">return</span> ( <br>            &lt;div&gt;<br>                &lt;img className=<span class="hljs-string">&quot;img&quot;</span> src=&#123;personPng&#125; alt=<span class="hljs-string">&quot;&quot;</span> /&gt;<br>            &lt;/div&gt;<br>         );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Person;<br></code></pre></td></tr></table></figure>
+
+<h2 id="编写路由组件-React万物皆组件"><a href="#编写路由组件-React万物皆组件" class="headerlink" title="编写路由组件(React万物皆组件)"></a>编写路由组件(React万物皆组件)</h2><p><strong>新建<code>router</code>文件夹存放路由组件</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">import</span> &#123; BrowserRouter <span class="hljs-keyword">as</span> Router, Route, NavLink &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router-dom&#x27;</span><br><span class="hljs-keyword">import</span> Home <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Home&#x27;</span><br><span class="hljs-keyword">import</span> Analysis <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Analysis&#x27;</span><br><span class="hljs-keyword">import</span> Person <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Person&#x27;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../index.css&quot;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../images/iconfont.css&quot;</span><br><br><span class="hljs-keyword">const</span> HomePage = <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> routeList = [<br>        &#123;<br>            path: <span class="hljs-string">&quot;/&quot;</span>,<br>            exact: <span class="hljs-literal">true</span>,<br>            title: <span class="hljs-string">&quot;首页&quot;</span>,<br>            component: Home,<br>            icon: <span class="hljs-string">&quot;iconfont icon-yemian-copy&quot;</span><br>        &#125;,<br>        &#123;<br>            path: <span class="hljs-string">&quot;/analysis/&quot;</span>,<br>            exact: <span class="hljs-literal">false</span>,<br>            title: <span class="hljs-string">&quot;相关性分析&quot;</span>,<br>            component: Analysis,<br>            icon: <span class="hljs-string">&quot;iconfont icon-fenxi&quot;</span><br>        &#125;,<br>        &#123;<br>            path: <span class="hljs-string">&quot;/person/&quot;</span>,<br>            exact: <span class="hljs-literal">false</span>,<br>            title: <span class="hljs-string">&quot;个人档案&quot;</span>,<br>            component: Person,<br>            icon: <span class="hljs-string">&quot;iconfont icon-icon-text-fn-documentation&quot;</span><br>        &#125;,<br>    ]<br>    <span class="hljs-keyword">return</span> (<br>        &lt;div&gt;<br>            &lt;div&gt;<br>                &lt;div className=<span class="hljs-string">&quot;pageTop&quot;</span>&gt;<br>                    &lt;h2 className=<span class="hljs-string">&quot;pageTitle&quot;</span>&gt;社矫人员属性及轨迹数据可视化分析平台&lt;/h2&gt;<br>                &lt;/div&gt;<br>                &lt;div className=<span class="hljs-string">&quot;titleBottom&quot;</span>&gt;<br>                    &lt;Router&gt;<br>                        &lt;div className=<span class="hljs-string">&quot;leftMenu&quot;</span>&gt;<br>                            &lt;ul&gt;<br>                                &#123;<br>                                    routeList.map(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> (<br>                                        &lt;div className=<span class="hljs-string">&quot;subTitle&quot;</span> key=&#123;index&#125;&gt;<br>                                            &lt;i className=&#123;item.icon&#125; key=&#123;index&#125;&gt;&lt;/i&gt;<br>                                            &lt;li className=<span class="hljs-string">&quot;textItem&quot;</span>&gt;<br>                                                &lt;NavLink<br>                                                    exact=&#123;item.exact&#125; <span class="hljs-comment">//NavLink-exact: if true, 精确匹配active</span><br>                                                    to=&#123;item.path&#125;<br>                                                    key=&#123;index&#125;<br>                                                    className=<span class="hljs-string">&quot;link&quot;</span><br>                                                    activeClassName=<span class="hljs-string">&quot;activeLink&quot;</span><br>                                                &gt;&#123;item.title&#125;&lt;/NavLink&gt;<br>                                            &lt;/li&gt;<br>                                        &lt;/div&gt;<br>                                    ))<br>                                &#125;<br>                            &lt;/ul&gt;<br>                        &lt;/div&gt;<br>                        &lt;div&gt;<br>                            &#123;<br>                                routeList.map(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> &#123;<br>                                    <span class="hljs-keyword">return</span> (<br>                                        &lt;Route<br>                                            exact=&#123;item.exact&#125;<br>                                            path=&#123;item.path&#125;<br>                                            key=&#123;index&#125;<br>                                            component=&#123;item.component&#125;<br>                                        &gt;&lt;/Route&gt;<br>                                    )<br>                                &#125;)<br>                            &#125;<br>                        &lt;/div&gt;<br>                    &lt;/Router&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        &lt;/div&gt;<br>    )<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> HomePage<br></code></pre></td></tr></table></figure>
+<p><strong>重点：</strong></p>
+<ol>
+<li>上述路由组件中没有状态的变化，因此采用了无状态组件的方式书写。<strong>注意引入<code>React</code>，凡是用到<code>JSX</code>语法的都要<code>import React from &#39;react&#39;</code></strong><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">const</span> xxx = <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> (<br>        &lt;div&gt;...&lt;/div&gt;<br>    )<br>&#125;<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> xxx<br></code></pre></td></tr></table></figure></li>
+<li>开头引入<code>react-router-dom</code>，否则无法使用路由标签。**<code>NavLink</code>与<code>Link</code>相比可以在<code>active</code>时改变样式，<code>BrowserRouter as Router</code>设定别名**。<br>React Router 具体标签属性和使用可以参考<a target="_blank" rel="noopener" href="https://reactrouter.com/web/api/NavLink/exact-bool">官方文档</a><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs clean"><span class="hljs-keyword">import</span> &#123; BrowserRouter <span class="hljs-keyword">as</span> Router, Route, NavLink &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router-dom&#x27;</span><br>or <br><span class="hljs-keyword">import</span> &#123; BrowserRouter <span class="hljs-keyword">as</span> Router, Route, Link &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router-dom</span><br></code></pre></td></tr></table></figure></li>
+<li>开头引入路由跳转组件<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs clean"><span class="hljs-keyword">import</span> Home <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Home&#x27;</span><br><span class="hljs-keyword">import</span> Analysis <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Analysis&#x27;</span><br><span class="hljs-keyword">import</span> Person <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Person&#x27;</span><br></code></pre></td></tr></table></figure></li>
+<li>列表存放路由参数，模拟接收后台请求数据。此处采用遍历路由参数信息列表的方式搭建路由。相较于单独搭建，该方法灵活性更高。<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs dts">const routeList = [<br>    &#123;<br><span class="hljs-symbol">        path:</span> <span class="hljs-string">&quot;/&quot;</span>,<br><span class="hljs-symbol">        exact:</span> true,<br><span class="hljs-symbol">        title:</span> <span class="hljs-string">&quot;首页&quot;</span>,<br><span class="hljs-symbol">        component:</span> Home,<br><span class="hljs-symbol">        icon:</span> <span class="hljs-string">&quot;iconfont icon-yemian-copy&quot;</span><br>    &#125;,<br>    &#123;<br><span class="hljs-symbol">        path:</span> <span class="hljs-string">&quot;/analysis/&quot;</span>,<br><span class="hljs-symbol">        exact:</span> false,<br><span class="hljs-symbol">        title:</span> <span class="hljs-string">&quot;相关性分析&quot;</span>,<br><span class="hljs-symbol">        component:</span> Analysis,<br><span class="hljs-symbol">        icon:</span> <span class="hljs-string">&quot;iconfont icon-fenxi&quot;</span><br>    &#125;,<br>    &#123;<br><span class="hljs-symbol">        path:</span> <span class="hljs-string">&quot;/person/&quot;</span>,<br><span class="hljs-symbol">        exact:</span> false,<br><span class="hljs-symbol">        title:</span> <span class="hljs-string">&quot;个人档案&quot;</span>,<br><span class="hljs-symbol">        component:</span> Person,<br><span class="hljs-symbol">        icon:</span> <span class="hljs-string">&quot;iconfont icon-icon-text-fn-documentation&quot;</span><br>    &#125;,<br>]<br></code></pre></td></tr></table></figure></li>
+<li>遍历路由参数列表，设定<code>&lt;Route&gt;</code><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs javascript">routeList.map(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">return</span> (<br>        &lt;Route<br>            exact=&#123;item.exact&#125;<br>            path=&#123;item.path&#125;<br>            key=&#123;index&#125;<br>            component=&#123;item.component&#125;<br>        &gt;&lt;/Route&gt;<br>    )<br>&#125;)<br></code></pre></td></tr></table></figure></li>
+<li>遍历路由参数列表，引用<code>&lt;NavLink&gt;</code>标签<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs javascript">routeList.map(<span class="hljs-function">(<span class="hljs-params">item, index</span>) =&gt;</span> (<br>    &lt;div className=<span class="hljs-string">&quot;subTitle&quot;</span> key=&#123;index&#125;&gt;<br>        &lt;i className=&#123;item.icon&#125; key=&#123;index&#125;&gt;&lt;/i&gt;<br>        &lt;li className=<span class="hljs-string">&quot;textItem&quot;</span>&gt;<br>            &lt;NavLink<br>                exact=&#123;item.exact&#125; <span class="hljs-comment">//NavLink-exact: if true, 精确匹配active</span><br>                to=&#123;item.path&#125;<br>                key=&#123;index&#125;<br>                className=<span class="hljs-string">&quot;link&quot;</span><br>                activeClassName=<span class="hljs-string">&quot;activeLink&quot;</span><br>            &gt;&#123;item.title&#125;&lt;/NavLink&gt;<br>        &lt;/li&gt;<br>    &lt;/div&gt;<br>))<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>注意路由的层级关系为 <code>&lt;BrowserRouter&gt;</code>&gt;<code>&lt;Route&gt;</code>=<code>&lt;Link&gt;</code>，即<code>&lt;Route&gt;</code>和<code>&lt;Link&gt;</code>都必须被包裹在 <code>&lt;BrowserRouter&gt;</code>内使用。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">BrowserRouter</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">&quot;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">exact</span> <span class="hljs-attr">component</span>=<span class="hljs-string">&quot;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Route</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">BrowserRouter</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li><code>Link</code>,<code>NavLink</code>,<code>Route</code>常用参数举例：<br>to: 跳转路径 “string”<br>path: 路由路径 “string”<br>exact: 是否精确匹配 (true/false)<br>component: 目标组件<br>activeClassName: 链接激活后的样式 “string”<br>activeStyle: 链接激活后的样式 (css obj)<br>NavLink - exact: NavLink 中定义的 exact 指确认 active 激活的精确匹配，若不设置可能导致 <code>&quot;/&quot;&quot;/post/&quot;</code>两个链接都显示 active 样式<br><code>&lt;Link to=&quot;/&quot;&gt;&lt;/Link&gt;</code><br><code>&lt;NavLink to=&quot;/post/&quot; activeClassName=&quot;activeAction&quot; activeStyle=&#123;&#123;color:red,&#125;&#125;&gt;&lt;/NavLink&gt;</code><br><code>&lt;Route path=&quot;/post/&quot; exact=true component=&quot;Home&quot;&gt;&lt;/Route&gt;</code></li>
+<li><code>map()</code> 遍历时要给所遍历的组件加上<code>key</code>参数，且<code>key</code>要保证唯一性，此处用<code>key=&#123;index&#125;</code>，但实际应用中往往采用其他办法。</li>
+<li><code>&lt;ul&gt;&lt;li&gt;&lt;/li&gt;&lt;/ul&gt;</code> 无序列表书写格式，不要写错(填坑)</li>
+</ul>
+<h3 id="精确匹配-exact"><a href="#精确匹配-exact" class="headerlink" title="精确匹配 exact"></a>精确匹配 exact</h3><p>精确匹配从字面上理解，就是你的路径信息要<strong>完全匹配</strong>成功，才可以实现跳转，匹配一部分是不行的。<br>例如路由设置了两个跳转路径<code>/</code>和<code>/post/</code>，若<code>exact=false</code>，则路由既可以跳转到<code>/</code>对应的组件，也可以跳转到<code>/post/</code>对应的组件。<br>值得一提的是，我们一般在首页<code>/</code>的时候采用精确匹配，其余时候不用，当然这也要考虑的实际项目需求，酌情而定。</p>
+<h2 id="路由动态传参"><a href="#路由动态传参" class="headerlink" title="路由动态传参"></a>路由动态传参</h2><p>参考链接：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/yky-iris/p/9161907.html">路由动态传参</a></p>
+<h3 id="通配符传参"><a href="#通配符传参" class="headerlink" title="通配符传参"></a>通配符传参</h3><p>在进行路由跳转的过程中，我们可以通过 url 向子组件传递一些参数，这也被称为路由的动态传参。<br><strong>设置动态传参的步骤如下：</strong></p>
+<ol>
+<li>在<code>Route</code>上设置动态传值 <strong>(设置传参的 key 值)</strong><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;/post/:key&quot;</span> <span class="hljs-attr">component</span>=<span class="hljs-string">&#123;Home&#125;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Route</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li>在<code>Link</code>上传递值 <strong>(value)</strong><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lasso">&lt;<span class="hljs-keyword">Link</span> <span class="hljs-keyword">to</span>=<span class="hljs-string">&quot;/post/123&quot;</span>&gt;&lt;/<span class="hljs-keyword">Link</span>&gt;<br></code></pre></td></tr></table></figure></li>
+<li>在子组件上获取传递的参数<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">value</span> === <span class="hljs-keyword">this</span>.props.match.<span class="hljs-keyword">params</span>.key<br><span class="hljs-keyword">value</span> === <span class="hljs-number">123</span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>如果不往 url 里传任何东西，是没办法匹配路由成功的。即若设置了动态传参<code>:</code>，则必须要给定一个参数。</li>
+<li>params：传递过来的参数，<code>key</code>和<code>value</code>值。通过 <code>this.props.params.xxx</code> 取值，xxx = key</li>
+</ul>
+<blockquote>
+<p>优点：简单快捷，并且在刷新页面的时候，参数不会丢失。<br>缺点：只能传字符串，并且如果传的值太多的话，url会变得长而丑陋。<br>如果想传对象的话，可以用<code>JSON.stringify()</code>,想将其转为字符串，然后另外的页面接收后，用<code>JSON.parse()</code>转回去。</p>
+</blockquote>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p><strong>设置动态路由 &amp; Link传值</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span><br><span class="hljs-keyword">import</span> &#123; BrowserRouter <span class="hljs-keyword">as</span> Router, Route, NavLink &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router-dom&#x27;</span><br><span class="hljs-keyword">import</span> Home <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Home&#x27;</span><br><span class="hljs-keyword">import</span> Analysis <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Analysis&#x27;</span><br><span class="hljs-keyword">import</span> Person <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../components/Person&#x27;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../index.css&quot;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;../images/iconfont.css&quot;</span><br><br><span class="hljs-keyword">const</span> HomePage = <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> routeList = [<br>        ...<br>        &#123;<br>            <span class="hljs-comment">// href 定义了 value</span><br>            <span class="hljs-comment">// path 定义了 key</span><br>            href: <span class="hljs-string">&quot;/person/齐天大圣&quot;</span>,<br>            path: <span class="hljs-string">&quot;/person/:name&quot;</span>,<br>            exact: <span class="hljs-literal">false</span>,<br>            title: <span class="hljs-string">&quot;个人档案&quot;</span>,<br>            component: Person,<br>            icon: <span class="hljs-string">&quot;iconfont icon-icon-text-fn-documentation&quot;</span><br>        &#125;,<br>    ]<br>    <span class="hljs-keyword">return</span> (<br>        &lt;div&gt;<br>            ...<br>        &lt;/div&gt;<br>    )<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> HomePage<br></code></pre></td></tr></table></figure>
+
+<p><strong>子组件接收参数</strong><br>用了 <code>Ant Design</code> 的标签，标签具体属性可参照官网。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;../index.css&#x27;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span><br><span class="hljs-keyword">import</span> &#123;Input&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;  &#125;<br>        <span class="hljs-built_in">this</span>.onSearch = <span class="hljs-built_in">this</span>.onSearch.bind(<span class="hljs-built_in">this</span>)<br>    &#125;<br><br>    onSearch () &#123;<br>        <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> &#123;Search&#125; = Input <br>        <span class="hljs-keyword">return</span> ( <br>            &lt;div&gt;<br>                &lt;div&gt;<br>                    &lt;h1 className=<span class="hljs-string">&quot;basicInfo&quot;</span>&gt;基本信息&lt;/h1&gt;<br>                &lt;/div&gt;<br>                &lt;div&gt;<br>                    &lt;Search <br>                        <span class="hljs-comment">// 接收传递的参数</span><br>                        placeholder=&#123;<span class="hljs-built_in">this</span>.props.match.params.name&#125;<br>                        allowClear<br>                        onSearch=&#123;<span class="hljs-built_in">this</span>.onSearch&#125;<br>                        style=&#123;&#123; <span class="hljs-attr">width</span>: <span class="hljs-number">250</span>, <span class="hljs-attr">margin</span>: <span class="hljs-string">&#x27;0 10px&#x27;</span> &#125;&#125;<br>                    /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>         );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Person;<br></code></pre></td></tr></table></figure>
+
+<h3 id="query-传参"><a href="#query-传参" class="headerlink" title="query 传参"></a>query 传参</h3><ol>
+<li><code>&lt;Route&gt;</code>定义方式同普通路由相同<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;/post/&quot;</span> <span class="hljs-attr">component</span>=<span class="hljs-string">&#123;Home&#125;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Route</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li><code>&lt;Link&gt;</code>定义前需要声明一个对象，保存 url 地址和传递的参数 <code>key: value</code><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs dts">const name = &#123;<br><span class="hljs-symbol">    pathname:</span> <span class="hljs-string">&quot;/post/&quot;</span>,<br><span class="hljs-symbol">    query:</span> &#123;<br><span class="hljs-symbol">        xxx:</span> yyy,<br><span class="hljs-symbol">        aaa:</span> bbb,<br>        ...<br>    &#125;<br>    <span class="hljs-comment">// query: value (string or obj)</span><br>&#125;<br><span class="hljs-params">&lt;Link to=&#123;name&#125;&gt;</span><span class="hljs-params">&lt;/Link&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li>子组件参数获取<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">this</span><span class="hljs-selector-class">.props</span><span class="hljs-selector-class">.location</span><span class="hljs-selector-class">.query</span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><code>pathname, query</code>都是固定名称，不能修改，其中<code>pathname</code>不是驼峰命名，<code>query</code>表示传递的参数，等价于通配符的<code>key</code>。</li>
+<li>获取参数时，取的是 url 链接内的 <code>query</code> 属性值，而不是 <code>name</code>。即<code>this.props.location.name</code> 是错误的</li>
+</ul>
+<blockquote>
+<p>优点：优雅，可传对象。<br>缺点：刷新页面，参数丢失。</p>
+</blockquote>
+<h4 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> HomePage = <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> routeList = [<br>        &#123;<br>            <span class="hljs-comment">// href 对应的是&lt;Link&gt;标签内的 to 属性值</span><br>            href: &#123;<span class="hljs-attr">pathname</span>:<span class="hljs-string">&#x27;/analysis/&#x27;</span>, <span class="hljs-attr">query</span>:&#123;<span class="hljs-attr">id</span>:<span class="hljs-number">1024</span>, <span class="hljs-attr">name</span>:<span class="hljs-string">&quot;齐天大圣&quot;</span>&#125;&#125;,<br>            path: <span class="hljs-string">&quot;/analysis/&quot;</span>,<br>            exact: <span class="hljs-literal">false</span>,<br>            title: <span class="hljs-string">&quot;相关性分析&quot;</span>,<br>            component: Analysis,<br>            icon: <span class="hljs-string">&quot;iconfont icon-fenxi&quot;</span><br>        &#125;,<br>        ...<br>    ]<br>    <span class="hljs-keyword">return</span> (<br>        &lt;div&gt;<br>            ...<br>        &lt;/div&gt;<br>    )<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> HomePage<br></code></pre></td></tr></table></figure>
+
+<p><strong>子组件接收参数</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> analysisPng <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;../images/Analysis.png&quot;</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;../index.css&#x27;</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Analysis</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;&#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">componentDidMount</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-comment">// 刷新后参数不保留，会报错，因此在这添一个判断</span><br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.props.location.query === <span class="hljs-literal">undefined</span>) &#123;<br>            <span class="hljs-built_in">this</span>.setState(&#123;<br>                id: <span class="hljs-number">0</span>,<br>                name: <span class="hljs-string">&quot;无&quot;</span>,<br>            &#125;)<br>            <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.props)<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-built_in">this</span>.setState(&#123;<br>                id: <span class="hljs-built_in">this</span>.props.location.query.id,<br>                name: <span class="hljs-built_in">this</span>.props.location.query.name<br>            &#125;)<br>            <span class="hljs-comment">// this.props.location.query 接收传递的参数值，此处为一个对象</span><br>            <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.props.location.query)<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div&gt;<br>                    &lt;img className=<span class="hljs-string">&quot;img&quot;</span> src=&#123;analysisPng&#125; alt=<span class="hljs-string">&quot;&quot;</span> /&gt;<br>                &lt;/div&gt;<br>                &lt;h3&gt;&#123;<span class="hljs-built_in">this</span>.state.id&#125;&lt;/h3&gt;<br>                &lt;h3&gt;&#123;<span class="hljs-built_in">this</span>.state.name&#125;&lt;/h3&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Analysis;<br></code></pre></td></tr></table></figure>
+
+<h3 id="state-传参"><a href="#state-传参" class="headerlink" title="state 传参"></a>state 传参</h3><p>与 <code>query</code> 传参类似：</p>
+<ol>
+<li><code>&lt;Route&gt;</code>定义方式同普通路由相同<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">Route</span> <span class="hljs-attr">path</span>=<span class="hljs-string">&quot;/post/&quot;</span> <span class="hljs-attr">component</span>=<span class="hljs-string">&#123;Home&#125;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Route</span>&gt;</span><br></code></pre></td></tr></table></figure></li>
+<li><code>&lt;Link&gt;</code>定义前需要声明一个对象，保存 url 地址和传递的参数 <code>key: value</code><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs pf"><span class="hljs-keyword">const</span> name = &#123;<br>    pathname: <span class="hljs-string">&quot;/post/&quot;</span>,<br>    <span class="hljs-keyword">state</span>: &#123;<br>        xxx: yyy,<br>        aaa: bbb,<br>        ...<br>    &#125;<br>    // <span class="hljs-keyword">state</span>: value (string or obj)<br>&#125;<br><span class="hljs-variable">&lt;Link to=&#123;name&#125;&gt;</span>&lt;/Link&gt;<br></code></pre></td></tr></table></figure></li>
+<li>子组件参数获取<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pf">this.props.location.<span class="hljs-keyword">state</span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h2><p><strong>重定向</strong> 和 <strong>跳转</strong> 有一个重要的<strong>区别</strong>，就是跳转式可以用浏览器的回退按钮返回上一级的，而重定向是不可以的。</p>
+<h3 id="标签式重定向"><a href="#标签式重定向" class="headerlink" title="标签式重定向"></a>标签式重定向</h3><p>一般用在不是很复杂的业务逻辑中，比如我们进入Index组件，然后Index组件,直接重定向到Home组件。</p>
+<ol>
+<li>引入<code>&lt;Redirect&gt;</code>重定向标签<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs clean"><span class="hljs-keyword">import</span> &#123;Redirect&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-router-dom&#x27;</span><br></code></pre></td></tr></table></figure></li>
+<li>在<code>render</code>函数里使用<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-keyword">return</span>(<br>        &lt;div&gt;<br>            ...<br>            &lt;Redirect to=<span class="hljs-string">&quot;...&quot;</span>&gt;<br>            ...<br>        &lt;/div&gt;<br>    )<br>&#125;<br></code></pre></td></tr></table></figure>
+标签式重定向只能写在 <code>render</code> 函数中，因此无法绑定到一些业务逻辑上，例如一些业务逻辑绑定函数函数体是独立于<code>render</code>函数之外的，将<code>&lt;Redirect&gt;</code>标签定义在这类函数体中是不奏效的。因此，我们可以使用另一种编程式的重定向方法，它直接使用JS的语法实现重定向，一般用在业务逻辑比较发杂的场合或者需要多次判断的场合。</li>
+</ol>
+<h3 id="编程式重定向"><a href="#编程式重定向" class="headerlink" title="编程式重定向"></a>编程式重定向</h3><p>调用方法：直接在函数体中加入以下语句即可</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">this</span><span class="hljs-selector-class">.props</span><span class="hljs-selector-class">.history</span><span class="hljs-selector-class">.push</span>(&quot;<span class="hljs-selector-tag">url</span>地址&quot;)<br></code></pre></td></tr></table></figure>
+<p>例如在 <code>constructor</code> 构造函数中加入上述代码，即可在组件构造时就进行重定向。<br>在登陆界面中，我们可以将编程式重定向应用到点击事件判断中，例如当用户名密码与后端一致时，点击确认，重定向到目标路由。这也是标签式重定向无法做到的，具体过程在实战中继续领悟！</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/React/">React</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/React/">React</a>
+                    
+                      <a class="hover-with-bg" href="/tags/react-router-dom/">react-router-dom</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/12/08/React_Portal/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">React Portal</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/04/React+Redux%E5%AE%9E%E7%8E%B0%E5%B0%8F%E4%B9%A6%E8%AF%84%E8%AE%BA%E5%AE%9E%E6%88%98/">
+                        <span class="hidden-mobile">React+Redux实现小书评论实战(一~三)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/12/07/React%20Router%20%E8%B7%AF%E7%94%B1/';
+        this.page.identifier = '/2020/12/07/React%20Router%20%E8%B7%AF%E7%94%B1/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

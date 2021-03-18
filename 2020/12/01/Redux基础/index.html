@@ -1,0 +1,704 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="Redux是一个用来管理管理数据状态和UI状态的JavaScript应用工具。在当前页面复杂度越来越高的互联时代，React组件的状态管理以及状态提升给管理带来了极大的难度，而Redux就是降低管理难度的。但注意的一点是，Redux除了支持React之外，还能支持Angular、jQuery甚至纯JavaScript。本专题将结合博主“技术胖”的Redux免费教程内容，对自身学习做一个总体的总结，">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>Redux 基础及实战 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Redux 基础及实战">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-01 18:54" pubdate>
+        2020年12月1日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      91
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Redux 基础及实战</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h1><p>视频教程：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1w441137ss?p=1">技术胖 Redux 免费教程</a><br>参考链接：<a target="_blank" rel="noopener" href="https://jspang.com/detailed?id=48#toc230">技术胖 Redux 教程笔记汇总</a><br><strong>本文搭配原文教程食用，风味更佳~!</strong></p>
+<hr>
+<h2 id="Redux-简要介绍"><a href="#Redux-简要介绍" class="headerlink" title="Redux 简要介绍"></a>Redux 简要介绍</h2><ul>
+<li><strong>什么是Redux？</strong><br>官方解释：Redux is a predictable state container for JavaScript apps.  === Redux是<strong>js</strong>应用的一种可预测的<strong>状态容器</strong>。<br>通俗理解：Redux是一个用来管理管理数据状态和UI状态的JavaScript应用工具。</li>
+<li><strong>Redux作用？</strong><br>简化组件的状态传递。如下图是不使用Redux和使用Redux时，父子组件之间的通信方式。没有使用Redux的情况，如果两个组件(非父子关系)之间需要通信的话，可能需要多个中间组件为他们进行消息传递，这样既浪费了资源，代码也会比较复杂。Redux中提出了单一数据源 <strong>Store</strong> 用来<strong>存储状态数据</strong>，所有的组建都可以<strong>通过Action修改Store</strong>，也可以<strong>从Store中获取最新状态</strong>，从而实现统一状态管理，完美解决组建之间的通信问题。<br><img src="/img/posts_img/20201201191412481_5749.png" srcset="/img/loading.gif"></li>
+</ul>
+<h2 id="Redux-工作流程-总体框架"><a href="#Redux-工作流程-总体框架" class="headerlink" title="Redux 工作流程(总体框架)"></a>Redux 工作流程(总体框架)</h2><p>我们将结合 Redux 官方给出的结构图去总体了解 Redux 的工作流程，对结构图的理解将直接反映使用者对 Redux 的掌握程度，十分重要！！！<br>后续实战代码编写中，我们需要按照该结构流程去实现，所以该章节需要重点关注，初学不理解没关系，不过要不断回顾和反复阅读，同时将理解结合到代码中去。<br>现在给出官方的 Redux 结构，如下：<br><img src="/img/posts_img/20201201192118706_7818.png" srcset="/img/loading.gif"><br>直接看专业的 Redux 工作流程不是特别好理解，我们可以通过借书的例子来理解：<br><img src="/img/posts_img/20201201192506882_23071.png" srcset="/img/loading.gif"><br>React 的各个子组件更新或者改变状态的过程，等同于读者向图书馆借书的过程。读者(Component)需要从图书馆(Store)借书(state)，就要通过图书管理员去取书，取书的过程就是action，但是图书馆(Store)只负责存放图书(state)，无法告诉图书管理员具体的图书在哪，所以又需要图书管理软件(Reducer)进行精确检索，给它传递书名(state)和取书指令(action)，它将返回该书的具体位置(newState)，即一个新的状态，最终读者将从图书馆借到这本书。<br>当然上述只是通俗的理解，一些步骤可能存在纰漏，我们后续将通过实战代码进行详细解读。</p>
+<h2 id="代码实战：TodoLisT-实现"><a href="#代码实战：TodoLisT-实现" class="headerlink" title="代码实战：TodoLisT 实现"></a>代码实战：TodoLisT 实现</h2><h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><p>方法一：</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-string">Win+</span>R<br><span class="hljs-string">cmd</span><br><span class="hljs-string">npm </span><span class="hljs-string">install </span>-g <span class="hljs-built_in">create-react</span> <span class="hljs-string">app </span>//安装脚手架工具，若以前安装过可跳过该步<br><br>进入相应目录<br><span class="hljs-string">mkdir </span><span class="hljs-string">xxx </span>//创建<span class="hljs-string">xxx文</span>件夹<br><span class="hljs-string">cd </span><span class="hljs-string">ReduxDemo </span>     //进入文件夹<br><span class="hljs-built_in">create-react-app</span> <span class="hljs-string">yyy </span> //用脚手架创建<span class="hljs-string">React项</span>目，名称自定义，此处为<span class="hljs-string">yyy</span><br><span class="hljs-string">cd </span><span class="hljs-string">yyy </span>  //等项目创建完成后，进入项目目录<br><span class="hljs-string">npm </span><span class="hljs-string">start </span> //预览项目<br></code></pre></td></tr></table></figure>
+
+<p>方法二：</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig">进入<span class="hljs-string">vscode终</span>端：<span class="hljs-string">Ctrl+</span>`<br>进入目标目录<br><span class="hljs-string">npx </span><span class="hljs-built_in">create-react-app</span> <span class="hljs-string">yyy</span><br><span class="hljs-string">cd </span><span class="hljs-string">yyy</span><br><span class="hljs-string">npm </span><span class="hljs-string">start</span><br></code></pre></td></tr></table></figure>
+
+<p>项目搭建完成后，删除一下没用的文件，让代码结构保持最小化。删除<code>src</code>里边的所有文件，只留一个<code>index.js</code>,并且<code>index.js</code>文件里一些无关内容也都清空，只保留两项引用及<code>ReactDOM.render()</code>中的内容。</p>
+<h3 id="快速生成组件代码结构"><a href="#快速生成组件代码结构" class="headerlink" title="快速生成组件代码结构"></a>快速生成组件代码结构</h3><p>编写<code>index.js</code>基础文件，代码如下，主要包含了 React, ReactDOM，同时引入 TodoList 组件。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;<br><br><span class="hljs-comment">// 引入组件，组件首字母大写</span><br><span class="hljs-keyword">import</span> TodoList <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./TodoList&#x27;</span> <br><br>ReactDOM.render(<br>  &lt;React.StrictMode&gt;<br>    &lt;TodoList /&gt; <br>  &lt;/React.StrictMode&gt;,<br>  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>)<br>);<br></code></pre></td></tr></table></figure>
+
+<p>可以利用 VSCode 中的 Simple React Snippets 插件快速生成 React Component 的代码结构，先输入<code>imrc</code>,再输入<code>ccc</code>。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-comment">// imrc</span><br><span class="hljs-keyword">import</span> <span class="hljs-type">React</span>, &#123; <span class="hljs-type">Component</span> &#125; from <span class="hljs-symbol">&#x27;reac</span>t&#x27;;<br><br><span class="hljs-comment">// ccc</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoList</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    render() &#123; <br>        <span class="hljs-keyword">return</span> ( <br>            &lt;div&gt;<span class="hljs-type">Hello</span> <span class="hljs-type">World</span>&lt;/div&gt;<br>         );<br>    &#125;<br>&#125;<br>export <span class="hljs-keyword">default</span> <span class="hljs-type">TodoList</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="AntDesign-优化-UI-界面"><a href="#AntDesign-优化-UI-界面" class="headerlink" title="AntDesign 优化 UI 界面"></a>AntDesign 优化 UI 界面</h3><ol>
+<li>安装 antd<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql">npm <span class="hljs-keyword">install</span> antd <span class="hljs-comment">--save</span><br>或<br>yarn <span class="hljs-keyword">add</span> antd<br></code></pre></td></tr></table></figure></li>
+<li>在使用Ant Design时，先引入CSS样式，有样式文件才可以让UI组件显示正常。具体可从Ant Design官方文档查看快速上手步骤。<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xl"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span><br></code></pre></td></tr></table></figure></li>
+<li>antd组件使用参照<a target="_blank" rel="noopener" href="https://ant.design/components/overview-cn/">AntDesign 组件库</a>文档，同时在使用组件前，需要从相应的文件引入：<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mathematica">import &#123;<span class="hljs-keyword">Input</span>, <span class="hljs-keyword">Button</span>, <span class="hljs-keyword">List</span>&#125; from <span class="hljs-string">&quot;antd&quot;</span> //引入了 <span class="hljs-keyword">Input</span> ,<span class="hljs-keyword">Button</span>, <span class="hljs-keyword">List</span> 组件<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<blockquote>
+<p>Input 等组件的 style 等属性设置及一些细节参考最后贴出的实战代码，此处不做细讲</p>
+</blockquote>
+<p><strong>TodoList 代码</strong> (此部分是第二遍实现，与首遍代码相比存在出入，功能相同，若要参考具体细节，请移步最后的首版代码)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; Input, Button, List &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span>;<br><br><span class="hljs-keyword">const</span> data = [<br>    <span class="hljs-string">&quot;第一天&quot;</span>,<br>    <span class="hljs-string">&quot;第二天&quot;</span>,<br>    <span class="hljs-string">&quot;第三天&quot;</span>,<br>]<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoList</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.state = &#123;&#125;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &lt;Input placeholder=<span class="hljs-string">&quot;Write Something&quot;</span> style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;250px&quot;</span>,<span class="hljs-attr">marginRight</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125; /&gt;<br>                    &lt;Button type=<span class="hljs-string">&quot;primary&quot;</span> &gt;添加&lt;/Button&gt;<br>                &lt;/div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;325px&quot;</span>,<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &lt;List <br>                        size = <span class="hljs-string">&quot;small&quot;</span><br>                        bordered<br>                        dataSource = &#123;data&#125;<br>                        renderItem = &#123;<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> &#123; <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List.Item</span>&gt;</span>&#123;item&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">List.Item</span>&gt;</span></span>) &#125;&#125;<br>                    /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoList;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Redux-工作流程编写"><a href="#Redux-工作流程编写" class="headerlink" title="Redux 工作流程编写"></a>Redux 工作流程编写</h3><h4 id="创建-Store-仓库"><a href="#创建-Store-仓库" class="headerlink" title="创建 Store 仓库"></a>创建 Store 仓库</h4><ol>
+<li>项目根目录安装 Redux <code>npm install redux --save</code></li>
+<li><code>src</code>目录下新建<code>store</code>子文件夹，在<code>store</code>下创建<code>index.js</code>，<code>index.js</code>就是整个项目的<code>store</code>文件，打开文件，编写下面的代码。<strong>注意几点：</strong> 1. 整个项目只能存在一个 <code>store</code> (后续会讲到) 2. 要引入 <code>createStore()</code> 方法 3.要将 <code>store</code> 暴露出去<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> &#123; createStore &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux&#x27;</span>  <span class="hljs-comment">// 引入createStore方法</span><br><span class="hljs-keyword">const</span> store = createStore()          <span class="hljs-comment">// 创建数据存储仓库</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store                 <span class="hljs-comment">//暴露出去</span><br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="“招募”管理者-Reducer"><a href="#“招募”管理者-Reducer" class="headerlink" title="“招募”管理者 Reducer"></a>“招募”管理者 Reducer</h4><ol>
+<li>在<code>store</code>文件夹下，新建一个文件<code>reducer.js</code></li>
+<li>在<code>reducer.js</code>中编写如下代码，<strong>注意几点：</strong> 1. Reducer 中要定义 <code>defaultState</code> 存储初始(默认)状态，变量名自定义，但常用 <code>defaultState</code> 2.抛出一个方法函数，函数返回<strong>新的状态(newState)**，常用箭头函数。 3.<code>state=defaultState, action</code>注意书写顺序，state 写在 action 前，否则出错，</strong>原因暂时不知**。<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pf"><span class="hljs-keyword">const</span> <span class="hljs-keyword">default</span>State = &#123;&#125;<br>export <span class="hljs-keyword">default</span> (<span class="hljs-keyword">state</span>=<span class="hljs-keyword">default</span>State, action) =&gt; &#123;<br>    return <span class="hljs-keyword">state</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li>将 <code>reducer</code> 引入到 <code>Store</code> 中，创建<code>Store</code>时，以参数的形式传递给<code>Store</code>。可以理解为在创建仓库Store的时候就连带着招募一个管理员Reducer。<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// - const store = createStore()</span><br><span class="hljs-comment">// + import reducer from &#x27;./reducer&#x27;</span><br><span class="hljs-comment">// + const store = createStore(reducer)</span><br><span class="hljs-keyword">import</span> &#123;createStore&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;redux&quot;</span><br><span class="hljs-keyword">import</span> reducer <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./reducer&#x27;</span><br><span class="hljs-keyword">const</span> store = createStore(reducer)<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store;<br></code></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="向仓库“存放数据”"><a href="#向仓库“存放数据”" class="headerlink" title="向仓库“存放数据”"></a>向仓库“存放数据”</h4><p>我们创建的仓库是空的，我们可以向仓库中添加一些默认的数据，将其存放在 <code>defaultState</code> 中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">const</span> defaultState = &#123;<br>    inputValue: <span class="hljs-string">&quot;Write Something&quot;</span>,<br>    <span class="hljs-built_in">list</span>: [<br>        <span class="hljs-string">&quot;第一天&quot;</span>,<br>        <span class="hljs-string">&quot;第二天&quot;</span>,<br>        <span class="hljs-string">&quot;第三天&quot;</span>,<br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="组件从仓库获取数据"><a href="#组件从仓库获取数据" class="headerlink" title="组件从仓库获取数据"></a>组件从仓库获取数据</h4><p>我们仓库中已经存有数据了，我们需要在组件内通过<code>store.getState()</code>方法将其获取出来。<br>接下来，我们要通过store获取的方法，替换掉原有组件的一些值。<strong>注意：</strong> 要从<code>&quot;./store/index&quot;</code> 文件引入 <code>store</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; Input, Button, List &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span>;<br><span class="hljs-comment">// + import store from &#x27;./store/index&#x27;;</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store/index&#x27;</span>;<br><br><span class="hljs-comment">// - const data = [...]</span><br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoList</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-comment">// - this.state = &#123;&#125;</span><br>        <span class="hljs-built_in">this</span>.state = store.getState()<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &#123;- <span class="hljs-comment">/* &lt;Input placeholder=&quot;Write Something&quot; style=&#123;&#123;width:&quot;250px&quot;,marginRight:&quot;10px&quot;&#125;&#125; /&gt; */</span>&#125;<br>                    &lt;Input placeholder=&#123;<span class="hljs-built_in">this</span>.state.inputValue&#125; style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;250px&quot;</span>,<span class="hljs-attr">marginRight</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125; /&gt;<br>                    &lt;Button type=<span class="hljs-string">&quot;primary&quot;</span> &gt;添加&lt;/Button&gt;<br>                &lt;/div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;325px&quot;</span>,<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &lt;List <br>                        size = <span class="hljs-string">&quot;small&quot;</span><br>                        bordered<br>                        <span class="hljs-comment">// - dataSource = &#123;data&#125;</span><br>                        dataSource = &#123;<span class="hljs-built_in">this</span>.state.list&#125;<br>                        renderItem = &#123;<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> &#123; <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List.Item</span>&gt;</span>&#123;item&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">List.Item</span>&gt;</span></span>) &#125;&#125;<br>                    /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoList;<br></code></pre></td></tr></table></figure>
+
+<h4 id="添加-lt-Input-gt-事件"><a href="#添加-lt-Input-gt-事件" class="headerlink" title="添加 &lt;Input /&gt;事件"></a>添加 <code>&lt;Input /&gt;</code>事件</h4><p>到目前为止，我们只构建了Redux最基本的结构，还没有真正体会到Redux在管理state时的工作过程，同时我们只在开头定义过<code>action</code>，并没有实际用到它，现在我们给<code>&lt;Input /&gt;</code>添加<code>onChange</code>事件，去看看Redux是怎么通过<code>action</code>改变仓库状态的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs javascript">TodoList.js<br><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; Input, Button, List &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span>;<br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store/index&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoList</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-comment">//绑定函数，指向this</span><br>        <span class="hljs-built_in">this</span>.inputChangeValue = <span class="hljs-built_in">this</span>.inputChangeValue.bind(<span class="hljs-built_in">this</span>)<br>        <span class="hljs-built_in">this</span>.state = store.getState()<br>    &#125;<br><br>    <span class="hljs-comment">//定义函数</span><br>    <span class="hljs-function"><span class="hljs-title">inputChangeValue</span>(<span class="hljs-params">e</span>)</span> &#123;<br>        <span class="hljs-comment">//定义action对象</span><br>        <span class="hljs-keyword">const</span> action = &#123;<br>            type: <span class="hljs-string">&quot;input_change_value&quot;</span>,<br>            value: e.target.value,<br>        &#125;<br>        <span class="hljs-comment">//将 action 对象 dispatch 到仓库上</span><br>        store.dispatch(action)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &lt;Input placeholder=&#123;<span class="hljs-built_in">this</span>.state.inputValue&#125; style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;250px&quot;</span>,<span class="hljs-attr">marginRight</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125; <br>                        <span class="hljs-comment">//添加事件</span><br>                        onChange=&#123;<span class="hljs-built_in">this</span>.inputChangeValue&#125;<br>                    /&gt;<br>                    &lt;Button type=<span class="hljs-string">&quot;primary&quot;</span> &gt;添加&lt;/Button&gt;<br>                &lt;/div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;325px&quot;</span>,<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &lt;List <br>                        size = <span class="hljs-string">&quot;small&quot;</span><br>                        bordered<br>                        dataSource = &#123;<span class="hljs-built_in">this</span>.state.list&#125;<br>                        renderItem = &#123;<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> &#123; <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List.Item</span>&gt;</span>&#123;item&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">List.Item</span>&gt;</span></span>) &#125;&#125;<br>                    /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoList;<br><br>-------------------------<br>reducer.js<br><span class="hljs-keyword">const</span> defaultState = &#123;<br>    inputValue: <span class="hljs-string">&quot;Write Something&quot;</span>,<br>    list: [<br>        <span class="hljs-string">&quot;第一天&quot;</span>,<br>        <span class="hljs-string">&quot;第二天&quot;</span>,<br>        <span class="hljs-string">&quot;第三天&quot;</span>,<br>    ]<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> (state = defaultState, action) =&gt; &#123;<br>    <span class="hljs-comment">//添加对应的action</span><br>    <span class="hljs-keyword">if</span> (action.type === <span class="hljs-string">&quot;input_change_value&quot;</span>) &#123;<br>        <span class="hljs-keyword">let</span> newState = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">JSON</span>.stringify(state))<br>        newState.inputValue = action.value<br>        <span class="hljs-keyword">return</span> newState<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> state<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>注意以下几点：</strong></p>
+<ol>
+<li>函数要用<code>.bind(this)</code>绑定，箭头函数除外。函数绑定最好写在<code>constructor(props) &#123;&#125;</code>内，原因在代码分离的时候会提到。(也可以用<code>this.xxx.bind(this,param1,param2,...)</code>，但后续不好进行企业级代码分离)</li>
+<li>绑定事件的函数内部创建 action 对象，<strong>注意 <code>action</code> 是对象!!!</strong></li>
+<li><strong><code>action</code> 必须要有 <code>type</code> 属性</strong>，其属性值为自定义名称，用于标明当前声明 action 对象的名称。其余属性名称自定义。</li>
+<li>拥有 action 对象后，需要传递给 store 仓库，<strong>首先要将 action <code>dispatch</code> 到 store 仓库上，注意此处是<code>store.dispatch(action)</code>，而不是<code>action.dispatch(store)</code>，dispatch是派遣的意思，可以理解为“仓库派遣一个动作”，而不是“动作派遣仓库”</strong>。</li>
+<li>由于 store 的自动推送策略（store只是一个仓库，它并没有管理能力，它会把接收到的action自动转发给Reducer），我们将在 <code>reducer.js</code> 中对 <code>action</code> 进行处理</li>
+<li><strong>!!!重点：</strong> reducer 中只能接收 state ，但不能直接改变 state。因此，我们需要换种方法：定义一个新的state变量，作为临时变量，将 state 通过 <code>JSON.parse(JSON.stringify(state))</code> 进行深度拷贝，通过重新赋值改变临时变量，再将新的状态抛出</li>
+</ol>
+<h4 id="用newState更新组件"><a href="#用newState更新组件" class="headerlink" title="用newState更新组件"></a>用newState更新组件</h4><p>经过上述操作后，<code>Reducer</code> 通过 <code>action</code> 修改了原始 state 并抛出了新的状态 newState, 但是 newState 还没有被我们的组件给利用，现在就将这最后一环补上，实现整个 Redux 的工作流程。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span>;<br><span class="hljs-keyword">import</span> &#123; Input, Button, List &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span>;<br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store/index&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoList</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-built_in">this</span>.inputChangeValue = <span class="hljs-built_in">this</span>.inputChangeValue.bind(<span class="hljs-built_in">this</span>)<br>        <span class="hljs-built_in">this</span>.state = store.getState()<br>        <span class="hljs-comment">//绑定storeChange函数指向this；仓库订阅storeChange函数</span><br>        <span class="hljs-built_in">this</span>.storeChange = <span class="hljs-built_in">this</span>.storeChange.bind(<span class="hljs-built_in">this</span>)<br>        store.subscribe(<span class="hljs-built_in">this</span>.storeChange)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">inputChangeValue</span>(<span class="hljs-params">e</span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> action = &#123;<br>            type: <span class="hljs-string">&quot;input_change_value&quot;</span>,<br>            value: e.target.value,<br>        &#125;<br>        store.dispatch(action)<br>    &#125;<br>    <br>    <span class="hljs-comment">//从仓库中获取新的状态，重新渲染组件</span><br>    <span class="hljs-function"><span class="hljs-title">storeChange</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">this</span>.setState(store.getState())<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &lt;Input placeholder=&#123;<span class="hljs-built_in">this</span>.state.inputValue&#125; style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;250px&quot;</span>,<span class="hljs-attr">marginRight</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125; <br>                        onChange=&#123;<span class="hljs-built_in">this</span>.inputChangeValue&#125;<br>                    /&gt;<br>                    &lt;Button type=<span class="hljs-string">&quot;primary&quot;</span> &gt;添加&lt;/Button&gt;<br>                &lt;/div&gt;<br>                &lt;div style=&#123;&#123;<span class="hljs-attr">width</span>:<span class="hljs-string">&quot;325px&quot;</span>,<span class="hljs-attr">margin</span>:<span class="hljs-string">&quot;10px&quot;</span>&#125;&#125;&gt;<br>                    &lt;List <br>                        size = <span class="hljs-string">&quot;small&quot;</span><br>                        bordered<br>                        dataSource = &#123;<span class="hljs-built_in">this</span>.state.list&#125;<br>                        renderItem = &#123;<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> &#123; <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List.Item</span>&gt;</span>&#123;item&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">List.Item</span>&gt;</span></span>) &#125;&#125;<br>                    /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoList;<br></code></pre></td></tr></table></figure>
+<p><strong>注意以下几点：</strong></p>
+<ol>
+<li><code>this.setState()</code>接收的对象是<code>store.getState()</code>，即仓库中的状态而非 this.state。</li>
+<li>仓库需要订阅<code>storeChange()</code>方法，不订阅程序仍能正常运行，但是在某些地方会出错，为了避免这种情况，请将订阅写在 constructor 中。</li>
+</ol>
+<hr>
+<p>以上就是 Redux 基础的一些操作流程，后续的 Button onClick 事件，List onClick 事件不再详细讲解，感兴趣的同学可在下方整体的代码中找到详细的注释。以上就是我对Redux学习的一些体会，希望对各位有所启示。</p>
+<h3 id="TodoList-Redux-实现及详细注释"><a href="#TodoList-Redux-实现及详细注释" class="headerlink" title="TodoList Redux 实现及详细注释"></a>TodoList Redux 实现及详细注释</h3><h4 id="“-src-index-js”"><a href="#“-src-index-js”" class="headerlink" title="“./src/index.js”"></a>“./src/index.js”</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;<br><br><span class="hljs-comment">// 引入组件，组件首字母大写</span><br><span class="hljs-keyword">import</span> TodoList <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./TodoList&#x27;</span> <br><br>ReactDOM.render(<br>  &lt;React.StrictMode&gt;<br>    &lt;TodoList /&gt; <br>  &lt;/React.StrictMode&gt;,<br>  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>)<br>);<br></code></pre></td></tr></table></figure>
+
+<h4 id="“-src-TodoList-js”"><a href="#“-src-TodoList-js”" class="headerlink" title="“./src/TodoList.js”"></a>“./src/TodoList.js”</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// imrc</span><br><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-comment">// npm install antd --save ; import css file</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;antd/dist/antd.css&quot;</span><br><span class="hljs-comment">// 引入CSS样式后，还需引入用到的组件</span><br><span class="hljs-keyword">import</span> &#123; Input, Button, List &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;antd&quot;</span><br><span class="hljs-comment">// 引入 store，绑定 component 和 store</span><br><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./store/index&quot;</span><br><br><span class="hljs-comment">// 将默认 state 存入 reducer -- defaultState 中</span><br><span class="hljs-comment">// const data = [</span><br><span class="hljs-comment">//     &quot;第一条数据&quot;,</span><br><span class="hljs-comment">//     &quot;第二条数据&quot;,</span><br><span class="hljs-comment">//     &quot;第三条数据&quot;,</span><br><span class="hljs-comment">// ]</span><br><br><span class="hljs-comment">// ccc</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TodoList</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">props</span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>(props);<br>        <span class="hljs-comment">// store.getState() 方法从 store 仓库获取 state，固定方法</span><br>        <span class="hljs-built_in">this</span>.state = store.getState()<br><br>        <span class="hljs-comment">// storeChange 函数绑定 this</span><br>        <span class="hljs-built_in">this</span>.storeChange = <span class="hljs-built_in">this</span>.storeChange.bind(<span class="hljs-built_in">this</span>)<br>        <span class="hljs-comment">// store 订阅 redux 状态，状态更新则重新渲染</span><br>        store.subscribe(<span class="hljs-built_in">this</span>.storeChange)<br>    &#125;<br><br>    <span class="hljs-comment">// 定义 onChange 函数 changeInputValue</span><br>    <span class="hljs-comment">// 将最新输入的状态通过 action 传递给 store</span><br>    <span class="hljs-comment">// action 是一个对象，需要声明。</span><br>    <span class="hljs-comment">// action: type 属性是必需的，type 属性值自定义，表示该 action 的名字; 其余属性自定义，例如 value</span><br>    <span class="hljs-comment">// e.target.value 获取事件 event 对象的值</span><br>    <span class="hljs-comment">// store.dispatch(action) 是必需的，将 action 绑定到 store 上，参考 redux 官方文档，这是默认的结构</span><br>    <span class="hljs-comment">// store 只是仓库，没有管理能力，根据 store 的自动推送策略，store 会将接收的 action 自动转发给 reducer</span><br>    <span class="hljs-function"><span class="hljs-title">changeInputValue</span>(<span class="hljs-params">e</span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> action = &#123;<br>            type: <span class="hljs-string">&quot;change_input_value&quot;</span>,<br>            value: e.target.value,<br>        &#125;<br>        store.dispatch(action)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">valueSubmit</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> action = &#123;<br>            type: <span class="hljs-string">&quot;value_submit&quot;</span>,<br>        &#125;<br>        store.dispatch(action)<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">deleteItem</span>(<span class="hljs-params">idx</span>)</span> &#123;<br>        <span class="hljs-keyword">const</span> action = &#123;<br>            type: <span class="hljs-string">&quot;delete_item&quot;</span>,<br>            index: idx,<br>        &#125;<br>        store.dispatch(action)<br>    &#125;<br><br>    <span class="hljs-comment">// reducer action 只更新了 store 状态，需要定义一个 storeChange 函数来更新组件</span><br>    <span class="hljs-comment">// 通过 store.getState() 获取仓库状态，后用 setState 方法重新渲染</span><br>    <span class="hljs-function"><span class="hljs-title">storeChange</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">this</span>.setState(store.getState())<br>    &#125;<br><br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;div style=&#123;&#123; <span class="hljs-attr">margin</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;&gt;<br>                    &#123;<span class="hljs-comment">/* </span><br><span class="hljs-comment">                    1.React - style 接收css样式对象 </span><br><span class="hljs-comment">                    2.width 改变宽度；height 改变高度；margin 改变外边距；marginRight 设置右边距</span><br><span class="hljs-comment">                    3.</span><br><span class="hljs-comment">                    - placeholder=&quot;Please input something ...&quot;</span><br><span class="hljs-comment">                    + placeholder=&#123;this.state.inputValue&#125;</span><br><span class="hljs-comment">                    4.添加 onChange 事件，监听 input 文本框内容变化,不要忘记 .bind</span><br><span class="hljs-comment">                    + onChange=&#123;this.changeInputValue.bind(this)</span><br><span class="hljs-comment">                    */</span>&#125;<br>                    &lt;Input<br>                        placeholder=&#123;<span class="hljs-built_in">this</span>.state.inputValue&#125;<br>                        style=&#123;&#123; <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;250px&quot;</span>, <span class="hljs-attr">marginRight</span>: <span class="hljs-string">&quot;10px&quot;</span> &#125;&#125;<br>                        onChange=&#123;<span class="hljs-built_in">this</span>.changeInputValue.bind(<span class="hljs-built_in">this</span>)&#125;<br>                    /&gt;<br>                    &#123;<span class="hljs-comment">/* </span><br><span class="hljs-comment">                    1.开头要引入 antd 的 Button 组件</span><br><span class="hljs-comment">                    2.type 属性见 antd 的 Button 组件文档说明</span><br><span class="hljs-comment">                    3.</span><br><span class="hljs-comment">                    +onClick=&#123;this.valueSubmit.bind(this)&#125;</span><br><span class="hljs-comment">                    */</span>&#125;<br>                    &lt;Button<br>                        type=<span class="hljs-string">&quot;primary&quot;</span><br>                        onClick=&#123;<span class="hljs-built_in">this</span>.valueSubmit.bind(<span class="hljs-built_in">this</span>)&#125;<br>                    &gt;输入&lt;/Button&gt;<br>                &lt;/div&gt;<br>                &lt;div style=&#123;&#123; <span class="hljs-attr">margin</span>: <span class="hljs-string">&quot;10px&quot;</span>, <span class="hljs-attr">width</span>: <span class="hljs-string">&quot;325px&quot;</span> &#125;&#125;&gt;<br>                    &#123;<span class="hljs-comment">/* </span><br><span class="hljs-comment">                    1.参照 antd 的 List 组件文档</span><br><span class="hljs-comment">                    2.dataSource 接收一个数组，数组包含List Item</span><br><span class="hljs-comment">                    3.renderItem 渲染 item，固定写法</span><br><span class="hljs-comment">                    4.(item)=&gt;(...)接收dataSource数组中的元素</span><br><span class="hljs-comment">                    5.&lt;List /&gt;理解为外框架，则&lt;List.Item&gt;&lt;/List.Item&gt;理解为框架内的一行，</span><br><span class="hljs-comment">                    &lt;List.Item&gt;&lt;/List.Item&gt;中可以添加其他JSX元素</span><br><span class="hljs-comment">                    6.标签内属性值间用空格或者换行分割</span><br><span class="hljs-comment">                    */</span>&#125;<br>                    &lt;List<br>                        size=<span class="hljs-string">&quot;small&quot;</span><br>                        bordered<br>                        <span class="hljs-comment">// 用 this.state.list 替换 const data</span><br>                        <span class="hljs-comment">// dataSource = &#123;data&#125;</span><br>                        dataSource=&#123;<span class="hljs-built_in">this</span>.state.list&#125;<br>                        <span class="hljs-comment">// -(item) =&gt; (&lt;List.Item&gt;&#123;item&#125;&lt;/List.Item&gt;)</span><br>                        <span class="hljs-comment">// +(item,idx) =&gt; (&lt;List.Item onClick=&#123;this.deleteItem.bind(this,idx)&#125;&gt;&#123;item&#125;&lt;/List.Item&gt;)</span><br>                        <span class="hljs-comment">// 此处箭头函数形式()=&gt;() ，也可写为()=&gt;&#123;return ()&#125;，用&#123;&#125;时要注意必须要用 return 将结果抛出，详情查看 ES6 箭头函数</span><br>                        renderItem=&#123;<span class="hljs-function">(<span class="hljs-params">item,idx</span>) =&gt;</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">List.Item</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;this.deleteItem.bind(this,idx)&#125;</span>&gt;</span>&#123;item&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">List.Item</span>&gt;</span></span>)&#125;<br>                    /&gt;<br>                &lt;/div&gt;<br>            &lt;/div&gt;<br>        );<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> TodoList;<br></code></pre></td></tr></table></figure>
+
+<h4 id="“-src-store-index-js”"><a href="#“-src-store-index-js”" class="headerlink" title="“./src/store/index.js”"></a>“./src/store/index.js”</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sql">// npm <span class="hljs-keyword">install</span> <span class="hljs-comment">--save redux</span><br>// 创建 redux <span class="hljs-keyword">store</span> 仓库：创建 <span class="hljs-keyword">store</span> 文件夹；创建 index.js 文件<br><br>// 引入 createStore 方法，顾名思义<span class="hljs-comment">--创建仓库</span><br><span class="hljs-keyword">import</span> &#123;createStore&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;redux&#x27;</span><br>// 将 reducer 引入 <span class="hljs-keyword">store</span> 中，实现 reducer 到 <span class="hljs-keyword">store</span> 的绑定(见 redux 官方结构图)<br><span class="hljs-keyword">import</span> reducer <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./reducer&#x27;</span><br><br>// 调用 createStore 方法创建 <span class="hljs-keyword">store</span> 仓库<br>// reducer 以参数形式传递给 createStore()，可以理解为在搭建仓库的时候就招募了一个管理员<br>const <span class="hljs-keyword">store</span> = createStore(reducer)<br><br>// 将仓库暴露出去<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">store</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="“-src-store-reducer-js”"><a href="#“-src-store-reducer-js”" class="headerlink" title="“./src/store/reducer.js”"></a>“./src/store/reducer.js”</h4><figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs pf">//仓库需要一个管理员 reducer 进行管理<br><br>// 定义默认<span class="hljs-keyword">state</span><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">default</span>State = &#123;<br>    inputValue: <span class="hljs-string">&quot;Please input something ...&quot;</span>,<br>    list: [<br>            <span class="hljs-string">&quot;第一条数据&quot;</span>,<br>            <span class="hljs-string">&quot;第二条数据&quot;</span>,<br>            <span class="hljs-string">&quot;第三条数据&quot;</span>,<br>        ],<br>&#125;<br><br>// 暴露 reducer 的管理行为：接收 <span class="hljs-keyword">state</span>，根据 action 动作返回新的 <span class="hljs-keyword">state</span><br>// <span class="hljs-keyword">state</span>=<span class="hljs-keyword">default</span>State 写在 action 之前，否则传出的数据不正确，why?<br>// <span class="hljs-keyword">state</span> 参数：store 仓库内的原始状态<br>// action 参数：action 新传递的状态<br>// store 只是仓库，没有管理能力，根据 store 的自动推送策略，store 会将接收的 action 自动转发给 reducer<br>export <span class="hljs-keyword">default</span> (<span class="hljs-keyword">state</span>=<span class="hljs-keyword">default</span>State,action) =&gt; &#123;<br>    // 在 reducer 中，我们获得了原始状态 <span class="hljs-keyword">state</span> 和新传递的状态 action，下一步就是改变 store 内的 <span class="hljs-keyword">state</span><br>    //console.<span class="hljs-keyword">log</span>(<span class="hljs-keyword">state</span>,action)<br><br>    /*<br>    用 if 语句识别当前的 action 对象，<br>    因为每个事件都定义一个 action ，则需要通过 action.type 区分，<br>    这也就解释了为什么 type 属性在 action 中是必需的。<br>    */<br>    if(action.type === <span class="hljs-string">&quot;change_input_value&quot;</span>) &#123;<br>        /*<br>        !!!重点<br>        reducer 中只能接收 <span class="hljs-keyword">state</span> ，但不能直接改变 <span class="hljs-keyword">state</span><br>        因此，我们需要换种方法：<br>        定义一个新的<span class="hljs-keyword">state</span>变量，作为临时变量，将 <span class="hljs-keyword">state</span> 通过 JSON.parse(JSON.stringify(<span class="hljs-keyword">state</span>)) 进行深度拷贝<br>        通过重新赋值改变临时变量，再将新的状态抛出<br>        */<br>        let newState = JSON.parse(JSON.stringify(<span class="hljs-keyword">state</span>))<br>        newState.inputValue = action.value<br>        return newState<br>    &#125;<br><br>    if(action.type === <span class="hljs-string">&quot;value_submit&quot;</span>) &#123;<br>        let newState = JSON.parse(JSON.stringify(<span class="hljs-keyword">state</span>))<br>        newState.list.push(newState.inputValue)<br>        return newState<br>    &#125;<br><br>    if(action.type === <span class="hljs-string">&quot;delete_item&quot;</span>) &#123;<br>        let newState = JSON.parse(JSON.stringify(<span class="hljs-keyword">state</span>))<br>        newState.list.splice(action.index,<span class="hljs-number">1</span>)<br>        return newState<br>    &#125;<br><br>    return <span class="hljs-keyword">state</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+<hr>
+<h2 id="React-三个易错点"><a href="#React-三个易错点" class="headerlink" title="React 三个易错点"></a>React 三个易错点</h2><ol>
+<li>store必须是<strong>唯一</strong>的，多个store是坚决不允许，只能有一个store空间</li>
+<li>只有store能改变自己的内容，Reducer不能改变</li>
+<li>Reducer必须是<strong>纯函数</strong></li>
+</ol>
+<h3 id="Store-仓库唯一"><a href="#Store-仓库唯一" class="headerlink" title="Store 仓库唯一"></a>Store 仓库唯一</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">import &#123;createStore&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;redux&quot;</span><br>import reducer <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./reducer&#x27;</span><br>const store = createStore(reducer)<br><span class="hljs-builtin-name">export</span><span class="hljs-built_in"> default </span>store;<br></code></pre></td></tr></table></figure>
+<p>我们在 <code>/store/index.js</code> 文件中，用createStore()方法，声明了一个store。之后整个应用都在使用这个 store，并且只能创建和使用这一个 store ，否则会报错。</p>
+<h3 id="改变-state-的是-Store-，而不是-Reducer"><a href="#改变-state-的是-Store-，而不是-Reducer" class="headerlink" title="改变 state 的是 Store ，而不是 Reducer"></a>改变 state 的是 Store ，而不是 Reducer</h3><p>我们在写 redux 时将业务逻辑代码都写在了 Reducer 中，但这并不意味着组建的 state 状态是在 Reducer 中改变的。事实上 Reducer 中只能接收 state ，而不允许改变 state。</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs pf">export <span class="hljs-keyword">default</span> (<span class="hljs-keyword">state</span> = <span class="hljs-keyword">default</span>State, action) =&gt; &#123;<br>    if (action.type === INPUT_CHANGE_VALUE) &#123;<br>        let newState = JSON.parse(JSON.stringify(<span class="hljs-keyword">state</span>))<br>        newState.inputValue = action.value<br>        return newState<br>    &#125;<br>    return <span class="hljs-keyword">state</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如上述代码示例，在 Reducer 中我们声明了一个新的临时状态变量<code>newState</code>来深度拷贝当前状态，最终只是将新的状态作了一个返回，返回到了store中，并没有作任何改变。Reudcer 只是返回了更改的数据，但是并没有更改 store 中的数据，store 拿到了 Reducer 的数据，自己对自己进行了更新。</p>
+<blockquote>
+<p>关于 Store 和 Reducer 中的 state 关联，引用一个网友的评论：<br>redux内的reducer里面的state初始时是一个默认赋值，当store里有state数据时，每次传入当前的currentstate给reducer内的state，所以reducer每次拷贝的是当前的state状态，并不是defaultvalue，reducer 经过 action 后返回更改的 newState 状态到 Store 中，而 Store 会将这些状态改动更新到仓库的状态中。</p>
+</blockquote>
+<h3 id="Reducer-必须是纯函数"><a href="#Reducer-必须是纯函数" class="headerlink" title="Reducer 必须是纯函数"></a>Reducer 必须是纯函数</h3><p><strong>纯函数：</strong> 如果函数的调用参数相同，则永远返回相同的结果。<strong>返回结果</strong>不依赖于程序执行期间函数外部任何状态或数据的变化，必须<strong>只依赖于其输入参数</strong>。<br>简单理解，若1. 某一函数的返回结果是由传入的值(形参)决定的，而不是其它的东西决定的，2. 函数不产生副作用(不影响外部变量)，那么该函数就是纯函数。</p>
+<ul>
+<li><p>纯函数</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gml">const aaa = (<span class="hljs-symbol">x</span>, <span class="hljs-symbol">y</span>) =&gt; &#123;<br>    let m = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-symbol">x</span> + <span class="hljs-symbol">y</span> + m <span class="hljs-comment">//函数返回结果由函数参数决定</span><br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>非纯函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> xxx = <span class="hljs-function">(<span class="hljs-params">x, y</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">let</span> m = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>() <span class="hljs-comment">//或 ajax,axios 异步请求等</span><br>    <span class="hljs-keyword">return</span> x + y + m <span class="hljs-comment">//函数结果受外部影响，结果不能由参数决定</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Reducer 中返回状态只由 state 和 action 决定。</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs pf">export <span class="hljs-keyword">default</span> (<span class="hljs-keyword">state</span> = <span class="hljs-keyword">default</span>State, action) =&gt; &#123;<br>    if (action.type === INPUT_CHANGE_VALUE) &#123;<br>        let newState = JSON.parse(JSON.stringify(<span class="hljs-keyword">state</span>))<br>        newState.inputValue = action.value<br>        return newState<br>    &#125;<br>    return <span class="hljs-keyword">state</span><br>&#125;<br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/React/">React</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/React/">React</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Redux/">Redux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/12/02/Redux%E5%B7%A5%E7%A8%8B%E4%BC%98%E5%8C%96/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Redux工程优化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/29/%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6%EF%BC%88Higher-Order%20Components%EF%BC%89/">
+                        <span class="hidden-mobile">React小书学习笔记 —— 高阶组件（Higher-Order Components）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/12/01/Redux%E5%9F%BA%E7%A1%80/';
+        this.page.identifier = '/2020/12/01/Redux%E5%9F%BA%E7%A1%80/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

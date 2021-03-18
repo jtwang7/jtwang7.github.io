@@ -1,0 +1,673 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="前言学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推胡子大哈的React小书，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>React小书学习笔记 —— 实战分析：评论功能(四) - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="React小书学习笔记 —— 实战分析：评论功能(四)">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-18 21:02" pubdate>
+        2020年11月18日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">React小书学习笔记 —— 实战分析：评论功能(四)</h1>
+            
+            <div class="markdown-body">
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/hu-zi-da-ha">胡子大哈</a>的<a target="_blank" rel="noopener" href="http://huziketang.mangojuice.top/books/react/lesson18">React小书</a>，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！</p>
+<a id="more"></a>
+
+<h1 id="实战分析：评论功能-四"><a href="#实战分析：评论功能-四" class="headerlink" title="实战分析：评论功能(四)"></a>实战分析：评论功能(四)</h1><p>参考教程：React小书–第25节(实战分析：评论功能(四)）<br>教程作者：<a target="_blank" rel="noopener" href="https://www.zhihu.com/people/hu-zi-da-ha">胡子大哈</a><br>参考链接：<a target="_blank" rel="noopener" href="http://huziketang.mangojuice.top/books/react/lesson18">React小书</a><br><strong>本文搭配原文教程食用，风味更佳~!</strong></p>
+<hr>
+<h2 id="本篇重点"><a href="#本篇重点" class="headerlink" title="本篇重点"></a>本篇重点</h2><p>本篇是对 React 小书内代码实战过程中遇到的一些疑难点做的解释性帖子。因此不注重于代码的连贯性，代码按照 React 小书介绍排布，将针对具体细节做深入阐述。</p>
+<h2 id="自动聚焦到评论框"><a href="#自动聚焦到评论框" class="headerlink" title="自动聚焦到评论框"></a>自动聚焦到评论框</h2><h3 id="React-小书代码"><a href="#React-小书代码" class="headerlink" title="React 小书代码"></a>React 小书代码</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>...<br>    &lt;textarea<br>      ref=&#123;<span class="hljs-function">(<span class="hljs-params">textarea</span>) =&gt;</span> &#123;<span class="hljs-built_in">this</span>.textarea = textarea&#125;&#125;<br>      value=&#123;<span class="hljs-built_in">this</span>.state.content&#125;<br>      onChange=&#123;<span class="hljs-built_in">this</span>.handleContentChange.bind(<span class="hljs-built_in">this</span>)&#125; /&gt;<br>...<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CommentInput</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>  static propTypes = &#123;<br>    onSubmit: <span class="hljs-type">PropTypes</span>.func<br>  &#125;<br><br>  constructor () &#123;<br>    <span class="hljs-keyword">super</span>()<br>    <span class="hljs-keyword">this</span>.state = &#123;<br>      username: &#x27;&#x27;,<br>      content: &#x27;&#x27;<br>    &#125;<br>  &#125;<br><br>  componentDidMount () &#123;<br>    <span class="hljs-keyword">this</span>.textarea.focus()<br>  &#125;<br>...<br></code></pre></td></tr></table></figure>
+
+<h3 id="侧重点"><a href="#侧重点" class="headerlink" title="侧重点"></a>侧重点</h3><ul>
+<li>学会用 ref 属性调用 DOM 元素的 API</li>
+<li>componentDidMount() 生命周期使用</li>
+<li>PropTypes 限制输入参数类型</li>
+<li><code>.focus()</code></li>
+</ul>
+<h3 id="代码编写思路"><a href="#代码编写思路" class="headerlink" title="代码编写思路"></a>代码编写思路</h3><ol>
+<li>给标签添加 <code>ref</code> 属性值</li>
+<li>在 <code>componentDidMount()</code> 中调用 <code>.focus()</code>，确保组件挂载完成后聚焦光标到组件。</li>
+</ol>
+<h3 id="实战填坑"><a href="#实战填坑" class="headerlink" title="实战填坑"></a>实战填坑</h3><ol>
+<li>在 <code>&lt;textarea ref=&#123;(textarea)=&gt;&#123;this.textarea=textarea&#125;&#125; value=&#123;this.state.content&#125; onChange=&#123;this.handleContentChange.bind(this)&#125; /&gt;</code> 中，<code>this</code>指的是什么？<code>ref</code>传的形参是什么？<code>(textarea)</code>可以变为其他值吗，比如<code>(aaa)=&gt;&#123;this.textarea=aaa&#125;</code>？<code>onChange</code>监听函数是什么？</li>
+</ol>
+<ul>
+<li><strong><code>this</code>指的是什么？</strong> 请参考<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/353757734/answer/964557747">JavaScript 的 this 原理是什么？</a>仔细研读，此处不知道理解的对不对，暂且记录一下：首先<code>this</code>是在箭头函数里的，箭头函数的this取决于它的上级调用对象，其上级为<code>render()</code>的函数调用，而<code>render()</code>调用的主体是 <code>class CommentInput</code> 类，因此，<code>this</code> 指向的是该类，即 <code>CommentInput</code> 组件，因此<code>this.state; this.textarea</code>就都很好解释了，其实就是组件类下的一些属性。</li>
+<li><strong><code>ref</code>传的形参是什么？</strong> <code>ref</code>传入的是该属性所对应标签对象的 DOM 元素，这里指的是 textarea 输入框。</li>
+<li><strong><code>(textarea)</code>可以变为其他值吗，比如<code>(aaa)=&gt;&#123;this.textarea=aaa&#125;</code>？</strong> 可以，<code>()</code>内的 textarea 只是一个形参名称，其实际值为 textarea 的 DOM 节点。</li>
+<li><strong><code>onChange</code>监听函数是什么？</strong> 简要了解可参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/149353182">JavaScript 中常见HTML事件</a>，<code>onChange</code>事件监听一个域的内容是否发生改变，在改变时触发绑定的函数，即触发<code>handleContentChange()</code>。在此重点讲一下 <code>event</code>对象和事件监听的关系，参考<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/jsref/dom_obj_event.asp">HTML DOM Event 对象</a>，以下是我当前的理解：event 对象代表事件的状态，比如事件在其中发生的元素、键盘按键的状态、鼠标的位置、鼠标按钮的状态。但是我们如何去用这些状态呢？这就要靠 <code>onClick</code>,<code>onChange</code>等事件句柄监听 event 对象状态，在状态发生相应变化是触发绑定的函数，那么显而易见，所触发的函数必然接收了该事件的状态，即 event 对象，每个事件监听函数都会有一个形参 event (例如<code>handleClick(event)</code>)，注意我们提及 event 它是一个对象，对象则必然有它对应的属性，结合<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/jsref/dom_obj_event.asp">HTML DOM Event 对象</a>，可查到 event 对象对应的属性值，其中 <code>event.target</code>,<code>event.currentTarget</code>目前我用的比较多。</li>
+</ul>
+<ol start="2">
+<li><code>propTypes</code>的使用。<br>大小写很容易搞混，这里要重点关注一下，按照规范来写。</li>
+</ol>
+<ul>
+<li>首先是<code>prop-types</code>的引入，代码为<code>import PropTypes from &#39;prop-types&#39;</code></li>
+<li>其次是静态对象声明，因为是一个变量，所以用驼峰命名法，代码为<code>static propTypes = &#123;&#125;</code></li>
+<li>内部是对参数的类型限制，调用<code>PropTypes</code>，因为<code>PropTypes</code>是<code>&#39;prop-types&#39;</code>中的一个类，所以开头是大写的，后面跟类型属性。</li>
+</ul>
+<ol start="3">
+<li><code>.foucus()</code>作用<br>focus() 方法用于为 checkbox 赋予焦点。语法<code>checkboxObject.focus()</code>。<br>拓展：移开 checkbox 的焦点用 blur() 方法，语法<code>checkboxObject.blur()</code></li>
+</ol>
+<h2 id="持久化用户名"><a href="#持久化用户名" class="headerlink" title="持久化用户名"></a>持久化用户名</h2><h3 id="React-小书代码-1"><a href="#React-小书代码-1" class="headerlink" title="React 小书代码"></a>React 小书代码</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">...<br>    &lt;input<br>      value=&#123;<span class="hljs-keyword">this</span>.state.username&#125;<br>      onBlur=&#123;<span class="hljs-keyword">this</span>.handleUsernameBlur.bind(<span class="hljs-keyword">this</span>)&#125;<br>      onChange=&#123;<span class="hljs-keyword">this</span>.handleUsernameChange.bind(<span class="hljs-keyword">this</span>)&#125; /&gt;<br>...<br></code></pre></td></tr></table></figure>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CommentInput</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>  constructor () &#123;<br>    <span class="hljs-keyword">super</span>()<br>    <span class="hljs-keyword">this</span>.state = &#123;<br>      username: &#x27;&#x27;,<br>      content: &#x27;&#x27;<br>    &#125;<br>  &#125;<br><br>  componentDidMount () &#123;<br>    <span class="hljs-keyword">this</span>.textarea.focus()<br>  &#125;<br><br>  _saveUsername (username) &#123;<br>    localStorage.setItem(<span class="hljs-symbol">&#x27;usernam</span>e&#x27;, username)<br>  &#125;<br><br>  handleUsernameBlur (event) &#123;<br>    <span class="hljs-keyword">this</span>._saveUsername(event.target.value)<br>  &#125;<br>...<br></code></pre></td></tr></table></figure>
+
+<h3 id="侧重点-1"><a href="#侧重点-1" class="headerlink" title="侧重点"></a>侧重点</h3><ul>
+<li>LocalStorage浏览器本地存储的使用</li>
+<li>onBlur() 事件监听句柄</li>
+<li>handlexxx 事件监听函数</li>
+<li>componentWillMount() 生命周期</li>
+</ul>
+<h3 id="代码编写思路-1"><a href="#代码编写思路-1" class="headerlink" title="代码编写思路"></a>代码编写思路</h3><ol>
+<li>通过<code>onBlur()</code>事件句柄绑定一个监听函数<code>handleUsernameChange</code>，当event事件状态失焦时，触发监听函数。</li>
+<li>编写监听函数<code>handleUsernameChange</code>，接收事件状态 (即 event 对象)，通过对象属性获取触发事件的目标节点，这里应该指向了<code>&lt;textarea /&gt;</code>，因此通过<code>.value</code>将文本框内值取出，传给私有函数。</li>
+<li>编写私有函数，通过<code>localStorage.setItem(&#39;key&#39;,value)</code>将值存入浏览器本地空间。</li>
+</ol>
+<h3 id="实战填坑-1"><a href="#实战填坑-1" class="headerlink" title="实战填坑"></a>实战填坑</h3><ol>
+<li><p><code>onBlur()</code>是什么？<code>event</code>是什么？<br>参照“自动聚焦到评论框”实战填坑的第一问。</p>
+</li>
+<li><p><code>localStorage</code>的作用和使用方法。<br>参照<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41997724/article/details/84560612">localStorage使用</a>。<br>localStorage 作用：<strong>前提-在HTML5中实现。</strong> 主要是用来作为本地存储来使用的，解决了cookie存储空间不足的问题(cookie中每条cookie的存储空间为4k)，localStorage中一般浏览器支持的是5M大小，这个在不同的浏览器中localStorage会有所不同。</p>
+<blockquote>
+<p>localStorage 优势：<br>拓展了cookie的4K限制；<br>可以将第一次请求的数据直接存储到本地，这个相当于一个5M大小的针对于前端页面的数据库，相比于cookie可以节约带宽，但是这个却是只有在高版本的浏览器中才支持的；<br>localStorage与sessionStorage的唯一一点区别就是localStorage属于永久性存储，而sessionStorage属于当会话结束的时候，sessionStorage中的键值对会被清空；</p>
+</blockquote>
+</li>
+</ol>
+<p><strong>localStorage 两种使用：</strong></p>
+<ul>
+<li><code>localStorage.getItem(&#39;key&#39;)</code>:获取指定<strong>key字段</strong>本地存储的值。 注意，我这里特别强调了字段，即接收的 key 参数是个字符，需要<code>&#39; &#39;</code>包裹。</li>
+<li><code>localStorage.setItem(&#39;key&#39;,value)</code>：将value存储到key字段。 同理，这里key也是字符，value是数据。</li>
+</ul>
+<p><code>.getItem()</code>方法主要是从浏览器本地存储中获取相应 key 的值 value。<br><code>.setItem()</code>方法主要是将值存储到本地存储中的指定 key 字段中，若没有 key 则由本地存储创建一个空的 key。</p>
+<p>localStorage 使用实例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript">在A页面中先存储：<br><span class="hljs-keyword">var</span> imgs = obj_mainform.archivesId  <span class="hljs-comment">//声明个变量存储下数据</span><br><span class="hljs-built_in">localStorage</span>.setItem(<span class="hljs-string">&#x27;key&#x27;</span>,imgs);  <span class="hljs-comment">//将变量imgs存储到name字段</span><br><br>在B页面中使用：<br><span class="hljs-keyword">var</span> naid = <span class="hljs-built_in">localStorage</span>.getItem(<span class="hljs-string">&quot;key&quot;</span>); <span class="hljs-comment">//获取指定key本地存储的值</span><br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>handleUsernameBlur (event) &#123;this._saveUsername(event.target.value)&#125;</code>中，为什么要用<code>this</code>调用类中的私有方法？<br>首先，我们需要知道的一点是，对于这个函数来说，我将 <code>this.</code> 去掉对整个过程没有任何的影响。那我们为什么还要去“多此一举”加入<code>this</code>呢？这就涉及到了 JS 的编程思想，原先 JS 语言提出的过程中，主要是面向函数的，即函数内调用函数，内部函数是通过向上查找发现的，随着 ES6 的提出，JS 的编程思想逐渐从面向函数向<strong>面向对象</strong>转变，此处的<code>this</code>即指向了类这个对象(JS 类的概念是在ES6中提出的)。所以我们在理解的时候可以认为：<strong>类内部函数的调用需要用<code>this</code>是目前一个通用的写法。</strong><br>我们理解了上述的思想后，再回过头来看这段代码：<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">&lt;input<br>      value=&#123;<span class="hljs-keyword">this</span>.state.username&#125;<br>      onBlur=&#123;<span class="hljs-keyword">this</span>.handleUsernameBlur.bind(<span class="hljs-keyword">this</span>)&#125;/&gt;<br></code></pre></td></tr></table></figure>
+第二行，<code>this.handleUsernameBlur</code>是类内函数调用的一个通用写法，所以 <code>this</code> 指的就是类(准确来说是类的实例)，那有人就问，既然都指向类了，为什么还要<code>.bind(this)</code>呢？前面提到的<code>this.xxx</code>是类内调用函数的通用写法，虽然函数写在了类内，但它并没有与类进行一个绑定，当触发该事件监听函数时，是在全局环境下运行<code>handleUsernameBlur()</code>，即 windows 对象调用的该函数，this 就指向了 windows，为了让类内函数在触发时指向类，就需要对它做一个绑定。<br>都谈到这了，那么就说一下第一行的<code>this</code>的指向，<code>this</code> 永远指向<strong>调用</strong>包含自身（this本身）的<strong>函数</strong>对应的<strong>对象</strong>。那么是什么函数调用了<code>this.state.username</code>呢？答案是<code>render()</code>，或者可以理解为是<code>CommentInput.render()</code>，那么显而易见这个对象，也就是this所指向的是 CommentInput。</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/React/">React</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/React/">React</a>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/20/ResNet/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Resnet 详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/17/PropTypes%20%E5%92%8C%E7%BB%84%E4%BB%B6%E5%8F%82%E6%95%B0%E9%AA%8C%E8%AF%81/">
+                        <span class="hidden-mobile">React小书学习笔记 —— PropTypes 和组件参数验证</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/11/18/%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90%EF%BC%9A%E8%AF%84%E8%AE%BA%E5%8A%9F%E8%83%BD(%E5%9B%9B)/';
+        this.page.identifier = '/2020/11/18/%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90%EF%BC%9A%E8%AF%84%E8%AE%BA%E5%8A%9F%E8%83%BD(%E5%9B%9B)/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

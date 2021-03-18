@@ -1,0 +1,626 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="在深度学习中，难免会遇到神经网络多层堆叠导致模型性能退化的情况，现阶段常用 Resnet 处理，但关于 Resnet 的内部机制没有深入了解。由于课程汇报的需要，故在此对 Resnet 做一个深入的学习和总结归纳，参考资料均来自知乎。">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>Resnet 详解 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Resnet 详解">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-20 16:05" pubdate>
+        2020年11月20日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      38
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Resnet 详解</h1>
+            
+            <div class="markdown-body">
+              <h1 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h1><p>参考链接：<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/31852747">你必须要知道CNN模型：ResNet</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/72589432">梯度消失和梯度爆炸及解决方法</a></p>
+<hr>
+<h2 id="深层网络的退化问题"><a href="#深层网络的退化问题" class="headerlink" title="深层网络的退化问题"></a>深层网络的退化问题</h2><ul>
+<li><p>深层网络结构为什么会导致模型退化？<br>网络的深度对于模型特征提取至关重要，按理来说，不断堆叠网络层数，模型可以进行更加复杂的特征模式提取，因此模型深度越深，就能取得更好的结果。但事实上，当网络深度增加到一定程度后，网络准确度出现了饱和，甚至出现下降，即网络退化(Degradation problem)，网络退化的原因主要是由<strong>梯度消失</strong>或者<strong>梯度爆炸</strong>造成的。</p>
+</li>
+<li><p>什么是梯度消失？什么是梯度爆炸？<br>目前优化神经网络的方法都是根据损失函数计算的误差通过梯度反向传播的方式(即BP)，指导深度网络权值的更新优化。其中将误差从末层往前传递的过程需要<strong>链式法则</strong>（Chain Rule)， 而链式法则是一个<strong>连乘</strong>的形式，梯度将以指数形式传播。随着网络深度不断增加，在根据损失函数计算的误差通过梯度反向传播的方式对深度网络权值进行更新时，容易导致得到的梯度值接近0或特别大，也就是梯度消失或爆炸。反向传播即链式法则如下图所示，梯度值为学习率右侧的偏导求值，当导数部分小于1时，经过链式法则连乘不断放大，最终梯度值会接近于0，模型几乎不再更新，即梯度消失，若导数部分大于1，经过链式法则连乘，最终梯度值会越来越大，发生梯度爆炸。<br><img src="/img/posts_img/20201117113531949_7119.png" srcset="/img/loading.gif">    <img src="/img/posts_img/20201117113716099_20642.png" srcset="/img/loading.gif"></p>
+</li>
+<li><p>梯度消失/梯度爆炸解决方法<br>梯度消失和梯度爆炸问题都是因为网络太深，网络权值更新不稳定造成的，本质上是因为梯度反向传播中的连乘效应。解决梯度消失、爆炸主要有以下几种方法：</p>
+</li>
+</ul>
+<ol>
+<li>梯度剪切：主要是针对梯度爆炸，其思想是设置一个梯度剪切阈值，然后更新梯度的时候，如果梯度超过这个阈值，那么就将其强制限制在这个范围之内。这可以防止梯度爆炸。</li>
+<li>权重正则化：通过对网络权重做正则来限制过拟合。如果发生梯度爆炸，那么权值就会变的非常大，反过来，通过正则化项来限制权重的大小，也可以在一定程度上防止梯度爆炸的发生。</li>
+<li>选择ReLU代替Sigmoid作为激活函数：使用sigmoid作为损失函数，其梯度是不可能超过0.25的，这样经过链式求导之后，很容易发生梯度消失(即越乘越小)，同理，tanh作为损失函数，它的倒数仍然是小于1。relu函数的导数在正数部分是恒等于1的，因此在深层网络中使用relu激活函数就不会导致梯度消失和爆炸的问题。</li>
+<li>batch normalization：通过对每一层的输出规范为均值和方差一致的方法，消除了权重参数放大缩小带来的影响，进而解决梯度消失和爆炸的问题，或者可以理解为BN将输出从饱和区拉倒了非饱和区。</li>
+<li><strong>残差网络(ResNet)</strong></li>
+<li>LSTM门结构</li>
+</ol>
+<h2 id="ResNet-1"><a href="#ResNet-1" class="headerlink" title="ResNet"></a>ResNet</h2><h3 id="恒等映射"><a href="#恒等映射" class="headerlink" title="恒等映射"></a>恒等映射</h3><p>假设现在存在一个浅层网络，为了获得更好地学习能力，你想通过向上堆积新层的方式来建立深层网络，一个极端情况是这些增加的层什么也不学习，仅仅复制浅层网络的特征，即这样新层是<strong>恒等映射（Identity mapping）</strong>。在这种情况下，深层网络应该至少和浅层网络性能一样，不应该出现退化现象，但是显然事实如刚才所说，存在梯度爆炸或梯度消失的现象，那么残差网络单元是如何解决这一问题的呢？</p>
+<h3 id="残差单元"><a href="#残差单元" class="headerlink" title="残差单元"></a>残差单元</h3><p><img src="/img/posts_img/20201117115531507_1447.png" srcset="/img/loading.gif"><br>如图为残差网络ResNet的一个残差学习单元<br>原先当输入为$x$时，其对应输出的特征为$H(x)$，而残差学习单元将学习的目标转化为了对残差$F(x)=H(x)-x$的学习，最终输出的仍是$H(x)$，只是输出从原有的$x$变为了$x+F(x)$。<br>为什么要这样做？之所以这样是因为<strong>残差学习相比原始特征直接学习更容易</strong>。当残差为0时，此时堆积层仅仅做了恒等映射(即$H(x)=x+0$)，至少网络性能不会下降，实际上残差不会为0，这也会使得堆积层在输入特征基础上学习到新的特征，从而拥有更好的性能。</p>
+<h3 id="ResNet采用的两种残差单元"><a href="#ResNet采用的两种残差单元" class="headerlink" title="ResNet采用的两种残差单元"></a>ResNet采用的两种残差单元</h3><h4 id="浅层残差单元"><a href="#浅层残差单元" class="headerlink" title="浅层残差单元"></a>浅层残差单元</h4><p>对于短路连接，当输入和输出维度一致时，可以直接将输入加到输出上。但是当维度不一致时（对应的是维度增加一倍），这就不能直接相加。有两种策略：（1）采用zero-padding增加维度，此时一般要先做一个downsamp，可以采用strde=2的pooling，这样不会增加参数；（2）采用新的映射（projection shortcut），一般采用1x1的卷积，这样会增加参数，也会增加计算量。短路连接除了直接使用恒等映射，当然都可以采用projection shortcut。<br><img src="/img/posts_img/20201117120420866_906.png" srcset="/img/loading.gif"><br>如图，输入维度为64维，内部经过2个3*3，深度为64的卷积核对残差进行学习，用relu激活函数(原因参照上面陈述)进行非线性激活。(可以理解为将外部$x$的学习转化为内部残差$F(x)$的学习)。</p>
+<h4 id="深层残差单元"><a href="#深层残差单元" class="headerlink" title="深层残差单元"></a>深层残差单元</h4><p><img src="/img/posts_img/20201117120752930_11450.png" srcset="/img/loading.gif"><br>如图，输入维度为256维，用 $1\times1$ 卷积核下采样，将深度降为64维，经过 $3\times3$ 卷积核对残差进行内部学习，再通过 $1\times1$ 卷积将维度还原到与输入维度一致，做相加操作。</p>
+<hr>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>最近看到一篇关于 ResNet 的知乎讲解很有意思，讲得非常透彻，特此安利一下：<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/64494691">Resnet到底在解决一个什么问题呢？</a><br>关于里面一些有趣的点，做一下总结：</p>
+<ol>
+<li>什么造成了模型退化？<br>模型<strong>退化现象</strong>：当神经网络的层数堆叠到一定程度时，模型的效果不升反降。<br>起初人们认为是模型过拟合导致的 (模型性能不佳，存在高偏差，导致欠拟合；模型复杂度过高，存在高方差，导致过拟合)，但是很明显当前CNN面临的效果退化不是因为过拟合，因为过拟合的现象是”高方差，低偏差”，即测试误差大而训练误差小。但实际上，深层CNN的训练误差和测试误差都很大。<br>那么是否与模型梯度爆炸/梯度消失有关？作者首先介绍了一些反向传播的知识，很通俗易懂，可以仔细研读一下(<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/64494691">Resnet到底在解决一个什么问题呢？</a>)。在反向传播中，其输出值的大小除了与求导式子有关外，很大程度上还取决于输入值的大小，当输入值大于1时，经过反向传播多层的回传，梯度将以几何倍数增长 (涉及了链式求导的知识)，这就造成了深度神经网络梯度爆炸的现象，同理当输入值小于1时，会造成梯度消失的现象。<br>好像是梯度爆炸/消失造成的，可事实真的如此吗？我们知道在 Resnet 前，人们处理梯度爆炸/消失时，通常用的是 Batch Normalization，理论上梯度爆炸/消失很早就被人们解决一大半了，为什么还是会导致模型退化呢？</li>
+<li>模型退化不符合常理？<br>按理说，当我们堆叠一个模型时，理所当然的会认为效果会越堆越好。因为，假设一个比较浅的网络已经可以达到不错的效果，那么即使之后堆上去的网络什么也不做，模型的效果也不会变差。然而事实上，这却是问题所在。“什么都不做”恰好是当前神经网络最难做到的东西之一。不断堆叠神经网络层数，会导致神经网络在具有无限可能的“非线性”道路上越走越远，以至于模型走了很远后，忘记了它为什么要出发，拟合的目标是什么 (“不忘初心，牢记使命”诚不欺我)。因此，后续就有了 Resnet 的提出，其初衷就是让模型的内部结构至少有恒等映射的能力。以保证在堆叠网络的过程中，网络至少不会因为继续堆叠而产生退化！</li>
+<li>Resnet 的恒等映射<br>让深层神经网络模型具备恒等映射 $H(x)=x$是一件看似简单，但难以解决的事，此处$x$表示输入，$H(x)$对应模型学习后的输出，在上述说到，模型总会尝试着输出一点新的东西，这就导致$H(x)$和$x$不会相等。但如果把网络设计为$H(x) = F(x) + x$，即直接把恒等映射作为网络的一部分，就可以把问题转化为学习一个残差函数$F(x) = H(x) - x$。因为只要$F(x)=0$，就构成了一个恒等映射$H(x) = x$。 而且，拟合残差至少比拟合恒等映射容易得多，该结构被称为 Residual Block。<br><img src="/img/posts_img/20201120154958055_11900.png" srcset="/img/loading.gif"><br>图中右侧的曲线叫做跳接（shortcut connection），通过跳接在激活函数前，将上一层（或几层）之前的输出与本层计算的输出相加，将求和的结果输入到激活函数中做为本层的输出。数学公式表达如图所示：<br><img src="/img/posts_img/20201120155050630_28876.png" srcset="/img/loading.gif"><br>其中 $F(x,{W_i})$ 是我们学习的目标，即输出输入的残差。以上图为例，残差部分是中间有一个Relu激活的双层权重，为什么一个 Block 中要用两层的权重来表示呢？因为只用一层权重，通过公式计算就会得到以下情况，结果就是加与不加残差块没有差别。<br><img src="/img/posts_img/20201120155336431_27734.png" srcset="/img/loading.gif"></li>
+<li>Resnet 在 VGG 上的变化，即网络结构和一些细节<br>图结构可见<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/64494691">Resnet到底在解决一个什么问题呢？</a><br>这里主要对空间维度不一致和深度不一致做一个解释。<br>空间维度不一致的解决方法：在跳接的部分给输入x加上一个线性映射，具体如图。<br><img src="/img/posts_img/20201120155659614_2741.png" srcset="/img/loading.gif"><br>深度维度不一致的解决方法：一种是在跳接过程中加一个 $1\times1$ 的卷积层进行升维，另一种则是直接简单粗暴地补零。事实证明两种方法都行得通。通过 $1\times1$ 卷积升维的方式如图。该结构也被称为是 bottleneck，它通过使用1x1 conv来巧妙地缩减或扩张feature map维度从而使得我们的3x3 conv的filters数目不受外界即上一层输入的影响，除了改变深度维度外，它还节省了计算时间进而缩小整个模型训练所需的时间。<br><img src="/img/posts_img/20201120155831799_13135.png" srcset="/img/loading.gif"></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Deep-Learning/">Deep Learning</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/22/JQuery%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">社矫项目：jQuery事件绑定失效原因总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/18/%E5%AE%9E%E6%88%98%E5%88%86%E6%9E%90%EF%BC%9A%E8%AF%84%E8%AE%BA%E5%8A%9F%E8%83%BD(%E5%9B%9B)/">
+                        <span class="hidden-mobile">React小书学习笔记 —— 实战分析：评论功能(四)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/11/20/ResNet/';
+        this.page.identifier = '/2020/11/20/ResNet/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

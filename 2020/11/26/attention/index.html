@@ -1,0 +1,641 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="对attention的实现机制做了一个简要的梳理，记录目前attention常用的一些模型打分机制及得分系数的作用过程。">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>attention 机制详解 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="attention 机制详解">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-26 11:14" pubdate>
+        2020年11月26日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">attention 机制详解</h1>
+            
+            <div class="markdown-body">
+              <h1 id="attention"><a href="#attention" class="headerlink" title="attention"></a>attention</h1><p>参考链接：<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/69111029">Self-Attention和Transformer</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv4902832/">拆 Transformer 系列二：Multi- Head Attention 机制详解</a><br><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/68482809">目前主流的attention方法都有哪些？</a></p>
+<hr>
+<h2 id="Attention-实现机制-本质"><a href="#Attention-实现机制-本质" class="headerlink" title="Attention 实现机制(本质)"></a>Attention 实现机制(本质)</h2><p>Attention 机制实质上就是一个寻址过程：<br>通过给定一个任务相关的查询 Query 向量 Q，通过计算与 Key 的注意力分布并附加在 Value 上，从而计算 Attention Value。<br>其中涉及到了<strong>注意力打分机制</strong>和<strong>注意力概率分布作用过程</strong>。</p>
+<h2 id="What-is-Q-K-V"><a href="#What-is-Q-K-V" class="headerlink" title="What is Q, K, V ?"></a>What is Q, K, V ?</h2><h3 id="字面理解"><a href="#字面理解" class="headerlink" title="字面理解"></a>字面理解</h3><p>Q: Question，问题<br>K：Key，关键字<br>V：Value，值<br>模型抛出一个问题（被查询的对象），根据辅助的关键字信息，得到两者间的<strong>相似度关系</strong>，经过归一化（softmax）后。作用在目标值上，即实现了根据前者相似度来影响目标的权重分布。<br>前一句体现了注意力的打分机制，后一句则体现了利用概率影响 Value 的作用机制。</p>
+<blockquote>
+<p>本质：根据注意力的打分机制，计算两个对象内部的相似关系，并将其作用于目标中。</p>
+</blockquote>
+<p>关于注意力的整个过程，形象理解如下(转自<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/69111029">Self-Attention和Transformer</a>)：<br><img src="/img/posts_img/20201126104032318_9538.png" srcset="/img/loading.gif"><br><img src="/img/posts_img/20201126104103806_13047.png" srcset="/img/loading.gif"></p>
+<h2 id="注意力打分机制"><a href="#注意力打分机制" class="headerlink" title="注意力打分机制"></a>注意力打分机制</h2><p>$\alpha_i=softmax(s(x_i,q))$，其中$\alpha$为注意力概率分布，$s(x_i,q)$为注意力打分机制。</p>
+<p>常用的注意力打分机制有以下几种：</p>
+<ol>
+<li>加性模型：$s(x_i,q)=v^Ttanh(Wx_i+Uq)$</li>
+<li>点积模型：$s(x_i,q)=x_i^Tq$</li>
+<li>缩放点积模型：$s(x_i,q)=(x_i^Tq)/\sqrt{d_k}$</li>
+<li>双线性模型：$s(x_i,q)=x_i^TWq$</li>
+</ol>
+<p>$attention(V)=\sum_{i=1}^N\alpha_iV_i=\alpha V$</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>缩放点积模型能防止点积结果过大导致 softmax 梯度过小，反向传播困难的情况。缩放点积模型相较于点积模型更好。</li>
+<li>点积模型及缩放点积模型需要保证矩阵的点积规则，及$(N\times H)\cdot(H\times V)$，在 self-attention 中，由于 Q 和 K 矩阵行数相同，因此仅需要注意最后得到结果的矩阵大小。假设 Q 长度为4，embed_dim 为6的序列($6\times 4$)，K 大小为$6\times 3$，那么就不能硬套上述点积公式，因为我们目标是获得 Q 和 K 的相似关系，即最后矩阵大小为 $3\times 4$，所以我们注意力打分的点积模型为 $s(x,q)=K^TQ$。</li>
+<li>若 Q，K 的矩阵点积无法满足点积规则，则可以用双线性模型或者加性模型，其中 W，U 的作用就是将两者拉到同一维度上进行矩阵运算。</li>
+</ol>
+<hr>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><p>阅读了<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/68482809">目前主流的attention方法都有哪些？</a>，特来对注意力打分机制的公式做一个补充。</p>
+<blockquote>
+<p>注意力机制可以分为三步：一是信息输入；二是计算注意力分布α；三是根据注意力分布α 来计算输入信息的加权平均。</p>
+</blockquote>
+<ol>
+<li>信息输入：$X=[x_0,…,x_N]$表示N 个输入信息。注意思考此处$x_i$的编码向量为：<strong>列向量</strong> (对于后续公式的理解很重要!!!)</li>
+<li>注意力分布计算：令<strong>Key=Value=X</strong>，则可以给出注意力分布，$\alpha_i=softmax(s(k_i,q))=softmax(s(x_i,q))$。</li>
+<li>根据打分机制计算注意力得分系数：<br>加性模型：$s(x_i,q)=v^Ttanh(Wx_i+Uq)$<br>点积模型：$s(x_i,q)=x_i^Tq$<br>缩放点积模型：$s(x_i,q)=(x_i^Tq)/\sqrt{d_k}$<br>双线性模型：$s(x_i,q)=x_i^TWq$</li>
+<li>信息加权：注意力分布 $\alpha_i$ 可以解释为在上下文查询q时，<strong>第i个信息受关注的程度</strong>，采用一种“软性”的信息选择机制对输入信息X进行编码为，$attention(q,X)=\sum_{i=1}^N\alpha_iX_i$，用矩阵乘法表示为 $V(K^TQ)$，注意列向量是右乘的形式，若以行向量计算则为左乘形式$(QK^T)V$。</li>
+</ol>
+<h2 id="软性注意力机制（soft-Attention）"><a href="#软性注意力机制（soft-Attention）" class="headerlink" title="软性注意力机制（soft Attention）"></a>软性注意力机制（soft Attention）</h2><p>软性注意力机制有两种：普通模式（<strong>Key=Value=X</strong>）和键值对模式（<strong>Key！=Value</strong>）:<br><img src="/img/posts_img/20201126143000592_26756.png" srcset="/img/loading.gif"></p>
+<h2 id="疑点"><a href="#疑点" class="headerlink" title="疑点"></a>疑点</h2><p>在学习 transformer 过程中一直有个疑问，在点积模型中，$s(x_i,q)=x_i^Tq$，可知，$q$对应的是Q，而$x$对应的是K，可是在transformer中，公式是$QK^T$，按理来说两者表达的是同一个意思，但是矩阵左乘和右乘还是有一定区别的，故对此做了相应的思考，最终得出一个解释：<br>在$s(x_i,q)=x_i^Tq$中，$x_i$是以列向量形式表示的！即假设$x_i$是一个embed_dim=4的单词，那么实际上它的向量形式表示为$(4\times 1)$。<br>所以：<br><strong>向量尽量以列向量表示！！！</strong><br><strong>向量尽量以列向量表示！！！</strong><br><strong>向量尽量以列向量表示！！！</strong><br>完毕！</p>
+<hr>
+<h1 id="补充2"><a href="#补充2" class="headerlink" title="补充2"></a>补充2</h1><p>之前一直没有弄明白 Query, Key, Value 是怎么区分的，上述补充我们已知 Key = Value 和 Key != Value 的情况，即 Key 和 Value 在某种情况下是互通的，但是 Query 又怎么区分呢？什么可以作为 Query ？<br>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/hahajinbu/article/details/81940355">自然语言处理中的Attention机制总结</a></p>
+<h2 id="attention-通用定义"><a href="#attention-通用定义" class="headerlink" title="attention 通用定义"></a>attention 通用定义</h2><p>按照Stanford大学课件上的描述，<strong>attention的通用定义</strong>如下：</p>
+<ol>
+<li>给定一组<strong>向量集合</strong>values，以及<strong>一个向量</strong>query，attention机制是一种根据该query计算values的加权求和的机制。</li>
+<li>attention的重点就是这个集合values中的每个value的“权值”的计算方法。</li>
+</ol>
+<h2 id="Query-目标向量"><a href="#Query-目标向量" class="headerlink" title="Query: 目标向量"></a>Query: 目标向量</h2><p>参考链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6b2e586f9256">attention机制</a><br>在自然语言处理中，我们通常<strong>将目标作为 Query ，辅助信息作为 Key 和 Value</strong>。<br>例如在英译汉中，我们已知英语，需要对汉语做权值重新分配，则将汉语词向量作为 Query = “老师早上好”，将英语作为 (Key / Value) = “Goodmorning teacher”，设 embedding dim 大小为 3，Query 向量大小为 $3\times 5$，(Key / Value) 向量大小为 $3\times 2$，计算相似度 $K^TQ = (2\times 5)$，将相似度作用于 Value 上，得到 $V(K^TQ)=(3\times 5)$。可以看到最终输出的向量大小与 Query 保持一致，这也是为什么将 Query 作为自然语言处理目标向量的原因，因为其根据 Key 调整的是 Query 的权重分布。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Deep-Learning/">Deep Learning</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+                    
+                      <a class="hover-with-bg" href="/tags/attention/">attention</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/11/29/react-router-dom%E8%BF%90%E7%94%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">react-router-dom 路由</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/23/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82Transformer%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                        <span class="hidden-mobile">Transformer的位置编码</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2020/11/26/attention/';
+        this.page.identifier = '/2020/11/26/attention/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,655 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  
+    <meta name="description" content="项目需要前后端交互数据，仅需要用到接口制作，数据库连接等基本操作，故对Egg做了一点了解，根据其他教程写了这篇文章，记录了Egg操作数据库最基本的流程，可简单实现当前项目需求。">
+  
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>初识 Egg.js - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" 
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="初识 Egg.js">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-13 17:55" pubdate>
+        2021年3月13日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">初识 Egg.js</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Egg初级入门"><a href="#Egg初级入门" class="headerlink" title="Egg初级入门"></a>Egg初级入门</h1><p>参考文章：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903718106693646">Egg.js 基本使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903716777099278">Egg.js 源码分析-项目启动</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904081689952269">Egg.js 项目结构</a></li>
+</ol>
+<h2 id="Egg-js-安装"><a href="#Egg-js-安装" class="headerlink" title="Egg.js 安装"></a>Egg.js 安装</h2><h3 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h3><p>根据<a target="_blank" rel="noopener" href="https://eggjs.org/zh-cn/intro/quickstart.html">Egg.js官方文档</a>快速创建项目：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> mkdir 自定义项目名 &amp;&amp; <span class="hljs-built_in">cd</span> 自定义项目名</span><br><span class="hljs-meta">$</span><span class="bash"> npm init egg --<span class="hljs-built_in">type</span>=simple</span><br><span class="hljs-meta">$</span><span class="bash"> npm i</span><br></code></pre></td></tr></table></figure>
+<p>项目创建完成后可进行初步测试，检测是否安装成功：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arduino">$ npm <span class="hljs-built_in">run</span> dev<br>$ <span class="hljs-built_in">open</span> http:<span class="hljs-comment">//localhost:7001</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>通过<code>egg-init</code>脚手架初始化项目</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> npm i egg-init -g</span><br><span class="hljs-meta">$</span><span class="bash"> egg-init 自定义项目名 --<span class="hljs-built_in">type</span>=simple</span><br><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">cd</span> 自定义项目名</span><br><span class="hljs-meta">$</span><span class="bash"> npm i</span><br><span class="hljs-meta">$</span><span class="bash"> npm run dev</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="Egg-js-项目目录结构"><a href="#Egg-js-项目目录结构" class="headerlink" title="Egg.js 项目目录结构"></a>Egg.js 项目目录结构</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs stylus">egg-project<br>├── package.json<br>├── app<span class="hljs-selector-class">.js</span> (可选)<br>├── agent<span class="hljs-selector-class">.js</span> (可选)<br>├── app<br>│   ├── router<span class="hljs-selector-class">.js</span> <span class="hljs-comment">// 配置路由</span><br>│   ├── controller <span class="hljs-comment">// 控制器</span><br>│        └── home.js<br>│   ├── service (可选) <span class="hljs-comment">// 服务</span><br>│        └── user.js<br>│   ├── middleware (可选) <span class="hljs-comment">// 中间件</span><br>│        └── response_time.js<br>│   ├── schedule (可选) <span class="hljs-comment">// 用于定时任务</span><br>│        └── my_task.js<br>│   ├── public (可选) <span class="hljs-comment">// 静态资源文件</span><br>│        └── reset.css<br>│   ├── view (可选) <span class="hljs-comment">// 模板视图</span><br>│        └── home.tpl<br>│   └── extend (可选) <span class="hljs-comment">// 集成功能插件</span><br>│       ├── helper<span class="hljs-selector-class">.js</span> (可选)<br>│       ├── request<span class="hljs-selector-class">.js</span> (可选)<br>│       ├── response<span class="hljs-selector-class">.js</span> (可选)<br>│       ├── context<span class="hljs-selector-class">.js</span> (可选)<br>│       ├── application<span class="hljs-selector-class">.js</span> (可选)<br>│       └── agent<span class="hljs-selector-class">.js</span> (可选)<br>├── config <span class="hljs-comment">// 必要的核心配置</span><br>│   ├── plugin<span class="hljs-selector-class">.js</span> <span class="hljs-comment">// 插件配置</span><br>│   ├── config<span class="hljs-selector-class">.default</span><span class="hljs-selector-class">.js</span> <span class="hljs-comment">// 默认基础配置</span><br>│   ├── config<span class="hljs-selector-class">.prod</span><span class="hljs-selector-class">.js</span> <span class="hljs-comment">// 生产环境</span><br>│   ├── config<span class="hljs-selector-class">.test</span><span class="hljs-selector-class">.js</span> (可选) <span class="hljs-comment">// 测试配置</span><br>│   ├── config<span class="hljs-selector-class">.local</span><span class="hljs-selector-class">.js</span> (可选) <span class="hljs-comment">// 本地配置</span><br>│   └── config<span class="hljs-selector-class">.unittest</span><span class="hljs-selector-class">.js</span> (可选) <span class="hljs-comment">// 待定 </span><br>└── test <span class="hljs-comment">// 测试需要</span><br>    ├── middleware<br>        └── response_time<span class="hljs-selector-class">.test</span>.js<br>    └── controller<br>        └── home<span class="hljs-selector-class">.test</span>.js<br></code></pre></td></tr></table></figure>
+
+<p><code>app/router.js</code> 用于配置 URL 路由规则<br><code>app/controller/**</code> 用于解析用户的输入，处理后返回相应的结果(管理服务器与用户交互行为)<br><code>app/service/**</code> 用于编写业务逻辑层(操作数据库)<br><code>app/middleware/**</code> 用于编写中间件<br><code>app/public/**</code> 用于放置静态资源<br><code>app/extend/**</code> 用于框架的扩展<br><code>config/config.&#123;env&#125;.js</code> 用于编写配置文件(配置环境)<br><code>config/plugin.js</code> 用于配置需要加载的插件<br><code>test/**</code> 用于单元测试<br><code>app.js</code> 和 <code>agent.js</code> 用于自定义启动时的初始化工作</p>
+<h2 id="Egg-路由配置"><a href="#Egg-路由配置" class="headerlink" title="Egg 路由配置"></a>Egg 路由配置</h2><p>Egg Router: 描述请求 URL 和具体承担执行动作的 Controller 的对应关系。(一个route对应Controller中的执行方法)<br>Egg 框架约定了 <code>app/router.js</code> 文件用于<strong>统一所有路由规则</strong>。通过统一的配置，可以避免路由规则逻辑散落在多个地方，从而出现未知的冲突，集中在一起我们可以更方便的来查看全局的路由规则。</p>
+<h3 id="Router-定义和使用"><a href="#Router-定义和使用" class="headerlink" title="Router 定义和使用"></a>Router 定义和使用</h3><h4 id="app-router-js"><a href="#app-router-js" class="headerlink" title="app/router.js"></a>app/router.js</h4><p>定义 URL 路由规则</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// app/router.js</span><br><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-params">app</span> =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> &#123; router, controller &#125; = app;<br>    router.get(<span class="hljs-string">&#x27;/user/:id&#x27;</span>, controller.user.info);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><code>controller.user.info</code>是Router回调函数所指向的app的controller下面的对象。该路径可以解析为：<code>controller</code> 是<code>app</code>的一个属性对象， eggjs 会在启动的时候调用<code>this.loadController();</code>方法，去加载整个应用<code>app/controller</code>文件下的所有的js 文件， 会将文件名作为属性名称，挂载在<code>app.controller</code> 对象上，分析 <code>/controller</code> 目录下js文件，其都将继承类作为借口export(暴露)出来了，因此，可以通过<strong>类.方法名</strong>的方式使用类内方法了，连在一起就写为了形如 <code>controller.user.findAll</code> 的方式来引用Controller 下面的方法了。</p>
+<h4 id="app-controller"><a href="#app-controller" class="headerlink" title="app/controller/**"></a>app/controller/**</h4><p>在 controller 目录下实现对应的 Controller 方法</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-comment">// app/controller/user.js</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Controller</span> </span>&#123;<br>    async info() &#123;<br>        const &#123;ctx&#125; = <span class="hljs-keyword">this</span>;<br>        ctx.body = &#123;<br>            name: `hello $&#123;ctx.params.id&#125;`,<br>        &#125;<br>    &#125;<br>&#125;<br><br>module.exports = <span class="hljs-type">UserController</span>;<br></code></pre></td></tr></table></figure>
+
+<p>定义完路由规则和对应方法后，我们就算完成了一个最简单的Router定义。效果：用户向<code>/user/xxx</code>执行 GET 请求时，user.js 内的相应方法就会执行。</p>
+<h4 id="组织和管理路由映射"><a href="#组织和管理路由映射" class="headerlink" title="组织和管理路由映射"></a>组织和管理路由映射</h4><p>项目中会涉及很多路由映射，若全写在 <code>app/router.js</code> 中会难以管理。我们可以根据需求做如下拆分：</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-comment">// app/router.js</span><br>module.exports = <span class="hljs-keyword">app</span> =&gt; &#123;<br>    <span class="hljs-comment">// require()引入函数，接收参数。因为/router/xx.js内不自带Application对象，因此通过参数传递</span><br>    require(&#x27;./router/<span class="hljs-keyword">news</span>&#x27;)(<span class="hljs-keyword">app</span>);<br>    require(&#x27;./router/admin&#x27;)(<span class="hljs-keyword">app</span>);<br>&#125;<br><br><span class="hljs-comment">// app/router/news.js</span><br>module.exports = <span class="hljs-keyword">app</span> =&gt; &#123;<br>    <span class="hljs-keyword">app</span>.router.<span class="hljs-built_in">get</span>(&#x27;/<span class="hljs-keyword">news</span>/<span class="hljs-keyword">list</span>&#x27;, <span class="hljs-keyword">app</span>.controller.<span class="hljs-keyword">news</span>.<span class="hljs-keyword">list</span>);<br>    <span class="hljs-keyword">app</span>.router.<span class="hljs-built_in">get</span>(&#x27;/<span class="hljs-keyword">news</span>/detail&#x27;, <span class="hljs-keyword">app</span>.controller.<span class="hljs-keyword">news</span>.detail);<br>&#125;<br><br><span class="hljs-comment">// app/router/admin.js</span><br>module.exports = <span class="hljs-keyword">app</span> =&gt; &#123;<br>    <span class="hljs-keyword">app</span>.router.<span class="hljs-built_in">get</span>(&#x27;/admin/user&#x27;, <span class="hljs-keyword">app</span>.controller.admin.user);<br>    <span class="hljs-keyword">app</span>.router.<span class="hljs-built_in">get</span>(&#x27;/admin/<span class="hljs-keyword">log</span>&#x27;, <span class="hljs-keyword">app</span>.controller.admin.<span class="hljs-keyword">log</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Service-操作数据库"><a href="#Service-操作数据库" class="headerlink" title="Service 操作数据库"></a>Service 操作数据库</h3><p>若你实现好了上述代码，则已经开发好了Router 和Controller , 但是在我们的controller 中，都是静态的内容,例如上述代码中只给<code>ctx.body</code>放入了一个对象。<br>在项目中我们需要跟数据库交互，实现前后端分离，我们一般将跟数据库交互的内容，都放在Service 层。Service 的目录一般为<code>app/service</code>，在该路径下我们可以创建多个 js 文件管理不同的数据库操作。</p>
+<h4 id="定义-Service"><a href="#定义-Service" class="headerlink" title="定义 Service"></a>定义 Service</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-comment">// app/service/user.js</span><br><br><span class="hljs-comment">// 引入egg内置的Service对象</span><br>const <span class="hljs-type">Service</span> = require(<span class="hljs-symbol">&#x27;eg</span>g&#x27;).<span class="hljs-type">Service</span>;<br><br><span class="hljs-comment">// 继承Service类</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserService</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Service</span> </span>&#123;<br>  async find(uid) &#123;<br>    const user = await <span class="hljs-keyword">this</span>.ctx.db.query(<span class="hljs-symbol">&#x27;select</span> * from user where uid = ?&#x27;, uid);<br>    <span class="hljs-keyword">return</span> user;<br>  &#125;<br>&#125;<br><br>module.exports = <span class="hljs-type">UserService</span>;<br></code></pre></td></tr></table></figure>
+
+<h4 id="在-Controller-中使用"><a href="#在-Controller-中使用" class="headerlink" title="在 Controller 中使用"></a>在 Controller 中使用</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scala"><span class="hljs-comment">// app/controller/user.js</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserController</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Controller</span> </span>&#123;<br>    async info() &#123;<br>        const &#123;ctx&#125; = <span class="hljs-keyword">this</span>;<br>        ctx.body = <span class="hljs-keyword">this</span>.service.user.find();<br>    &#125;<br>&#125;<br><br>module.exports = <span class="hljs-type">UserController</span>;<br></code></pre></td></tr></table></figure>
+<p>在Controller中调用Service类内的方法和路由调用Controller类内方法类似：<code>this.service.home.index();</code><br>注：此处也可以用 <code>this.ctx.service</code> 代替 <code>this.service</code> ，两者是等价的</p>
+<h3 id="egg-mysql-插件访问-MySQL-数据库"><a href="#egg-mysql-插件访问-MySQL-数据库" class="headerlink" title="egg-mysql 插件访问 MySQL 数据库"></a>egg-mysql 插件访问 MySQL 数据库</h3><p>Egg.js 提供了 egg-mysql 插件来访问 MySQL 数据库。<br><strong>插件安装：</strong><br><code>$ npm i --save egg-mysql</code><br><strong>插件配置：</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// config/plugin.js</span><br><span class="hljs-keyword">exports</span>.mysql = &#123;<br>  enable: <span class="hljs-keyword">true</span>,<br>  <span class="hljs-keyword">package</span>: <span class="hljs-string">&#x27;egg-mysql&#x27;</span>,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>在当前版本中，<code>plugin.js</code>文件统一以对象导出，因此可以写为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">module</span>.<span class="hljs-keyword">exports</span> = &#123;<br>  mysql: &#123;<br>    enable: <span class="hljs-keyword">true</span>,<br>    <span class="hljs-keyword">package</span>: <span class="hljs-string">&#x27;egg-mysql&#x27;</span>,<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p><strong>环境配置(数据库连接信息)：</strong><br>单数据源(只访问一个MySQL数据库实例)</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> config/config.default.js<br>exports.mysql = &#123;<br>  <span class="hljs-regexp">//</span> 单数据库信息配置<br>  client: &#123;<br>    <span class="hljs-regexp">//</span> host<br>    host: <span class="hljs-string">&#x27;mysql.com&#x27;</span>,<br>    <span class="hljs-regexp">//</span> 端口号<br>    port: <span class="hljs-string">&#x27;3306&#x27;</span>,<br>    <span class="hljs-regexp">//</span> 用户名<br>    user: <span class="hljs-string">&#x27;test_user&#x27;</span>,<br>    <span class="hljs-regexp">//</span> 密码<br>    password: <span class="hljs-string">&#x27;test_password&#x27;</span>,<br>    <span class="hljs-regexp">//</span> 数据库名<br>    database: <span class="hljs-string">&#x27;test&#x27;</span>,<br>  &#125;,<br>  <span class="hljs-regexp">//</span> 是否加载到 app 上，默认开启<br>  app: true,<br>  <span class="hljs-regexp">//</span> 是否加载到 agent 上，默认关闭<br>  agent: false,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>当前 config.default.js 配置文件中，统一用 <code>module.exports</code> 导出对象，因此也可以写在 config 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-params">appInfo</span> =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> config = <span class="hljs-built_in">exports</span> = &#123;<br>    mysql: &#123;<br>      client: &#123;<br>        <span class="hljs-comment">// host</span><br>        host: <span class="hljs-string">&#x27;localhost&#x27;</span>,<br>        <span class="hljs-comment">// 端口号</span><br>        port: <span class="hljs-string">&#x27;3306&#x27;</span>,<br>        <span class="hljs-comment">// 用户名</span><br>        user: <span class="hljs-string">&#x27;root&#x27;</span>,<br>        <span class="hljs-comment">// 密码</span><br>        password: <span class="hljs-string">&#x27;root&#x27;</span>,<br>        <span class="hljs-comment">// 数据库名</span><br>        database: <span class="hljs-string">&#x27;trajsystem&#x27;</span>,<br>      &#125;,<br>      <span class="hljs-comment">// 是否加载到 app 上，默认开启</span><br>      app: <span class="hljs-literal">true</span>,<br>      <span class="hljs-comment">// 是否加载到 agent 上，默认关闭</span><br>      agent: <span class="hljs-literal">false</span>,<br>    &#125;<br>  &#125;;<br><br>  <span class="hljs-comment">// use for cookie sign key, should change to your own and keep security</span><br>  config.keys = appInfo.name + <span class="hljs-string">&#x27;_1615607271496_3440&#x27;</span>;<br><br>  <span class="hljs-comment">// add your middleware config here</span><br>  config.middleware = [];<br><br>  <span class="hljs-comment">// add your user config here</span><br>  <span class="hljs-keyword">const</span> userConfig = &#123;<br>    <span class="hljs-comment">// myAppName: &#x27;egg&#x27;,</span><br>  &#125;;<br><br>  <span class="hljs-keyword">return</span> &#123;<br>    ...config,<br>    ...userConfig,<br>  &#125;;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>注意此处的写法，<code>=</code>从右向左赋值，因此配置对象首先赋值给<code>exports(exports=&#123;mysql:&#123;...&#125;, ...&#125;)</code>，之后 config 在获得 exports 对象。在最后返回值的时候，用了ES6的展开语法<code>...</code>将 config 展开后抛出。按照我的理解，config 展开后应该抛出形如<code>exports.mysql</code>的形式。因此上述写法和之前将环境配置单独导出类似。</p>
+<p><strong>单实例使用方式：</strong> <code>await app.mysql.query(sql, values);</code></p>
+<p>多数据源(应用需要访问多个MySQL数据源)</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs awk">exports.mysql = &#123;<br>  clients: &#123;<br>    <span class="hljs-regexp">//</span> clientId, 获取client实例，需要通过 app.mysql.get(<span class="hljs-string">&#x27;clientId&#x27;</span>) 获取<br>    db1: &#123;<br>      <span class="hljs-regexp">//</span> host<br>      host: <span class="hljs-string">&#x27;mysql.com&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 端口号<br>      port: <span class="hljs-string">&#x27;3306&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 用户名<br>      user: <span class="hljs-string">&#x27;test_user&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 密码<br>      password: <span class="hljs-string">&#x27;test_password&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 数据库名<br>      database: <span class="hljs-string">&#x27;test&#x27;</span>,<br>    &#125;,<br>    db2: &#123;<br>      <span class="hljs-regexp">//</span> host<br>      host: <span class="hljs-string">&#x27;mysql2.com&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 端口号<br>      port: <span class="hljs-string">&#x27;3307&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 用户名<br>      user: <span class="hljs-string">&#x27;test_user&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 密码<br>      password: <span class="hljs-string">&#x27;test_password&#x27;</span>,<br>      <span class="hljs-regexp">//</span> 数据库名<br>      database: <span class="hljs-string">&#x27;test&#x27;</span>,<br>    &#125;,<br>    <span class="hljs-regexp">//</span> ...<br>  &#125;,<br>  <span class="hljs-regexp">//</span> 所有数据库配置的默认值<br>  default: &#123;<br><br>  &#125;,<br><br>  <span class="hljs-regexp">//</span> 是否加载到 app 上，默认开启<br>  app: true,<br>  <span class="hljs-regexp">//</span> 是否加载到 agent 上，默认关闭<br>  agent: false,<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p><strong>多实例使用方式：</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">cosnt client1 = app.mysql.<span class="hljs-keyword">get</span>(<span class="hljs-string">&#x27;db1&#x27;</span>);<br>await client1.query(<span class="hljs-keyword">sql</span>, <span class="hljs-keyword">values</span>);<br><br>const client2 = app.mysql.<span class="hljs-keyword">get</span>(<span class="hljs-string">&#x27;db2&#x27;</span>);<br>await client2.query(<span class="hljs-keyword">sql</span>, <span class="hljs-keyword">values</span>);<br></code></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，我们完成了由Egg.js制作接口，连接数据库，并实现接口的暴露以及前后端通过接口实现数据库交互的一系列简单的操作。<br>现总结如下：</p>
+<ol>
+<li>定义 Router , 在 <code>app/router.js</code> 中构建路由映射</li>
+<li>定义 Controller，在 <code>app/controller</code> 目录下，编写路由跳转后需要执行的方法。</li>
+<li>安装 egg-mysql 插件，在 <code>config/plugin.js</code> 文件中配置插件，在环境中配置数据库的连接信息等</li>
+<li>定义 Service，在 <code>app/service</code> 目录下维护一些与数据库有关的操作，例如 CRUD 语句等。</li>
+<li>将 Service 中的继承类暴露，并在 Controller 中调用其内部方法。</li>
+</ol>
+<p>整体可概括为： Router – Controller – Service(MySQL)</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Egg/">Egg</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Egg/">Egg</a>
+                    
+                      <a class="hover-with-bg" href="/tags/MySQL/">MySQL</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/03/13/Egg%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%EF%BC%9AEgg%E5%86%85%E7%BD%AE%E5%AF%B9%E8%B1%A1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Egg官方文档阅读笔记：Egg.js内置基础对象</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/12/Vue-axios/">
+                        <span class="hidden-mobile">Vue.js - axios</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+      var disqus_config = function() {
+        this.page.url = 'http://wangjintian.com/2021/03/13/Egg%E5%88%9D%E7%BA%A7%E5%85%A5%E9%97%A8/';
+        this.page.identifier = '/2021/03/13/Egg%E5%88%9D%E7%BA%A7%E5%85%A5%E9%97%A8/';
+      };
+      Fluid.utils.waitElementVisible('disqus_thread', function () {
+        var d = document, s = d.createElement('script');
+        s.src = '//' + '' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', new Date());
+        (d.head || d.body).appendChild(s);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the
+      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
+    </noscript>
+  </div>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+<!-- SCRIPTS -->
+
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+
+</body>
+</html>
