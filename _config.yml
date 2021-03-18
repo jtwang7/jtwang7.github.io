@@ -104,7 +104,7 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repository: https://github.com/jtwang7/jtwang7.github.io.git
+  repo: git@github.com:jtwang7/jtwang7.github.io.git
   branch: master
 
 # 页面宠物

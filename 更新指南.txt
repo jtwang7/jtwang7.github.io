@@ -1,0 +1,6 @@
+https://fluid-dev.github.io/hexo-fluid-docs/start/#%E6%9B%B4%E6%96%B0%E4%B8%BB%E9%A2%98
+
+下载最新版本主题压缩包
+解压至 /themes
+重命名为 fluid (原 fluid 别马上删掉)
+将原 fluid 下的 img 复制到新解压的 fluid 中 (保存了文章的图片，博客背景等)
