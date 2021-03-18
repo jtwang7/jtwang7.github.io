@@ -10,7 +10,7 @@ page.banner_mask_alpha = theme.about.banner_mask_alpha
 <div class="text-center">
   <div class="about-info">
     <div class="about-name"><%- theme.about.name %></div>
-    <div class="about-intro"><%- theme.about.introduce %></div>
+    <div class="about-intro"><%- theme.about.introduce || theme.about.intro %></div>
     <div class="about-icons">
       <% for(const each of theme.about.icons || []) { %>
         <% if (!each.class) continue; %>
@@ -30,14 +30,21 @@ page.banner_mask_alpha = theme.about.banner_mask_alpha
   </div>
 </div>
 
-<article class="mt-5 markdown-body">
-  <%- page.content %>
-</article>
+<article class="about-content page-content mt-5">
+  <div class="markdown-body">
+    <%- page.content %>
+  </div>
 
-<% if(page.comments && theme.post.comments.enable) { %>
-  <!-- Comments -->
-  <article class="comments" id="comments">
-    <% var type = '_partial/comments/' + theme.post.comments.type %>
-    <%- partial(type) %>
-  </article>
-<% } %>
+  <% if(page.comments) { %>
+    <!-- Comments -->
+    <article class="comments" id="comments">
+      <% var type %>
+      <% if (typeof page.comment === 'string' && page.comment !== '') { %>
+        <% type = '_partial/comments/' + page.comment %>
+      <% } else { %>
+        <% type = '_partial/comments/' + theme.post.comments.type %>
+      <% } %>
+      <%- partial(type) %>
+    </article>
+  <% } %>
+</article>

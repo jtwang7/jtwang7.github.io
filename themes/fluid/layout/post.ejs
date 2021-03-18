@@ -6,11 +6,11 @@ page.banner_img_height = theme.post.banner_img_height
 page.banner_mask_alpha = theme.post.banner_mask_alpha
 %>
 
-<div class="container-fluid">
-  <div class="row">
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
     <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
@@ -48,10 +48,16 @@ page.banner_mask_alpha = theme.post.banner_mask_alpha
                 <% } %>
               </div>
               <% if(theme.post.copyright.enable && theme.post.copyright.content && page.copyright !== false) { %>
-                <p class="note note-warning"><%- theme.post.copyright.content %></p>
+                <p class="note note-warning">
+                  <% if (typeof page.copyright === 'string' && page.copyright !== '') { %>
+                    <%- page.copyright %>
+                  <% } else { %>
+                    <%- theme.post.copyright.content %>
+                  <% } %>
+                </p>
               <% } %>
               <% if(theme.post.prev_next.enable && !page.hide) { %>
-                <div class="post-prevnext row">
+                <div class="post-prevnext">
                   <article class="post-prev col-6">
                     <% const prev = prev_post(page) %>
                     <% if (prev) { %>
@@ -79,7 +85,11 @@ page.banner_mask_alpha = theme.post.banner_mask_alpha
             <% if(page.comments && theme.post.comments.enable) { %>
               <!-- Comments -->
               <article class="comments" id="comments">
-                <% var type = '_partial/comments/' + theme.post.comments.type %>
+                <% if (typeof page.comment === 'string' && page.comment !== '') { %>
+                  <% type = '_partial/comments/' + page.comment %>
+                <% } else { %>
+                  <% type = '_partial/comments/' + theme.post.comments.type %>
+                <% } %>
                 <%- partial(type) %>
               </article>
             <% } %>
@@ -87,7 +97,7 @@ page.banner_mask_alpha = theme.post.banner_mask_alpha
         </div>
       </div>
     </div>
-    <% if(theme.post.toc.enable && page.toc != false){ %>
+    <% if(theme.post.toc.enable && page.toc !== false){ %>
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <%- partial('_partial/toc') %>
       </div>
@@ -97,7 +107,7 @@ page.banner_mask_alpha = theme.post.banner_mask_alpha
 
 <!-- Custom -->
 <% if(theme.post.custom.enable && theme.post.custom.content && page.custom !== false) { %>
-  <div class="col-lg-7 mx-auto nopadding-md">
+  <div class="col-lg-7 mx-auto nopadding-x-md">
     <div class="container custom post-custom mx-auto">
       <%- page.custom || theme.post.custom.content %>
     </div>

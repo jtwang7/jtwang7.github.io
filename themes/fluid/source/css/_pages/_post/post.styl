@@ -21,6 +21,13 @@
   strong
     font-weight bold
 
+  & > *:first-child
+    margin-top 0
+
+  img
+    object-fit cover
+    max-width 100%
+
 .post-metas
   display flex
   flex-direction row
@@ -36,7 +43,10 @@
 .post-prevnext
   margin-top 2rem
   display flex
+  flex-wrap wrap
   justify-content space-between
+  margin-left -0.5rem
+  margin-right -0.5rem
 
   .post-prev, .post-next
     display flex
@@ -121,7 +131,6 @@
   position sticky
   top 2rem
   padding 3rem 0 0 0
-  max-height 80%
   visibility hidden
 
 .toc-header
@@ -133,7 +142,7 @@
     font-size 1.25rem
 
 .toc-body
-  max-height 100%
+  max-height 75vh
   overflow-y auto
   overflow -moz-scrollbars-none
   -ms-overflow-style none
@@ -177,28 +186,11 @@
   color var(--post-text-color)
   opacity 0.65
   line-height 1
-  margin -.85rem auto 2rem
+  margin -0.75rem auto 2rem
   text-align center
 
 .custom, .comments
   margin-top 2rem
-
-.katex-block
-  overflow-x auto
-
-.katex, .mjx-mrow
-  white-space pre-wrap !important
-
-.mjx-char
-  line-height 1
-
-.mjx-container
-  overflow-x auto
-  overflow-y hidden !important
-  padding .5em 0
-
-  &:focus, svg:focus
-    outline none
 
 .visitors
   font-size .8em

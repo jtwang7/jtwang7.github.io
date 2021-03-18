@@ -25,13 +25,13 @@
 
 <p align="center">
   <span>文档：</span>
-  <a href="https://hexo.fluid-dev.com/docs/guide/">主题配置</a>&nbsp&nbsp&nbsp&nbsp
+  <a href="https://hexo.fluid-dev.com/docs/guide/">主题配置</a> | 
   <a href="https://hexo.io/zh-cn/docs/front-matter">文章配置</a>
 </p>
 
 <p align="center">
   <span>预览：</span>
-  <a href="https://hexo.fluid-dev.com/">Fluid's blog</a>&nbsp&nbsp&nbsp&nbsp
+  <a href="https://hexo.fluid-dev.com/">Fluid's blog</a> | 
   <a href="https://zkqiang.cn">zkqiang's blog</a>
 </p>
 
@@ -119,17 +119,6 @@ layout: about
 其他贡献：[@zhugaoqi](https://github.com/zhugaoqi) [@julydate](https://github.com/julydate)
 
 如你也想贡献代码，可参照[贡献指南](https://hexo.fluid-dev.com/docs/contribute/)
-
-## 社区
-
-微信群：扫描二维码添加好友进交流群
-
-<details>
-  <summary>二维码</summary>
-  <p><b>好友申请备注：fluid</b></p>
-  <p><b>提问之前请先仔细查阅用户文档</b></p>
-  <img width="200" src="https://cdn.jsdelivr.net/gh/fluid-dev/static@master/hexo-theme-fluid/wechat.png" alt="wechat">
-</details>
 
 ## 支持
 
