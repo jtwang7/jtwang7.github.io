@@ -23,17 +23,17 @@ learnvuerouter
 ├─ README.md
 ├─ src
 │  ├─ App.vue
-│  ├─ assets
+│  ├─ assets  //静态资源
 │  │  └─ logo.png
-│  ├─ components
+│  ├─ components  //组件
 │  │  ├─ HelloWorld.vue
 │  │  ├─ Info.vue
 │  │  ├─ News.vue
 │  │  ├─ Profile.vue
 │  │  └─ User.vue
-│  ├─ main.js
-│  ├─ router
-│  │  └─ index.js
+│  ├─ main.js  //项目入口文件(Vue实例)
+│  ├─ router  //路由
+│  │  └─ index.js  //路由入口文件
 │  └─ views
 │     ├─ About.vue
 │     └─ Home.vue
