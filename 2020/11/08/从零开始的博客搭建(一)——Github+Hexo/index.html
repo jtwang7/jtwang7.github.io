@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="前言创建博客的初衷是为了记录和总结自己的学习心得，也希望将自己的一些经历分享给同样在努力奋斗的你。本篇将带着你一步步搭建专属于你的博客网站。在学习之前，你需要具备以下前提：1. 拥有一个专属于你的GitHub 2. 电脑上需安装有Git 3. 需要安装node.js并完成相应的环境配置">
-  
+  <meta name="description" content="前言创建博客的初衷是为了记录和总结自己的学习心得，也希望将自己的一些经历分享给同样在努力奋斗的你。本篇将带着你一步步搭建专属于你的博客网站。在学习之前，你需要具备以下前提：1. 拥有一个专属于你的GitHub 2. 电脑上需安装有Git 3. 需要安装node.js并完成相应的环境配置">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -266,9 +264,9 @@
 <p><strong>1. 拥有一个专属于你的GitHub</strong><br><strong>2. 电脑上需安装有Git</strong><br><strong>3. 需要安装node.js并完成相应的环境配置</strong></p>
 <h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>Hexo 是目前比较常用的静态博客搭建框架，除 Hexo 外，比较常用的还有 jekyll, hugo 等，可以酌情选择，本篇则以 GitHub + Hexo 搭建博客。</p>
 <h3 id="第一步：在GitHub上创建仓库"><a href="#第一步：在GitHub上创建仓库" class="headerlink" title="第一步：在GitHub上创建仓库"></a>第一步：在GitHub上创建仓库</h3><p>登录你的 GitHub 账号，进入该页面：</p>
-<p><img src="/img/posts_img/20201108195954111_21042.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108195954111_21042.png" srcset="/img/loading.gif" lazyload></p>
 <p>进入 Repository 仓库，点击 New 创建新的仓库，转入下图页面。</p>
-<p><img src="/img/posts_img/20201108200309207_10161.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108200309207_10161.png" srcset="/img/loading.gif" lazyload></p>
 <p>你需要填写仓库名称**(你的用户名+<code>.github.io</code>)**，然后点击创建 Create repository 即可。</p>
 <h3 id="第二步：安装Hexo"><a href="#第二步：安装Hexo" class="headerlink" title="第二步：安装Hexo"></a>第二步：安装Hexo</h3><p>首先在你想要存放博客文件的位置创建一个文件夹，例如我的博客在本机中的路径为 <code>G:\myBlog</code>，打开 myBlog 文件夹，鼠标右键打开 Git Bush Here (前提是你要成功安装Git)，输入 npm 命令安装 Hexo：<code>npm install -g hexo-cli</code>。<br>安装完成后，输入 <code>hexo init</code> 初始化博客。<br>其次，输入 <code>hexo g</code> 静态部署。<br>至此，网页已经部署完成了，我们可以输入 <code>hexo s</code> 命令查看，此时浏览器输入 <code>http://localhost:4000</code> 就可以查看到 Hexo 的初始页面啦。</p>
 <p><strong>小结：</strong></p>
@@ -287,9 +285,9 @@
 <p>该文件配置了你博客的相关的内容，关于 <code>_config.yml</code> 文件中的配置参数解释，可以参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zemprogram/article/details/104288872">hexo根目录下的_config.yml配置解释</a><br><strong>所有参数中，冒号 <code>:</code> 后面都要带上空格。</strong></p>
 </blockquote>
 <p>将 <code>_config.yml</code> 文件下拉至底部，修改 deploy (部署)配置参数，如图：</p>
-<p><img src="/img/posts_img/20201108202628168_13089.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108202628168_13089.png" srcset="/img/loading.gif" lazyload></p>
 <p>其中 type 为部署的方法，repository 为部署的仓库名称(即我们此前创建的仓库clone地址)，branch 为分支(默认主支 master)<br>repository 仓库地址直接从 clone 复制，首先进入你创建的仓库，然后按下步操作进行：</p>
-<p><img src="/img/posts_img/20201108203039449_16182.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108203039449_16182.png" srcset="/img/loading.gif" lazyload></p>
 <p>回到 myBlog 文件夹中，右击 Git Bush Here，安装 Git 部署插件，输入命令 <code>npm install hexo-deployer-git --save</code>。<br>然后分别输入 <code>hexo clean</code>, <code>hexo g</code>, <code>hexo d</code>。<br>完成上述步骤后，打开浏览器，我们就可以用 <code>https://your_user_name.github.io</code> (此处为 <code>jtwang7.github.io</code>) 代替 <code>http://localhost:4000</code> 打开博客了。</p>
 <p><strong>小结：</strong></p>
 <ol>
@@ -300,15 +298,15 @@
 <li><code>hexo d</code> #自动生成网站静态文件，并部署到设定的仓库(hexo deploy 的缩写)</li>
 </ol>
 <h3 id="第四步：购买-解析域名，制作个性化的访问地址"><a href="#第四步：购买-解析域名，制作个性化的访问地址" class="headerlink" title="第四步：购买/解析域名，制作个性化的访问地址"></a>第四步：购买/解析域名，制作个性化的访问地址</h3><p>走到上一步，我们已经可以用 <code>https://jtwang7.github.io</code> 访问博客了，但是本着对 .com 的执着，在<a target="_blank" rel="noopener" href="https://cloud.tencent.com/?fromSource=gwzcw.2212127.2212127.2212127&utm_medium=cpd&utm_id=gwzcw.2212127.2212127.2212127">腾讯云</a>上购买了一个 .com 的域名，具体购买过程就不细说了，按照网站提示操作就行，除了腾讯云外，也可以在<a target="_blank" rel="noopener" href="https://wanwang.aliyun.com/">万网</a>，<a target="_blank" rel="noopener" href="https://sg.godaddy.com/zh/offers/domains/godaddycom?isc=gennbacn07&countryview=1&currencyType=CNY&utm_source=baidu&utm_medium=cpc&utm_term=Title&utm_campaign=zh-cn_corp_sem_x_b_x_bz_001&utm_content=Brandzone%20PC&gclid=CIXh9LjPmecCFdOavAoddDkHcw&gclsrc=ds">Godaddy</a>上购买。<br>主要讲一下域名解析的一些过程，以腾讯云为例。<br>首先进入腾讯云控制台，点击域名注册进入域名控制台管理。</p>
-<p><img src="/img/posts_img/20201108204915553_22845.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108204915553_22845.png" srcset="/img/loading.gif" lazyload></p>
 <p>第二步点击解析。</p>
-<p><img src="/img/posts_img/20201108204944145_13319.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108204944145_13319.png" srcset="/img/loading.gif" lazyload></p>
 <p>第三步添加以下两条解析记录，其中 IPV4 地址可以通过ping得到，具体方法是：打开cmd输入下面命令：<code>ping jtwang7.github.io</code> #ping + 你的 GitHub 仓库地址</p>
-<p><img src="/img/posts_img/20201108205233329_15863.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108205233329_15863.png" srcset="/img/loading.gif" lazyload></p>
 <p>至此，在腾讯云上的域名解析已经完成了，我们看到在记录里，有一个记录类型为 CNAME，接下来我们要打开 myBlog 文件夹的 source 文件夹，添加 CNAME 文件，可以先创建一个CNAME.txt文件，打开后写上你的域名，即你购买时申请的域名，(不要加www否则每次访问都必须加www，但如果不带有www，以后访问的时候带不带www都可以访问)，保存后记得要重命名，将.txt删除。</p>
-<p><img src="/img/posts_img/20201108205644657_21100.png" srcset="/img/loading.gif"><br><img src="/img/posts_img/20201108205702960_15023.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108205644657_21100.png" srcset="/img/loading.gif" lazyload><br><img src="/img/posts_img/20201108205702960_15023.png" srcset="/img/loading.gif" lazyload></p>
 <p>最后，回到 myBlog 文件夹下，依次输入 <code>hexo clean</code>, <code>hexo g</code>, <code>hexo d</code>。<br>打开 GitHub，查看 CNAME 文件是否在项目中，如图：</p>
-<p><img src="/img/posts_img/20201108210014793_7086.png" srcset="/img/loading.gif"></p>
+<p><img src="/img/posts_img/20201108210014793_7086.png" srcset="/img/loading.gif" lazyload></p>
 <p>若没有该文件，则点击 <code>Settings</code>，在 GitHub Pages 中查看域名是否保存，若域名没有自动填写，则手动将其填上并保存，则项目中会出现 CNAME 文件，若还没有 CNAME 文件，则点击 <code>Add file</code>，自行添加即可。</p>
 <p>![]/img/posts_img/20201108210255514_19277.png)<br>![]/img/posts_img/20201108210359154_32401.png)<br>![]/img/posts_img/20201108210335057_9425.png)</p>
 <p>现在，你可以用你自己的域名来访问博客了~</p>
@@ -374,30 +372,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/11/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA(%E4%B8%80)%E2%80%94%E2%80%94Github+Hexo/';
-        this.page.identifier = '/2020/11/08/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA(%E4%B8%80)%E2%80%94%E2%80%94Github+Hexo/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -490,8 +469,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -514,7 +494,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -649,7 +629,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="Redux是一个用来管理管理数据状态和UI状态的JavaScript应用工具。在当前页面复杂度越来越高的互联时代，React组件的状态管理以及状态提升给管理带来了极大的难度，而Redux就是降低管理难度的。但注意的一点是，Redux除了支持React之外，还能支持Angular、jQuery甚至纯JavaScript。本专题将结合博主“技术胖”的Redux免费教程内容，对自身学习做一个总体的总结，">
-  
+  <meta name="description" content="Redux是一个用来管理管理数据状态和UI状态的JavaScript应用工具。在当前页面复杂度越来越高的互联时代，React组件的状态管理以及状态提升给管理带来了极大的难度，而Redux就是降低管理难度的。但注意的一点是，Redux除了支持React之外，还能支持Angular、jQuery甚至纯JavaScript。本专题将结合博主“技术胖”的Redux免费教程内容，对自身学习做一个总体的总结，">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -261,9 +259,9 @@
 <hr>
 <h2 id="Redux-简要介绍"><a href="#Redux-简要介绍" class="headerlink" title="Redux 简要介绍"></a>Redux 简要介绍</h2><ul>
 <li><strong>什么是Redux？</strong><br>官方解释：Redux is a predictable state container for JavaScript apps.  === Redux是<strong>js</strong>应用的一种可预测的<strong>状态容器</strong>。<br>通俗理解：Redux是一个用来管理管理数据状态和UI状态的JavaScript应用工具。</li>
-<li><strong>Redux作用？</strong><br>简化组件的状态传递。如下图是不使用Redux和使用Redux时，父子组件之间的通信方式。没有使用Redux的情况，如果两个组件(非父子关系)之间需要通信的话，可能需要多个中间组件为他们进行消息传递，这样既浪费了资源，代码也会比较复杂。Redux中提出了单一数据源 <strong>Store</strong> 用来<strong>存储状态数据</strong>，所有的组建都可以<strong>通过Action修改Store</strong>，也可以<strong>从Store中获取最新状态</strong>，从而实现统一状态管理，完美解决组建之间的通信问题。<br><img src="/img/posts_img/20201201191412481_5749.png" srcset="/img/loading.gif"></li>
+<li><strong>Redux作用？</strong><br>简化组件的状态传递。如下图是不使用Redux和使用Redux时，父子组件之间的通信方式。没有使用Redux的情况，如果两个组件(非父子关系)之间需要通信的话，可能需要多个中间组件为他们进行消息传递，这样既浪费了资源，代码也会比较复杂。Redux中提出了单一数据源 <strong>Store</strong> 用来<strong>存储状态数据</strong>，所有的组建都可以<strong>通过Action修改Store</strong>，也可以<strong>从Store中获取最新状态</strong>，从而实现统一状态管理，完美解决组建之间的通信问题。<br><img src="/img/posts_img/20201201191412481_5749.png" srcset="/img/loading.gif" lazyload></li>
 </ul>
-<h2 id="Redux-工作流程-总体框架"><a href="#Redux-工作流程-总体框架" class="headerlink" title="Redux 工作流程(总体框架)"></a>Redux 工作流程(总体框架)</h2><p>我们将结合 Redux 官方给出的结构图去总体了解 Redux 的工作流程，对结构图的理解将直接反映使用者对 Redux 的掌握程度，十分重要！！！<br>后续实战代码编写中，我们需要按照该结构流程去实现，所以该章节需要重点关注，初学不理解没关系，不过要不断回顾和反复阅读，同时将理解结合到代码中去。<br>现在给出官方的 Redux 结构，如下：<br><img src="/img/posts_img/20201201192118706_7818.png" srcset="/img/loading.gif"><br>直接看专业的 Redux 工作流程不是特别好理解，我们可以通过借书的例子来理解：<br><img src="/img/posts_img/20201201192506882_23071.png" srcset="/img/loading.gif"><br>React 的各个子组件更新或者改变状态的过程，等同于读者向图书馆借书的过程。读者(Component)需要从图书馆(Store)借书(state)，就要通过图书管理员去取书，取书的过程就是action，但是图书馆(Store)只负责存放图书(state)，无法告诉图书管理员具体的图书在哪，所以又需要图书管理软件(Reducer)进行精确检索，给它传递书名(state)和取书指令(action)，它将返回该书的具体位置(newState)，即一个新的状态，最终读者将从图书馆借到这本书。<br>当然上述只是通俗的理解，一些步骤可能存在纰漏，我们后续将通过实战代码进行详细解读。</p>
+<h2 id="Redux-工作流程-总体框架"><a href="#Redux-工作流程-总体框架" class="headerlink" title="Redux 工作流程(总体框架)"></a>Redux 工作流程(总体框架)</h2><p>我们将结合 Redux 官方给出的结构图去总体了解 Redux 的工作流程，对结构图的理解将直接反映使用者对 Redux 的掌握程度，十分重要！！！<br>后续实战代码编写中，我们需要按照该结构流程去实现，所以该章节需要重点关注，初学不理解没关系，不过要不断回顾和反复阅读，同时将理解结合到代码中去。<br>现在给出官方的 Redux 结构，如下：<br><img src="/img/posts_img/20201201192118706_7818.png" srcset="/img/loading.gif" lazyload><br>直接看专业的 Redux 工作流程不是特别好理解，我们可以通过借书的例子来理解：<br><img src="/img/posts_img/20201201192506882_23071.png" srcset="/img/loading.gif" lazyload><br>React 的各个子组件更新或者改变状态的过程，等同于读者向图书馆借书的过程。读者(Component)需要从图书馆(Store)借书(state)，就要通过图书管理员去取书，取书的过程就是action，但是图书馆(Store)只负责存放图书(state)，无法告诉图书管理员具体的图书在哪，所以又需要图书管理软件(Reducer)进行精确检索，给它传递书名(state)和取书指令(action)，它将返回该书的具体位置(newState)，即一个新的状态，最终读者将从图书馆借到这本书。<br>当然上述只是通俗的理解，一些步骤可能存在纰漏，我们后续将通过实战代码进行详细解读。</p>
 <h2 id="代码实战：TodoLisT-实现"><a href="#代码实战：TodoLisT-实现" class="headerlink" title="代码实战：TodoLisT 实现"></a>代码实战：TodoLisT 实现</h2><h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><p>方法一：</p>
 <figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-string">Win+</span>R<br><span class="hljs-string">cmd</span><br><span class="hljs-string">npm </span><span class="hljs-string">install </span>-g <span class="hljs-built_in">create-react</span> <span class="hljs-string">app </span>//安装脚手架工具，若以前安装过可跳过该步<br><br>进入相应目录<br><span class="hljs-string">mkdir </span><span class="hljs-string">xxx </span>//创建<span class="hljs-string">xxx文</span>件夹<br><span class="hljs-string">cd </span><span class="hljs-string">ReduxDemo </span>     //进入文件夹<br><span class="hljs-built_in">create-react-app</span> <span class="hljs-string">yyy </span> //用脚手架创建<span class="hljs-string">React项</span>目，名称自定义，此处为<span class="hljs-string">yyy</span><br><span class="hljs-string">cd </span><span class="hljs-string">yyy </span>  //等项目创建完成后，进入项目目录<br><span class="hljs-string">npm </span><span class="hljs-string">start </span> //预览项目<br></code></pre></td></tr></table></figure>
 
@@ -422,30 +420,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/12/01/Redux%E5%9F%BA%E7%A1%80/';
-        this.page.identifier = '/2020/12/01/Redux%E5%9F%BA%E7%A1%80/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -538,8 +517,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -562,7 +542,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -697,7 +677,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="轨迹目的地预测系统项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。项目开发过程中，遇到异步加载插件无法正常显示的问题，后排查原因发现是插件未完成全局注册就被调用于实例挂载，特此记录。">
-  
+  <meta name="description" content="轨迹目的地预测系统项目开发，基于Vue.js+Egg.js+MySQL进行全栈开发。项目开发过程中，遇到异步加载插件无法正常显示的问题，后排查原因发现是插件未完成全局注册就被调用于实例挂载，特此记录。">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -257,7 +255,7 @@
             <h1 style="display: none">Vue全局注册与异步加载</h1>
             
             <div class="markdown-body">
-              <h1 id="Vue全局注册与异步加载"><a href="#Vue全局注册与异步加载" class="headerlink" title="Vue全局注册与异步加载"></a>Vue全局注册与异步加载</h1><h2 id="应用需求描述"><a href="#应用需求描述" class="headerlink" title="应用需求描述"></a>应用需求描述</h2><p>单独封装一个地图控件，实现开关控制地图插件的显示。当开关状态为ON时，在地图上显示相应的地图插件，当开关状态为OFF时，隐藏地图插件。<br><img src="/img/posts_img/20210310215211593_26729.png" srcset="/img/loading.gif"></p>
+              <h1 id="Vue全局注册与异步加载"><a href="#Vue全局注册与异步加载" class="headerlink" title="Vue全局注册与异步加载"></a>Vue全局注册与异步加载</h1><h2 id="应用需求描述"><a href="#应用需求描述" class="headerlink" title="应用需求描述"></a>应用需求描述</h2><p>单独封装一个地图控件，实现开关控制地图插件的显示。当开关状态为ON时，在地图上显示相应的地图插件，当开关状态为OFF时，隐藏地图插件。<br><img src="/img/posts_img/20210310215211593_26729.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="Vue-代码"><a href="#Vue-代码" class="headerlink" title="Vue 代码"></a>Vue 代码</h2><p><strong>MapPlugin.vue:</strong> 整体插件框封装</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;map-plugin&quot;</span>&gt;</span><br>    //预留插槽，开发者可向内插入任意数目插件<br>    <span class="hljs-tag">&lt;<span class="hljs-name">slot</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span><br>  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><br><span class="javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="javascript">  name: <span class="hljs-string">&quot;MapPlugin&quot;</span>,</span><br>  <br>&#125;;<br><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><br><span class="css"><span class="hljs-selector-id">#map-plugin</span> &#123;</span><br>  width: 180px;<br>  min-height: 100px;<br><br>  padding: 0 20px;<br>  margin-left: 10px;<br><br><span class="css">  <span class="hljs-selector-tag">border</span>: 3<span class="hljs-selector-tag">px</span> <span class="hljs-selector-tag">ridge</span> <span class="hljs-selector-id">#515a6ece</span>;</span><br>  border-radius: 5px 25px;<br><br>  display: flex;<br>  flex-direction: column;<br><br>  position: fixed;<br>  bottom: 40px;<br>  left: 0;<br>&#125;<br><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span><br></code></pre></td></tr></table></figure>
 
@@ -334,30 +332,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2021/03/10/Vue%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD/';
-        this.page.identifier = '/2021/03/10/Vue%E5%85%A8%E5%B1%80%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -450,8 +429,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -474,7 +454,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -609,7 +589,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

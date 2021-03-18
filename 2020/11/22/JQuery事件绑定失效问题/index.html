@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="在社区矫正人员项目中，遇到了用 jQuery 进行事件绑定失效的问题，即在相应事件触发时无法执行内部绑定的函数，后在网上找到了解决方法及原因，特此记录。">
-  
+  <meta name="description" content="在社区矫正人员项目中，遇到了用 jQuery 进行事件绑定失效的问题，即在相应事件触发时无法执行内部绑定的函数，后在网上找到了解决方法及原因，特此记录。">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -263,8 +261,8 @@
 <p><strong>搜索框的 html 代码：</strong></p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs applescript">&lt;<span class="hljs-keyword">div</span> style=<span class="hljs-string">&quot;position: absolute; width: 300px; height: auto; left:25px&quot;</span>&gt;<br>	&lt;form <span class="hljs-built_in">class</span>=<span class="hljs-string">&quot;navbar-form1 input-group&quot;</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;search1&quot;</span> onsubmit=<span class="hljs-string">&quot;return false&quot;</span> style=<span class="hljs-string">&quot;position:absolute;&quot;</span>&gt;<br>		&lt;input type=<span class="hljs-string">&quot;text&quot;</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;nameSearch&quot;</span> <span class="hljs-built_in">name</span>=<span class="hljs-string">&quot;nameSearch&quot;</span> <span class="hljs-built_in">class</span>=<span class="hljs-string">&quot;form-control&quot;</span> onkeydown=<span class="hljs-string">&quot;search();&quot;</span> <span class="hljs-built_in">list</span>=<span class="hljs-string">&quot;nameList&quot;</span> autocomplete=<span class="hljs-string">&quot;on&quot;</span><br>			placeholder=<span class="hljs-string">&quot;请输入姓名...&quot;</span>&gt;<br>		&lt;datalist <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;nameList&quot;</span>&gt;<br>			&lt;option&gt;&lt;/option&gt;<br>		&lt;/datalist&gt;<br>	&lt;/form&gt;<br>	&lt;button <span class="hljs-built_in">class</span>=<span class="hljs-string">&quot;btn btn_form_search&quot;</span> data-toggle=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-built_in">id</span>=<span class="hljs-string">&quot;bottom_search&quot;</span> <br>	style=<span class="hljs-string">&quot;position:absolute; right:48px; z-index:10;outline: none;border-radius: 0 4px 4px 0;background-color: yellowgreen;&quot;</span> <br>	onclick=<span class="hljs-string">&quot;buttonClick()&quot;</span>&gt;确定&lt;/button&gt;<br>&lt;/<span class="hljs-keyword">div</span>&gt;<br></code></pre></td></tr></table></figure>
 
-<h2 id="搜索框样式"><a href="#搜索框样式" class="headerlink" title="搜索框样式"></a>搜索框样式</h2><p><img src="/img/posts_img/20201122193701509_16268.png" srcset="/img/loading.gif"></p>
-<h2 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h2><p>监听汉字输入，当输入中文时，在输入阶段(即输入法拼音部分)不执行函数，在完成中文拼写并输入到 input 框中后执行绑定函数。<br>未完成输入时状态如下：<br><img src="/img/posts_img/20201122193911660_25674.png" srcset="/img/loading.gif"><br>完成输入状态如下：<br><img src="/img/posts_img/20201122193934278_3961.png" srcset="/img/loading.gif"></p>
+<h2 id="搜索框样式"><a href="#搜索框样式" class="headerlink" title="搜索框样式"></a>搜索框样式</h2><p><img src="/img/posts_img/20201122193701509_16268.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="实现功能"><a href="#实现功能" class="headerlink" title="实现功能"></a>实现功能</h2><p>监听汉字输入，当输入中文时，在输入阶段(即输入法拼音部分)不执行函数，在完成中文拼写并输入到 input 框中后执行绑定函数。<br>未完成输入时状态如下：<br><img src="/img/posts_img/20201122193911660_25674.png" srcset="/img/loading.gif" lazyload><br>完成输入状态如下：<br><img src="/img/posts_img/20201122193934278_3961.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="jQuery-事件绑定失效原因"><a href="#jQuery-事件绑定失效原因" class="headerlink" title="jQuery 事件绑定失效原因"></a>jQuery 事件绑定失效原因</h2><p>JQuery事件绑定不生效，大概分两种情况。</p>
 <ol>
 <li><strong>绑定事件在未加载完成之前：</strong> DOM 元素在未加载完成之前，通过<code>$(&quot;...&quot;).on()</code>方法进行事件绑定，由于此时未加载完成(页面加载的异步性)，实际上<code>$(&quot;...&quot;)</code>是一个空数组，所以最终的结果是未对任何元素进行事件绑定。</li>
@@ -277,7 +275,7 @@
 
 <hr>
 <h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><h2 id="关于-jQuery-的-function"><a href="#关于-jQuery-的-function" class="headerlink" title="关于 jQuery 的 $(function() {})"></a>关于 jQuery 的 $(function() {})</h2><p><code>$(function() &#123;&#125;)</code> 是<code>$(document).ready(function()&#123;&#125;)</code>的简写。<br>该函数在 DOM 元素加载完毕之后执行。</p>
-<p><strong>什么是 DOM ？</strong><br>DOM 就是一个 html 页面的标签树:<br><img src="/img/posts_img/20201122195517212_4963.png" srcset="/img/loading.gif"><br>当页面所有的 html 标签（包括图片等）都加载完了，即浏览器已经响应完了，DOM 即完成了加载操作。DOM 在第一次页面加载完毕后，就在内存里了，无论后面怎么局部修改 html 页面，都只是对内存中的 DOM 树进行修改，而 DOM在第一次页面加载后就已经加载完毕了。所以后面 js文件（动态加载或者 head 中加载）再使用到 <code>$(function() &#123;&#125;)</code> 函数肯定会执行的。</p>
+<p><strong>什么是 DOM ？</strong><br>DOM 就是一个 html 页面的标签树:<br><img src="/img/posts_img/20201122195517212_4963.png" srcset="/img/loading.gif" lazyload><br>当页面所有的 html 标签（包括图片等）都加载完了，即浏览器已经响应完了，DOM 即完成了加载操作。DOM 在第一次页面加载完毕后，就在内存里了，无论后面怎么局部修改 html 页面，都只是对内存中的 DOM 树进行修改，而 DOM在第一次页面加载后就已经加载完毕了。所以后面 js文件（动态加载或者 head 中加载）再使用到 <code>$(function() &#123;&#125;)</code> 函数肯定会执行的。</p>
 
             </div>
             <hr>
@@ -335,30 +333,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/11/22/JQuery%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/';
-        this.page.identifier = '/2020/11/22/JQuery%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -451,8 +430,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -475,7 +455,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -610,7 +590,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="Transformer目前在文本序列的处理上应用较为广泛，其内部的自注意力机制可以更好地发现词与词间的隐含关系，但是，Transformer抛弃了原有循环神经网络的顺序处理结构，在换取了其并行计算的能力的同时，也丧失了对文本序列顺序信息的记录能力，因此，Transformer提出了自成一套的位置编码方式，本文将尽可能分析和总结其所采用的位置编码，从位置编码的概念，实现方法，公式等各方面带你了解Tr">
-  
+  <meta name="description" content="Transformer目前在文本序列的处理上应用较为广泛，其内部的自注意力机制可以更好地发现词与词间的隐含关系，但是，Transformer抛弃了原有循环神经网络的顺序处理结构，在换取了其并行计算的能力的同时，也丧失了对文本序列顺序信息的记录能力，因此，Transformer提出了自成一套的位置编码方式，本文将尽可能分析和总结其所采用的位置编码，从位置编码的概念，实现方法，公式等各方面带你了解Tr">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -271,21 +269,21 @@
 <li>模型应该能毫不费力地泛化到更长的句子。它的值应该是有界的；</li>
 <li>它必须是确定性的。</li>
 </ul>
-<p><strong>方法一</strong>：分配一个0到1之间的数值给每个时间步，其中，0表示第一个词，1表示最后一个词。<br>存在的问题：无法知道在一个特定区间范围内到底存在多少个单词。换句话说，不同句子之间的时间步差值没有任何的意义。如图，<br><img src="/img/posts_img/20201123103224198_2462.png" srcset="/img/loading.gif"><br>将 0 和 1 分别分配给第一个词和最后一个词，但关于内部数值的分配我们不得而知，0.5对应的时间步(词位置)可能在句子一半靠前的位置，也可能在一半靠后的位置，即不会完全对应于句子中心，因此，你无法确定在某个区间范围内包含了多少个单词。</p>
-<p><strong>方法二</strong>：为了解决上述方法任意两个时间步空间距离相等的情况，线性分配一个数值给每个时间步。也就是，1分配给第一个词，2分配给第二个词，以此类推，这样各个词间的距离就均保证为1且相等。<br>存在的问题：随着文本长度增加，这些数值会变得非常大，此外，模型也会遇到一些比训练中的所有句子都要长的句子。数据集中不一定在所有数值上都会包含相对应长度的句子，也就是模型很有可能没有看到过任何一个这样的长度的样本句子，这会严重影响模型的泛化能力。如图，<br><img src="/img/posts_img/20201123105313573_11133.png" srcset="/img/loading.gif"></p>
+<p><strong>方法一</strong>：分配一个0到1之间的数值给每个时间步，其中，0表示第一个词，1表示最后一个词。<br>存在的问题：无法知道在一个特定区间范围内到底存在多少个单词。换句话说，不同句子之间的时间步差值没有任何的意义。如图，<br><img src="/img/posts_img/20201123103224198_2462.png" srcset="/img/loading.gif" lazyload><br>将 0 和 1 分别分配给第一个词和最后一个词，但关于内部数值的分配我们不得而知，0.5对应的时间步(词位置)可能在句子一半靠前的位置，也可能在一半靠后的位置，即不会完全对应于句子中心，因此，你无法确定在某个区间范围内包含了多少个单词。</p>
+<p><strong>方法二</strong>：为了解决上述方法任意两个时间步空间距离相等的情况，线性分配一个数值给每个时间步。也就是，1分配给第一个词，2分配给第二个词，以此类推，这样各个词间的距离就均保证为1且相等。<br>存在的问题：随着文本长度增加，这些数值会变得非常大，此外，模型也会遇到一些比训练中的所有句子都要长的句子。数据集中不一定在所有数值上都会包含相对应长度的句子，也就是模型很有可能没有看到过任何一个这样的长度的样本句子，这会严重影响模型的泛化能力。如图，<br><img src="/img/posts_img/20201123105313573_11133.png" srcset="/img/loading.gif" lazyload></p>
 <p>上述方法均存在一定的问题，没有满足位置编码方案的要求。Transformer 则提出了一种基于三角函数的位置编码方式，很好的解决了上述问题，我们将具体分析它是如何解决这些问题的。</p>
 <hr>
 <h2 id="Position-Encoding"><a href="#Position-Encoding" class="headerlink" title="Position Encoding"></a>Position Encoding</h2><ul>
 <li>Position Encoding 编码不是单一的一个数值，而是包含句子中特定位置信息的 d 维向量 (一个位置对应一个 d 维向量)。</li>
 <li>Position Encoding 编码没有整合进模型，而是用这个向量让每个词具有它在句子中的位置的信息。换句话说，通过注入词的顺序信息来增强模型输入 (Position Encoding + Input Embedding)。</li>
 </ul>
-<h3 id="t位置信息-gt-d维向量"><a href="#t位置信息-gt-d维向量" class="headerlink" title="t位置信息 -&gt; d维向量"></a>t位置信息 -&gt; d维向量</h3><p>假设文本输入为一个长度为 n 的序列，我们用 t 来表示第 t 个词在文本中的位置。根据上述信息，我们可以将文本中一个特定位置信息表示为一个 d 维向量，因此，我们将 t 所对应的 d 维向量记为 $p_t\in R^d$，其对应的函数映射我们记为$f:N\rightarrow R^d$，即有 $p_t=f(t)$，其中 $f()$函数映射计算第 i 个维度的 $p_t^i$ 的具体公式如下，<br><img src="/img/posts_img/20201123111244476_2311.png" srcset="/img/loading.gif"><br>其中，$k\in [0,(d_{model} - 1)/2]$，频率$w_k=1/(10000^{2k/d})$，$i\in [1,d_{model}]$表示向量的第 i 维。<strong>频率沿向量维度减小，且 d 可被 2 整除。</strong><br>因此，遍历 k 计算各个维度，每个 t 对应的位置编码 $p_t$可以表示为如下所示，向量长度为 d，<br><img src="/img/posts_img/20201123112135158_31524.png" srcset="/img/loading.gif"></p>
-<p>其中，将所有输入序列的编码向量(n个d维向量)进行排列，可得到如下图像，其表示了长度为200、维度为150的序列转置后的位置矩阵PE，红线指输入序列的第 i 个维度。<br><img src="/img/posts_img/20201123112608523_18448.png" srcset="/img/loading.gif"></p>
-<h3 id="Position-Encoding-Input-Embedding"><a href="#Position-Encoding-Input-Embedding" class="headerlink" title="Position Encoding + Input Embedding"></a>Position Encoding + Input Embedding</h3><p>位置编码方法已经有了，那如何让每个词具有它们的位置信息？原始论文将位置编码加到模型输入之上。也就是，对于句子里的每个词，计算其对应的词嵌入，然后按照下面的方法喂给模型：<br><img src="/img/posts_img/20201123113620325_27960.png" srcset="/img/loading.gif"></p>
+<h3 id="t位置信息-gt-d维向量"><a href="#t位置信息-gt-d维向量" class="headerlink" title="t位置信息 -&gt; d维向量"></a>t位置信息 -&gt; d维向量</h3><p>假设文本输入为一个长度为 n 的序列，我们用 t 来表示第 t 个词在文本中的位置。根据上述信息，我们可以将文本中一个特定位置信息表示为一个 d 维向量，因此，我们将 t 所对应的 d 维向量记为 $p_t\in R^d$，其对应的函数映射我们记为$f:N\rightarrow R^d$，即有 $p_t=f(t)$，其中 $f()$函数映射计算第 i 个维度的 $p_t^i$ 的具体公式如下，<br><img src="/img/posts_img/20201123111244476_2311.png" srcset="/img/loading.gif" lazyload><br>其中，$k\in [0,(d_{model} - 1)/2]$，频率$w_k=1/(10000^{2k/d})$，$i\in [1,d_{model}]$表示向量的第 i 维。<strong>频率沿向量维度减小，且 d 可被 2 整除。</strong><br>因此，遍历 k 计算各个维度，每个 t 对应的位置编码 $p_t$可以表示为如下所示，向量长度为 d，<br><img src="/img/posts_img/20201123112135158_31524.png" srcset="/img/loading.gif" lazyload></p>
+<p>其中，将所有输入序列的编码向量(n个d维向量)进行排列，可得到如下图像，其表示了长度为200、维度为150的序列转置后的位置矩阵PE，红线指输入序列的第 i 个维度。<br><img src="/img/posts_img/20201123112608523_18448.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="Position-Encoding-Input-Embedding"><a href="#Position-Encoding-Input-Embedding" class="headerlink" title="Position Encoding + Input Embedding"></a>Position Encoding + Input Embedding</h3><p>位置编码方法已经有了，那如何让每个词具有它们的位置信息？原始论文将位置编码加到模型输入之上。也就是，对于句子里的每个词，计算其对应的词嵌入，然后按照下面的方法喂给模型：<br><img src="/img/posts_img/20201123113620325_27960.png" srcset="/img/loading.gif" lazyload></p>
 <blockquote>
 <p>为了保证这种相加操作正确，需要让位置向量（PE）的维度等于词向量（WE）的维度，即 $d_{PE}=d_{WE}$。假设某位置 t 的词被 embedding 编码为了 4 维向量，那么执行相加操作的时候，必须也要保证位置编码后的 p 向量维度也为 4，这也就解释了为什么上述 $p_t\in R^{d_{model}}$的原因。</p>
 </blockquote>
-<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p><img src="/img/posts_img/20201123114050252_14574.png" srcset="/img/loading.gif"></p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p><img src="/img/posts_img/20201123114050252_14574.png" srcset="/img/loading.gif" lazyload></p>
 
             </div>
             <hr>
@@ -343,30 +341,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/11/23/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82Transformer%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/';
-        this.page.identifier = '/2020/11/23/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82Transformer%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BD%8D%E7%BD%AE%E7%BC%96%E7%A0%81%E2%80%94%E2%80%94%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -459,8 +438,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -483,7 +463,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -618,7 +598,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="前言学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推胡子大哈的React小书，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！">
-  
+  <meta name="description" content="前言学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推胡子大哈的React小书，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -275,7 +273,7 @@
 <h2 id="props-children"><a href="#props-children" class="headerlink" title="props.children"></a>props.children</h2><p><code>props.children</code>使得组件标签也能像普通的 HTML 标签那样编写内嵌的结构，具体使用方法如下代码所示：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Card</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>  render () &#123;<br>    <span class="hljs-keyword">return</span> (<br>      &lt;div className=<span class="hljs-string">&#x27;card&#x27;</span>&gt;<br>        &lt;div className=<span class="hljs-string">&#x27;card-content&#x27;</span>&gt;<br>          &#123;<span class="hljs-built_in">this</span>.props.children&#125;<br>        &lt;/div&gt;<br>      &lt;/div&gt;<br>    )<br>  &#125;<br>&#125;<br><br>ReactDOM.render(<br>  &lt;Card&gt;<br>    &lt;h2&gt;React.js 小书&lt;/h2&gt;<br>    &lt;div&gt;开源、免费、专业、简单&lt;/div&gt;<br>    订阅：&lt;input /&gt;<br>  &lt;/Card&gt;,<br>  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>)<br>)<br></code></pre></td></tr></table></figure>
 <p>先看 <code>ReactDOM.render()</code> 实现了什么：<br>可以看到，相比于原先将容器类组件的内容通过 <code>props</code> 参数传入 JSX 元素的方法，该种方法<strong>直接将内容作为一个HTML内嵌结构编写，将组件参数与内嵌结构分开写</strong>，而<code>&lt;card&gt;&lt;/ card&gt;</code>容器组件标签则起到了和<code>&lt;div&gt;&lt;/ div&gt;</code>类似的作用。<br>所有容器类组件内部嵌套的 JSX 结构都通过组件内的 <code>props.children</code> 来获取，即上例中的<code>this.props.children</code>。</p>
-<h3 id="内部实现原理"><a href="#内部实现原理" class="headerlink" title="内部实现原理"></a>内部实现原理</h3><p>我们将 <code>props.children</code> 打印出来，可以发现，其包含的其实是个数组，<strong>React.js 就是把我们嵌套的 JSX 元素一个个都放到数组当中，然后通过 props.children 传给了 Card。</strong><br><img src="/img/posts_img/20201117195904513_10716.png" srcset="/img/loading.gif"><br><strong>由于 JSX 会把插入表达式里面数组中的 JSX 一个个罗列下来显示。</strong> 所以其实就相当于在 Card 中嵌套了 JSX 结构，都会显示在 Card 的类名为 card-content 的 div 元素当中。</p>
+<h3 id="内部实现原理"><a href="#内部实现原理" class="headerlink" title="内部实现原理"></a>内部实现原理</h3><p>我们将 <code>props.children</code> 打印出来，可以发现，其包含的其实是个数组，<strong>React.js 就是把我们嵌套的 JSX 元素一个个都放到数组当中，然后通过 props.children 传给了 Card。</strong><br><img src="/img/posts_img/20201117195904513_10716.png" srcset="/img/loading.gif" lazyload><br><strong>由于 JSX 会把插入表达式里面数组中的 JSX 一个个罗列下来显示。</strong> 所以其实就相当于在 Card 中嵌套了 JSX 结构，都会显示在 Card 的类名为 card-content 的 div 元素当中。</p>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p>按照这种HTML内嵌式的编写方法：</p>
 <ol>
 <li>结构清晰，将内嵌 JSX 结构与组件标签参数分离。</li>
@@ -339,30 +337,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/11/17/props.children%20%E5%92%8C%E5%AE%B9%E5%99%A8%E7%B1%BB%E7%BB%84%E4%BB%B6/';
-        this.page.identifier = '/2020/11/17/props.children%20%E5%92%8C%E5%AE%B9%E5%99%A8%E7%B1%BB%E7%BB%84%E4%BB%B6/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -455,8 +434,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -479,7 +459,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -614,7 +594,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

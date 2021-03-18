@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="系统性学习CSS(层叠样式表)，学习资料来源 W3School 。">
-  
+  <meta name="description" content="系统性学习CSS(层叠样式表)，学习资料来源 W3School 。">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -259,7 +257,7 @@
             <div class="markdown-body">
               <h1 id="CSS基础"><a href="#CSS基础" class="headerlink" title="CSS基础"></a>CSS基础</h1><p>参考资料：<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/css/index.asp">W3School–CSS</a></p>
 <hr>
-<h2 id="CSS语法"><a href="#CSS语法" class="headerlink" title="CSS语法"></a>CSS语法</h2><p>**CSS规则集(rule-set)**：选择器 + 声明块<br><img src="/img/posts_img/20210306111858285_13158.png" srcset="/img/loading.gif"><br>实例：</p>
+<h2 id="CSS语法"><a href="#CSS语法" class="headerlink" title="CSS语法"></a>CSS语法</h2><p>**CSS规则集(rule-set)**：选择器 + 声明块<br><img src="/img/posts_img/20210306111858285_13158.png" srcset="/img/loading.gif" lazyload><br>实例：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">p</span> &#123;<br>  <span class="hljs-attribute">color</span>: red;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p><strong>重点：</strong></p>
 <ol>
@@ -358,8 +356,8 @@
 <p>padding 属性简写：</p>
 <figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">padding:</span> 上 右 下 左<br><span class="hljs-symbol">padding:</span> 上 右左 下<br><span class="hljs-symbol">padding:</span> 上下 右左<br><span class="hljs-symbol">padding:</span> 上下左右<br></code></pre></td></tr></table></figure>
 
-<h2 id="CSS高度-宽度"><a href="#CSS高度-宽度" class="headerlink" title="CSS高度/宽度"></a>CSS高度/宽度</h2><p>height 和 width 属性用于设置元素的高度和宽度。height 和 width 属性不包括内边距、边框或外边距。<br>标准盒子模型：<br><img src="/img/posts_img/20210306140343369_9779.png" srcset="/img/loading.gif"></p>
-<p>IE盒子模型：<br><img src="/img/posts_img/20210306140404202_28129.png" srcset="/img/loading.gif"></p>
+<h2 id="CSS高度-宽度"><a href="#CSS高度-宽度" class="headerlink" title="CSS高度/宽度"></a>CSS高度/宽度</h2><p>height 和 width 属性用于设置元素的高度和宽度。height 和 width 属性不包括内边距、边框或外边距。<br>标准盒子模型：<br><img src="/img/posts_img/20210306140343369_9779.png" srcset="/img/loading.gif" lazyload></p>
+<p>IE盒子模型：<br><img src="/img/posts_img/20210306140404202_28129.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>height | width 属性</strong>：</p>
 <ol>
 <li><code>auto</code> - 默认。浏览器计算高度和宽度。</li>
@@ -426,30 +424,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2021/03/06/CSS%E5%9F%BA%E7%A1%80/';
-        this.page.identifier = '/2021/03/06/CSS%E5%9F%BA%E7%A1%80/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -542,8 +521,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -566,7 +546,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -701,7 +681,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

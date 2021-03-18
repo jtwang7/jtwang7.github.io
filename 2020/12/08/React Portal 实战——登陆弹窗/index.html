@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="React Portal ——“传送门”，它给React提供了一个强大的功能，原始的子组件只能在父组件的代码内部调用位置进行渲染，这就会影响到整个父组件的排版，特别是一些类似于弹窗的效果，会挤占父组件的渲染空间，没有 Portal，我们就只能预留空间给弹窗组件，防止布局的混乱。而 Portal 的提出，让子组件能够跳出父组件，在其他任意挂载节点进行渲染，提高了代码的灵活性。本章结合 Portal ">
-  
+  <meta name="description" content="React Portal ——“传送门”，它给React提供了一个强大的功能，原始的子组件只能在父组件的代码内部调用位置进行渲染，这就会影响到整个父组件的排版，特别是一些类似于弹窗的效果，会挤占父组件的渲染空间，没有 Portal，我们就只能预留空间给弹窗组件，防止布局的混乱。而 Portal 的提出，让子组件能够跳出父组件，在其他任意挂载节点进行渲染，提高了代码的灵活性。本章结合 Portal ">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -262,7 +260,7 @@
 <li>同时保证原始界面内容保留并显示在蒙版后。</li>
 <li>点击退出按钮后，重定向到“个人档案”页面。</li>
 </ol>
-<p>效果图：<br><img src="/img/posts_img/20201208094720091_21532.png" srcset="/img/loading.gif"></p>
+<p>效果图：<br><img src="/img/posts_img/20201208094720091_21532.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="登陆界面代码"><a href="#登陆界面代码" class="headerlink" title="登陆界面代码"></a>登陆界面代码</h2><p>直接解读代码内容<br><strong>重点：</strong></p>
 <ol>
 <li>使用 Portal 需要在组件开头导入 <code>ReactDOM.createPortal()</code> 方法，即 <code>import &#123; createPortal &#125; from &#39;react-dom&#39;</code></li>
@@ -335,30 +333,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/12/08/React%20Portal%20%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E7%99%BB%E9%99%86%E5%BC%B9%E7%AA%97/';
-        this.page.identifier = '/2020/12/08/React%20Portal%20%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E7%99%BB%E9%99%86%E5%BC%B9%E7%AA%97/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -451,8 +430,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -475,7 +455,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -610,7 +590,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

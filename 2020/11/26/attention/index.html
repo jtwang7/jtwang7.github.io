@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="对attention的实现机制做了一个简要的梳理，记录目前attention常用的一些模型打分机制及得分系数的作用过程。">
-  
+  <meta name="description" content="对attention的实现机制做了一个简要的梳理，记录目前attention常用的一些模型打分机制及得分系数的作用过程。">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -264,7 +262,7 @@
 <blockquote>
 <p>本质：根据注意力的打分机制，计算两个对象内部的相似关系，并将其作用于目标中。</p>
 </blockquote>
-<p>关于注意力的整个过程，形象理解如下(转自<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/69111029">Self-Attention和Transformer</a>)：<br><img src="/img/posts_img/20201126104032318_9538.png" srcset="/img/loading.gif"><br><img src="/img/posts_img/20201126104103806_13047.png" srcset="/img/loading.gif"></p>
+<p>关于注意力的整个过程，形象理解如下(转自<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/69111029">Self-Attention和Transformer</a>)：<br><img src="/img/posts_img/20201126104032318_9538.png" srcset="/img/loading.gif" lazyload><br><img src="/img/posts_img/20201126104103806_13047.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="注意力打分机制"><a href="#注意力打分机制" class="headerlink" title="注意力打分机制"></a>注意力打分机制</h2><p>$\alpha_i=softmax(s(x_i,q))$，其中$\alpha$为注意力概率分布，$s(x_i,q)$为注意力打分机制。</p>
 <p>常用的注意力打分机制有以下几种：</p>
 <ol>
@@ -290,7 +288,7 @@
 <li>根据打分机制计算注意力得分系数：<br>加性模型：$s(x_i,q)=v^Ttanh(Wx_i+Uq)$<br>点积模型：$s(x_i,q)=x_i^Tq$<br>缩放点积模型：$s(x_i,q)=(x_i^Tq)/\sqrt{d_k}$<br>双线性模型：$s(x_i,q)=x_i^TWq$</li>
 <li>信息加权：注意力分布 $\alpha_i$ 可以解释为在上下文查询q时，<strong>第i个信息受关注的程度</strong>，采用一种“软性”的信息选择机制对输入信息X进行编码为，$attention(q,X)=\sum_{i=1}^N\alpha_iX_i$，用矩阵乘法表示为 $V(K^TQ)$，注意列向量是右乘的形式，若以行向量计算则为左乘形式$(QK^T)V$。</li>
 </ol>
-<h2 id="软性注意力机制（soft-Attention）"><a href="#软性注意力机制（soft-Attention）" class="headerlink" title="软性注意力机制（soft Attention）"></a>软性注意力机制（soft Attention）</h2><p>软性注意力机制有两种：普通模式（<strong>Key=Value=X</strong>）和键值对模式（<strong>Key！=Value</strong>）:<br><img src="/img/posts_img/20201126143000592_26756.png" srcset="/img/loading.gif"></p>
+<h2 id="软性注意力机制（soft-Attention）"><a href="#软性注意力机制（soft-Attention）" class="headerlink" title="软性注意力机制（soft Attention）"></a>软性注意力机制（soft Attention）</h2><p>软性注意力机制有两种：普通模式（<strong>Key=Value=X</strong>）和键值对模式（<strong>Key！=Value</strong>）:<br><img src="/img/posts_img/20201126143000592_26756.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="疑点"><a href="#疑点" class="headerlink" title="疑点"></a>疑点</h2><p>在学习 transformer 过程中一直有个疑问，在点积模型中，$s(x_i,q)=x_i^Tq$，可知，$q$对应的是Q，而$x$对应的是K，可是在transformer中，公式是$QK^T$，按理来说两者表达的是同一个意思，但是矩阵左乘和右乘还是有一定区别的，故对此做了相应的思考，最终得出一个解释：<br>在$s(x_i,q)=x_i^Tq$中，$x_i$是以列向量形式表示的！即假设$x_i$是一个embed_dim=4的单词，那么实际上它的向量形式表示为$(4\times 1)$。<br>所以：<br><strong>向量尽量以列向量表示！！！</strong><br><strong>向量尽量以列向量表示！！！</strong><br><strong>向量尽量以列向量表示！！！</strong><br>完毕！</p>
 <hr>
 <h1 id="补充2"><a href="#补充2" class="headerlink" title="补充2"></a>补充2</h1><p>之前一直没有弄明白 Query, Key, Value 是怎么区分的，上述补充我们已知 Key = Value 和 Key != Value 的情况，即 Key 和 Value 在某种情况下是互通的，但是 Query 又怎么区分呢？什么可以作为 Query ？<br>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/hahajinbu/article/details/81940355">自然语言处理中的Attention机制总结</a></p>
@@ -359,30 +357,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/11/26/attention/';
-        this.page.identifier = '/2020/11/26/attention/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -475,8 +454,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -499,7 +479,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -634,7 +614,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>

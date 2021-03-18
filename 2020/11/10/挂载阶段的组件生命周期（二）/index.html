@@ -16,9 +16,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  
-    <meta name="description" content="前言学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推胡子大哈的React小书，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！">
-  
+  <meta name="description" content="前言学习前端一小步，迈向成功一大步！本专栏主要记录学习前端React框架的一些个人心得，分享一些实战教学，如有不足，欢迎交流讨论。React框架的入门教学强推胡子大哈的React小书，简单易懂还有代码实战。还等什么？让我们开始本篇的前端学习之旅，欢迎各位入坑前端！">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
@@ -60,7 +58,7 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"onlypost":false},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
@@ -283,10 +281,10 @@
 <h3 id="step2：定义时钟组件"><a href="#step2：定义时钟组件" class="headerlink" title="step2：定义时钟组件"></a>step2：定义时钟组件</h3><p>创建 Clock.js <strong>(注意大写，语法规范：导出类名的文件开头首字母大写)</strong><br>编写代码：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs javascript">Clock.js代码：<br><span class="hljs-keyword">import</span> React,&#123;Component&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Clock</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>()<br>        <span class="hljs-built_in">this</span>.state = &#123;<br>            date: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        &lt;div&gt;<br>            &lt;h1&gt;<br>                &lt;p&gt;现在时间是&lt;/p&gt;<br>                &#123;<span class="hljs-built_in">this</span>.state.date.toLocaleTimeString()&#125;<br>            &lt;/h1&gt;<br>        &lt;/div&gt;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Clock;<br>--------------------------------------------------------------<br>index.js代码：<br><span class="hljs-keyword">import</span> reportWebVitals <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./reportWebVitals&#x27;</span>;<br><br><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react-dom&#x27;</span>;<br><span class="hljs-keyword">import</span> Clock <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./Clock&#x27;</span>;<br><br>ReactDOM.render(<br>  &lt;React.StrictMode&gt;<br>    &lt;Clock /&gt;<br>  &lt;/React.StrictMode&gt;,<br>  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&#x27;root&#x27;</span>)<br>);<br><br><span class="hljs-comment">// If you want to start measuring performance in your app, pass a function</span><br><span class="hljs-comment">// to log results (for example: reportWebVitals(console.log))</span><br><span class="hljs-comment">// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals</span><br>reportWebVitals();<br></code></pre></td></tr></table></figure>
 <p>稍作解释：<br>Clock.js 中首先要引入<code>import React,&#123;Component&#125; from &#39;react&#39;;</code>(基本每个React组件都要引用)，创建组件，在组件构造函数生命周期中初始化 state 状态(初始化一个对象)，<code>new Date()</code>定义了一个 Date 对象，在 render 中调用 Date 对象的<code>.toLocaleTimeString()</code>方法，根据本地时间格式，把 Date 对象的时间部分转换为字符串。可结合“Date 对象”一起学习。最后 <code>export default xxx</code>导出组件类<br>index.js 主要包含了 <code>ReactDOM.render()</code> 方法，需要 <code>import React from &#39;react&#39;;import ReactDOM from &#39;react-dom&#39;;import Clock from &#39;./Clock&#39;;</code>，然后导入组件进行渲染。</p>
-<p>ok! <code>npm start</code>运行~<br><img src="/img/posts_img/20201110103616469_23459.png" srcset="/img/loading.gif"><br>what!!!出错了，好像render()没有return，大意了。加上return后再运行(注意return后加 <strong><code>()</code></strong> )。</p>
+<p>ok! <code>npm start</code>运行~<br><img src="/img/posts_img/20201110103616469_23459.png" srcset="/img/loading.gif" lazyload><br>what!!!出错了，好像render()没有return，大意了。加上return后再运行(注意return后加 <strong><code>()</code></strong> )。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript">Clock.js代码：<br><span class="hljs-keyword">import</span> React,&#123;Component&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;react&#x27;</span>;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Clock</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-built_in">super</span>()<br>        <span class="hljs-built_in">this</span>.state = &#123;<br>            date: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-title">render</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> (<br>            &lt;div&gt;<br>                &lt;h1&gt;<br>                    &lt;p&gt;现在时间是&lt;/p&gt;<br>                    &#123;<span class="hljs-built_in">this</span>.state.date.toLocaleTimeString()&#125;<br>                &lt;/h1&gt;<br>            &lt;/div&gt;<br>        )<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Clock;<br></code></pre></td></tr></table></figure>
-<p><img src="/img/posts_img/20201110103942355_23640.png" srcset="/img/loading.gif"></p>
-<h3 id="step3：实现时间动态："><a href="#step3：实现时间动态：" class="headerlink" title="step3：实现时间动态："></a>step3：实现时间动态：</h3><p>完美！但是现在时间是静态的，我们需要加上一个定时器，放在 componentWillMount() 生命周期中，每隔多少秒就重新更新一次state状态（实际操作过程中，发现vscode竟然没有自动提示componentWillMount()，果然是被淘汰了呀，不过幸好还能用）。<br><img src="/2020/11/10/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%BA%8C%EF%BC%89/_posts/img/20201110104750052_1966.png" srcset="/img/loading.gif"><br>上述意思大致是：componentWillMount 被重命名为了 UNSAFE_componentWillMount，React 建议少用 componentWillMount，因为初始化状态可以在 constructor 中进行，其余的可以在 componentDidMount 中进行，所以没 componentWillMount 啥事了。</p>
+<p><img src="/img/posts_img/20201110103942355_23640.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="step3：实现时间动态："><a href="#step3：实现时间动态：" class="headerlink" title="step3：实现时间动态："></a>step3：实现时间动态：</h3><p>完美！但是现在时间是静态的，我们需要加上一个定时器，放在 componentWillMount() 生命周期中，每隔多少秒就重新更新一次state状态（实际操作过程中，发现vscode竟然没有自动提示componentWillMount()，果然是被淘汰了呀，不过幸好还能用）。<br><img src="/2020/11/10/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%BA%8C%EF%BC%89/_posts/img/20201110104750052_1966.png" srcset="/img/loading.gif" lazyload><br>上述意思大致是：componentWillMount 被重命名为了 UNSAFE_componentWillMount，React 建议少用 componentWillMount，因为初始化状态可以在 constructor 中进行，其余的可以在 componentDidMount 中进行，所以没 componentWillMount 啥事了。</p>
 <p>扯远了，继续撸代码，上步我们加了一个 componentWillMount，里面装了个定时器setInterval()，每个1000ms重新更新一下状态并渲染(this.setState)，这里由于每秒都会渲染一次，所以不用担心componentWillMount 无法二次渲染的问题。</p>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">...<br>componentWillMount() &#123;<br>    <span class="hljs-built_in">this</span>.timer = <span class="hljs-built_in">setInterval</span>(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;<br>        <span class="hljs-built_in">this</span>.setState(&#123;date: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()&#125;)<br>    &#125;,<span class="hljs-number">1000</span>)<br>&#125;<br>...<br></code></pre></td></tr></table></figure>
 
@@ -299,8 +297,8 @@
 <li>关注<code>&lt;div&gt;&#123;...&#125;&lt;/div&gt;</code>的形式，这是典型的JSX书写，即HTML中嵌入JS代码。任何函数及表达式在JSX中都要写入 <strong><code>&#123;&#125;</code></strong> 内，例如<code>onClick=&#123;...函数...&#125;</code></li>
 <li>注意 <code>.bind(this)</code>，组件内部函数没有绑定 this 对象，所以需要人为绑定。箭头函数例外，箭头函数会自动指向 this。</li>
 </ol>
-<p>更新完之后，我们运行代码：<br><img src="/img/posts_img/20201110114320822_23996.png" srcset="/img/loading.gif"><br><img src="/img/posts_img/20201110114332942_23846.png" srcset="/img/loading.gif"></p>
-<h3 id="step5：添加componentWillUnmout，清除定时器"><a href="#step5：添加componentWillUnmout，清除定时器" class="headerlink" title="step5：添加componentWillUnmout，清除定时器"></a>step5：添加componentWillUnmout，清除定时器</h3><p>隐藏和显示的功能我们已经实现了，但是F12调试发现居然报错了！<br><img src="/img/posts_img/20201110114426671_5798.png" srcset="/img/loading.gif"><br>报错原因大致是：没有 unmount 的组件，容易造成内存泄露。结合小书学习我们可知，定时器在每次组件移除时并没有被清除，下一次组件生成时又创建了一个新的定时器，时钟隐藏的时候，定时器的回调函数还在不停地尝试 setState，由于 setState 只能在已经挂载或者正在挂载的组件上调用，所以 React.js 开始疯狂报错。这时候componentWillUnmount 就可以派上用场了，它的作用就是在组件销毁的时候，做这种清场的工作。例如清除该组件的定时器和其他的数据清理工作。我们给 Clock 添加 componentWillUnmount，在组件销毁的时候清除该组件的定时器：</p>
+<p>更新完之后，我们运行代码：<br><img src="/img/posts_img/20201110114320822_23996.png" srcset="/img/loading.gif" lazyload><br><img src="/img/posts_img/20201110114332942_23846.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="step5：添加componentWillUnmout，清除定时器"><a href="#step5：添加componentWillUnmout，清除定时器" class="headerlink" title="step5：添加componentWillUnmout，清除定时器"></a>step5：添加componentWillUnmout，清除定时器</h3><p>隐藏和显示的功能我们已经实现了，但是F12调试发现居然报错了！<br><img src="/img/posts_img/20201110114426671_5798.png" srcset="/img/loading.gif" lazyload><br>报错原因大致是：没有 unmount 的组件，容易造成内存泄露。结合小书学习我们可知，定时器在每次组件移除时并没有被清除，下一次组件生成时又创建了一个新的定时器，时钟隐藏的时候，定时器的回调函数还在不停地尝试 setState，由于 setState 只能在已经挂载或者正在挂载的组件上调用，所以 React.js 开始疯狂报错。这时候componentWillUnmount 就可以派上用场了，它的作用就是在组件销毁的时候，做这种清场的工作。例如清除该组件的定时器和其他的数据清理工作。我们给 Clock 添加 componentWillUnmount，在组件销毁的时候清除该组件的定时器：</p>
 <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Clock</span>.</span></span>js:<br>...<br>component<span class="hljs-constructor">WillUnmount()</span> &#123;<br>    clear<span class="hljs-constructor">Interval(<span class="hljs-params">this</span>.<span class="hljs-params">timer</span>)</span><br>&#125;<br>...<br></code></pre></td></tr></table></figure>
 <p>注意：这行代码是写在 Clock.js 下的。<br>至此，我们完成了实战，时间能动态走动，且能隐藏或显示，并且不会报错。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们一般会把组件的 state 的初始化工作放在 constructor 里面去做；<br>在 componentWillMount 进行组件的启动工作，例如 Ajax 数据拉取、定时器的启动；<br>组件从页面上销毁的时候，有时候需要一些数据的清理，例如定时器的清理，就会放在 componentWillUnmount 里面去做。</p>
@@ -362,30 +360,11 @@
 
             
               <!-- Comments -->
-              <article class="comments" id="comments">
+              <article class="comments" id="comments" lazyload>
                 
                   
                 
                 
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-      var disqus_config = function() {
-        this.page.url = 'http://wangjintian.com/2020/11/10/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%BA%8C%EF%BC%89/';
-        this.page.identifier = '/2020/11/10/%E6%8C%82%E8%BD%BD%E9%98%B6%E6%AE%B5%E7%9A%84%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88%E4%BA%8C%EF%BC%89/';
-      };
-      Fluid.utils.waitElementVisible('disqus_thread', function () {
-        var d = document, s = d.createElement('script');
-        s.src = '//' + '' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', new Date());
-        (d.head || d.body).appendChild(s);
-      });
-    </script>
-    <noscript>Please enable JavaScript to view the
-      <a target="_blank" href="https://disqus.com/?ref_noscript" rel="nofollow noopener noopener">comments powered by Disqus.</a>
-    </noscript>
-  </div>
-
 
               </article>
             
@@ -478,8 +457,9 @@
   
 </footer>
 
-<!-- SCRIPTS -->
 
+  <!-- SCRIPTS -->
+  
   <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
   <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
 
@@ -502,7 +482,7 @@
 
 
   
-    <script  src="/js/lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -637,7 +617,6 @@
 
 <!-- 主题的启动项 保持在最底部 -->
 <script  src="/js/boot.js" ></script>
-
 
 
 </body>
