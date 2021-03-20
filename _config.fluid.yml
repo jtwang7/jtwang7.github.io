@@ -814,6 +814,12 @@ links:
       link: "https://tadpolema.com/",
       image: "https://tadpolema.com/img/header.png"
     }
+    - {
+      title: "wallhaven高清壁纸",
+      intro: "恭喜你找到一笔高清壁纸宝藏",
+      link: "https://wallhaven.cc/",
+      image: "https://wallhaven.cc/images/layout/logo_sm.png"
+    }
     
 
 
