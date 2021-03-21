@@ -806,7 +806,7 @@ links:
       title: "孙云增的博客",
       intro: "一位前端引导者的成神之路",
       link: "https://sunyunzeng.com/",
-      image: "https://sunyunzeng.com/img/avatar.png"
+      image: "https://sunyunzeng.com/img/avatar.jpg"
     }
     - {
       title: "小马要上天的博客",
@@ -817,8 +817,14 @@ links:
     - {
       title: "wallhaven高清壁纸",
       intro: "恭喜你找到一笔高清壁纸宝藏",
-      link: "https://wallhaven.cc/",
+      link: "https://www.electronjs.org/",
       image: "https://wallhaven.cc/images/layout/logo_sm.png"
+    }
+    - {
+      title: "Electron",
+      intro: "前端桌面应用开发",
+      link: "https://wallhaven.cc/",
+      image: "https://www.electronjs.org/images/electron-api-demos.c64a476462a66c25b43073bc87c24f88.png"
     }
     
 
