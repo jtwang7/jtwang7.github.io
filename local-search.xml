@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Vue侦听功能(watch)</title>
+    <link href="/2021/03/22/Vue%E4%BE%A6%E5%90%AC(watch)/"/>
+    <url>/2021/03/22/Vue%E4%BE%A6%E5%90%AC(watch)/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Vue侦听-watch"><a href="#Vue侦听-watch" class="headerlink" title="Vue侦听(watch)"></a>Vue侦听(watch)</h1><p><a href="https://cn.vuejs.org/v2/api/#watch">vue(watch)官方文档</a></p><figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><br><span class="javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="javascript">  name: <span class="hljs-string">&quot;LayoutFrame&quot;</span>,</span><br><span class="javascript">  <span class="hljs-function"><span class="hljs-title">data</span>(<span class="hljs-params"></span>)</span> &#123;</span><br><span class="javascript">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="javascript">      isCollapsed: <span class="hljs-literal">false</span>,</span><br>    &#125;;<br>  &#125;,<br>  watch: &#123;<br><span class="javascript">    <span class="hljs-string">&quot;$route.path&quot;</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">newValue, oldValue</span>) </span>&#123;</span><br><span class="javascript">      <span class="hljs-built_in">console</span>.log(newValue);</span><br><span class="javascript">      <span class="hljs-comment">// js 中数组取末尾不能用索引-1，因为不支持该写法。</span></span><br><span class="javascript">      <span class="hljs-built_in">this</span>.curActiveName = newValue;</span><br>    &#125;,<br>  &#125;,<br>&#125;;<br><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></div></td></tr></table></figure><p>重点：</p><ol><li>watch 接收对象作为属性值</li><li>对象内类型：<code>&#123; [key: string]: string | Function | Object | Array &#125;</code> 即 key 传入的是字符串，属性值有四种(字符串，函数，对象，数组)</li><li>watch 侦听的目标(target)作为 key 值，后面的回调函数在目标发生状态改变时触发，接收 <code>(newValue, oldValue)</code>，其中 newValue 为新状态值， oldValue 为旧状态值。</li><li>watch 可以侦听 store ，router，route 等全局实例，和监听普通变量一样，同样不需要加 this。</li></ol><h1 id="JS-数组拼接技巧"><a href="#JS-数组拼接技巧" class="headerlink" title="JS 数组拼接技巧"></a>JS 数组拼接技巧</h1><p>通常会遇到以下应用场景：<br>对某一数组内的值进行处理，并返回新的数组。此时我们可以用 <code>arr.map(()=&gt;&#123;&#125;)</code> 来实现，<br>但当<code>arr.map(()=&gt;&#123;&#125;)</code> 内部返回数组时，我们希望将数组整合成一个数组，可采用如下方式：</p><figure class="highlight coffeescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs coffeescript">[].concat.apply([],arr.map(<span class="hljs-function"><span class="hljs-params">()</span>=&gt;</span>&#123;<br>   ...<br>   <span class="hljs-keyword">return</span> xxx<br>&#125;))<br></code></pre></div></td></tr></table></figure><p><code>[].concat</code> 为数组拼接，<code>.apply()</code>表示对其回调函数返回值都应用<code>.concat()</code>方法，<code>.apply([],callback())</code>第一个参数为this指向，此处指向<code>[]</code>空数组，即定义初始值。</p><h1 id="html-a标签禁用跳转功能"><a href="#html-a标签禁用跳转功能" class="headerlink" title="html a标签禁用跳转功能"></a>html a标签禁用跳转功能</h1><p><code>&lt;a&gt;</code>标签除了作为跳转标签外，还可以包裹文本等元素，使之具有点击的功能(即鼠标放在文本上，显示点击图标)。<br>但包裹的文本，我们通常不希望其具备跳转的功能，因此，我们可以通过：</p><figure class="highlight xml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;javascript:void(0)&quot;</span>&gt;</span><br>  ...<br><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><br></code></pre></div></td></tr></table></figure><p>取消其跳转的功能</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Vue</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Vue</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Vue项目登录功能实现</title>
     <link href="/2021/03/21/Vue%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0/"/>
     <url>/2021/03/21/Vue%E7%99%BB%E5%BD%95%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0/</url>
