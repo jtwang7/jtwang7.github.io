@@ -16,11 +16,11 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="Web 存储对象 localStorage 和 sessionStorage, 允许我们在浏览器上保存键/值对。在页面刷新后（对于 sessionStorage）甚至浏览器完全重启（对于 localStorage）后，数据仍然保留在浏览器中。">
+  <meta name="description" content="">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
-  <title>LocalStorage,sessionStorage - 王锦添的博客</title>
+  <title>王锦添的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -177,7 +177,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="LocalStorage,sessionStorage">
+            <span class="h2" id="subtitle" title="">
               
             </span>
 
@@ -192,7 +192,7 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-03-28 15:26" pubdate>
+      <time datetime="2021-03-28 17:01" pubdate>
         2021年3月28日 下午
       </time>
     </span>
@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      883 字
+      1.3k 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      13
+      19
        分钟
     </span>
   
@@ -252,53 +252,34 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">LocalStorage,sessionStorage</h1>
+            <h1 style="display: none"></h1>
             
             <div class="markdown-body">
-              <h1 id="LocalStorage-sessionStorage"><a href="#LocalStorage-sessionStorage" class="headerlink" title="LocalStorage,sessionStorage"></a>LocalStorage,sessionStorage</h1><h2 id="LocalStorage-sessionStorage-与-Cookie-的区别"><a href="#LocalStorage-sessionStorage-与-Cookie-的区别" class="headerlink" title="LocalStorage,sessionStorage 与 Cookie 的区别"></a>LocalStorage,sessionStorage 与 Cookie 的区别</h2><ol>
-<li><strong>Web存储对象(LocalStorage,sessionStorage)不会随每个请求被发送到服务器。可以保存更多数据</strong>。大多数浏览器都允许保存至少 2MB 的数据（或更多），并且具有用于配置数据的设置。</li>
-<li><strong>服务器无法通过 HTTP header 操纵存储对象</strong>。对于Web存储对象的操作一切都是在 JavaScript 中完成的。</li>
-<li>存储对象绑定到源（域/协议/端口三者）。不同协议或子域 对应 不同的存储对象，它们之间无法访问彼此数据。</li>
+              <h1 id="Cookie-document-cookie"><a href="#Cookie-document-cookie" class="headerlink" title="Cookie,document.cookie"></a>Cookie,document.cookie</h1><ol>
+<li>Cookie : 直接<strong>存储在浏览器</strong>中的一小串数据。是 <strong>HTTP 协议的一部分</strong>，由 RFC 6265 规范定义。</li>
+<li>Cookie 通常是<strong>由 Web 服务器使用响应 <code>Set-Cookie HTTP-header</code> 设置</strong>的。然后<strong>浏览器</strong>使用 <code>Cookie HTTP-header</code> 将它们自动添加到（几乎）每个对相同域的请求中。(服务器设置，并由浏览器添加至请求)</li>
 </ol>
-<h2 id="LocalStorage-sessionStorage-存储对象的方法和属性"><a href="#LocalStorage-sessionStorage-存储对象的方法和属性" class="headerlink" title="LocalStorage,sessionStorage 存储对象的方法和属性"></a>LocalStorage,sessionStorage 存储对象的方法和属性</h2><ol>
-<li>setItem(key, value) —— 存储键/值对。</li>
-<li>getItem(key) —— 按照键获取值。</li>
-<li>removeItem(key) —— 删除键及其对应的值。</li>
-<li>clear() —— 删除所有数据。</li>
-<li>key(index) —— 获取该索引下的键名。</li>
-<li>length —— 存储的内容的长度。</li>
+<h2 id="Cookie-作用：身份验证"><a href="#Cookie-作用：身份验证" class="headerlink" title="Cookie 作用：身份验证"></a>Cookie 作用：身份验证</h2><ol>
+<li>用户登录后，服务器<strong>在响应中</strong>使用 Set-Cookie HTTP-header 来设置具有唯一“会话标识符（session identifier）”的 cookie。</li>
+<li>下次如果请求是由<strong>相同域</strong>发起的，浏览器会使用 Cookie HTTP-header 通过网络发送 cookie。</li>
+<li>服务器接收时识别cookie就知道是谁发起了请求。</li>
 </ol>
-<h2 id="LocalStorage"><a href="#LocalStorage" class="headerlink" title="LocalStorage"></a>LocalStorage</h2><h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ol>
-<li>在<strong>同源(协议/域/端口均相同)**的所有标签页和窗口之间</strong>共享数据**。(url路径可以不同，即源下路径不同，也可以获取数据)</li>
-<li><strong>数据不会过期</strong>。它在浏览器重启甚至系统重启后仍然存在。</li>
-</ol>
-<h2 id="sessionStorage"><a href="#sessionStorage" class="headerlink" title="sessionStorage"></a>sessionStorage</h2><h3 id="特点：-1"><a href="#特点：-1" class="headerlink" title="特点："></a>特点：</h3><ol>
-<li>sessionStorage 的数据<strong>只存在于当前浏览器标签页</strong>。不同标签页存储数据不同。</li>
-<li>数据在页面刷新后仍然保留，但在关闭/重新打开浏览器标签页后不会被保留。</li>
-</ol>
-<h2 id="存储对象遍历"><a href="#存储对象遍历" class="headerlink" title="存储对象遍历"></a>存储对象遍历</h2><p>存储对象不可迭代(<code>for..of..</code>不适用)</p>
-<h3 id="for-let-i-0-i-lt-localStorage-length-i"><a href="#for-let-i-0-i-lt-localStorage-length-i" class="headerlink" title="for(let i=0; i&lt;localStorage.length; i++)"></a>for(let i=0; i&lt;localStorage.length; i++)</h3><p>用最普通的for循环遍历：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">localStorage</span>.length; i++</span>)</span> &#123;<br>  <span class="hljs-keyword">let</span> key = <span class="hljs-built_in">localStorage</span>.key(i);<br>  alert(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;<span class="hljs-built_in">localStorage</span>.getItem(key)&#125;</span>`</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p><strong>就好比公司打卡，第一天上班HR根本不认识你，此时会给你发工作证来标明你唯一的身份，之后打卡，HR只要识别你工作证就能知道是你打卡而不是别人打卡。</strong></p>
+<h2 id="document-cookie"><a href="#document-cookie" class="headerlink" title="document.cookie"></a>document.cookie</h2><p>cookie 是服务器在响应阶段设置的，在浏览器端可以通过 <code>document.cookie</code> 访问</p>
+<h3 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h3><p><code>document.cookie</code> 不是对象属性，而是一个访问器(getter/setter)，因此可以读取和写入。</p>
+<h3 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h3><p><code>console.log(document.cookie)</code> 隐式调用了 get 方法，并返回所有的cookie。<br><code>document.cookie</code> 的值由 <code>name=value</code> 对组成，以<code>;</code>分隔。每个都是独立的 cookie。**key 和 value 都不需要 ‘’ **</p>
+<h3 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h3><p><code>document.cookie = &#39;user=John&#39;</code> 调用 set 方法写入一个cookie<br>此处只是插入了一个cookie，而不是覆盖了所有cookie，这就证明了document.cookie是访问器而不是对象属性。<br>cookie 的 name 和 value 可以是任何字符，为了保证格式有效，通常需要用内建的函数(<strong><code>encodeURIComponent</code></strong>)进行转义。</p>
+<figure class="highlight xquery"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs xquery">// 特殊字符（空格），需要编码<br><span class="hljs-keyword">let</span><span class="hljs-built_in"> name</span> = <span class="hljs-string">&quot;my name&quot;</span>;<br><span class="hljs-keyword">let</span> <span class="hljs-keyword">value</span> = <span class="hljs-string">&quot;John Smith&quot;</span><br><br>// 将 cookie 编码为 my<span class="hljs-meta">%20name</span>=John<span class="hljs-meta">%20Smith</span><br><span class="hljs-type">document</span>.cookie = encodeURIComponent<span class="hljs-built_in">(name</span>) + <span class="hljs-string">&#x27;=&#x27;</span> + encodeURIComponent(<span class="hljs-keyword">value</span>);<br><br>alert<span class="hljs-built_in">(document</span>.cookie); // ...; my<span class="hljs-meta">%20name</span>=John<span class="hljs-meta">%20Smith</span><br></code></pre></div></td></tr></table></figure>
 
-<h3 id="for-let-key-in-localStorage"><a href="#for-let-key-in-localStorage" class="headerlink" title="for(let key in localStorage)"></a>for(let key in localStorage)</h3><p>用遍历对象键的方式：<br>缺点：遍历所有键，会输出 localStorage 或 sessionStorage 的内建字段</p>
-<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> <span class="hljs-built_in">localStorage</span></span>)</span> &#123;<br>  alert(key); <span class="hljs-comment">// 显示 getItem，setItem 和其他内建的东西</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
-
-<h4 id="通过-hasOwnProperty-或使用-Object-keys-过滤原型内建字段"><a href="#通过-hasOwnProperty-或使用-Object-keys-过滤原型内建字段" class="headerlink" title="通过 hasOwnProperty 或使用 Object.keys 过滤原型内建字段"></a>通过 hasOwnProperty 或使用 Object.keys 过滤原型内建字段</h4><p><strong><code>.hasOwnProperty()</code></strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> <span class="hljs-built_in">localStorage</span></span>)</span> &#123;<br>  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">localStorage</span>.hasOwnProperty(key)) &#123;<br>    <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 跳过像 &quot;setItem&quot;，&quot;getItem&quot; 等这样的键</span><br>  &#125;<br>  alert(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;<span class="hljs-built_in">localStorage</span>.getItem(key)&#125;</span>`</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<p><strong><code>Object.keys()</code></strong><br>更佳的选择，不需要写额外判断条件，Object.keys()只返回属于对象的键，会忽略原型上的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> keys = <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">localStorage</span>);<br><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> key <span class="hljs-keyword">of</span> keys</span>)</span> &#123;<br>  alert(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;<span class="hljs-built_in">localStorage</span>.getItem(key)&#125;</span>`</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
-
-<h2 id="存储格式"><a href="#存储格式" class="headerlink" title="存储格式"></a>存储格式</h2><p>Web存储对象(localStorage,sessionStorage)的键值对都必须是字符串，其内部会进行自动转化。<br>因此，对象类型的值存储要手动通过 <code>JSON.stringify()</code> 处理，以免出错。<br>或者可以对整个存储对象进行字符串化处理。</p>
-<h2 id="Storage-事件"><a href="#Storage-事件" class="headerlink" title="Storage 事件"></a>Storage 事件</h2><h3 id="触发条件："><a href="#触发条件：" class="headerlink" title="触发条件："></a>触发条件：</h3><p>当 localStorage 或 sessionStorage 中的数据更新后，storage 事件就会触发。<br><strong>事件会在所有可访问到存储对象的 window 对象上触发，导致当前数据改变的 window 对象除外。</strong></p>
-<h3 id="应用："><a href="#应用：" class="headerlink" title="应用："></a>应用：</h3><p><strong>其允许同源的不同窗口交换消息</strong><br>常用于监听同源下不同窗口 LocalStorage 变化，当一个窗口数据更新时，另一个窗口及时进行反应。</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs coffeescript"><span class="hljs-regexp">//</span> 等同于 <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&#x27;storage&#x27;</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;&#125;)<br><span class="hljs-built_in">window</span>.onstorage = event =&gt; &#123;<br>  <span class="hljs-keyword">if</span> (event.key != <span class="hljs-string">&#x27;now&#x27;</span>) <span class="hljs-keyword">return</span>;<br>  alert(event.key + <span class="hljs-string">&#x27;:&#x27;</span> + event.newValue + <span class="hljs-string">&quot; at &quot;</span> + event.url);<br>&#125;;<br><br><span class="hljs-built_in">localStorage</span>.setItem(<span class="hljs-string">&#x27;now&#x27;</span>, <span class="hljs-built_in">Date</span>.now());<br></code></pre></div></td></tr></table></figure>
-
-<h3 id="事件属性："><a href="#事件属性：" class="headerlink" title="事件属性："></a>事件属性：</h3><ol>
-<li>key —— 发生更改的数据的 key（如果调用的是 .clear() 方法，则为 null）。</li>
-<li>oldValue —— 旧值（如果是新增数据，则为 null）。</li>
-<li>newValue —— 新值（如果是删除数据，则为 null）。</li>
-<li>url —— 发生数据更新的文档的 url。</li>
-<li>storageArea —— 发生数据更新的 localStorage 或 sessionStorage 对象。</li>
+<h2 id="Cookie-的设置选项"><a href="#Cookie-的设置选项" class="headerlink" title="Cookie 的设置选项"></a>Cookie 的设置选项</h2><p>在写入 Cookie 时，可以设置相应的选项：选项写在 key=value 之后，并以 <code>;</code> 分隔。<br><code>document.cookie = &quot;user=John; path=/; expires=Tue, 19 Jan 2038 03:14:07 GMT&quot;</code></p>
+<ol>
+<li><code>path=/mypath</code>：url 路径前缀，该路径下的页面可以访问该 cookie。必须是绝对路径。默认为当前路径。<br>如果一个 cookie 带有 <code>path=/admin</code> 设置，那么该 cookie 在 <code>/admin</code> 和 <code>/admin/something</code> 下都是可见的，但是在 <code>/home</code> 或 <code>/adminpage</code> 下不可见。<strong>即设置路径及其子路径可访问cookie</strong><br>通常，我们应该将 path 设置为根目录：path=/，以使 cookie 对此网站的所有页面可见。</li>
+<li><code>domain=site.com</code>：设置可访问 cookie 的根域，其使得该域下所有子域均可访问 cookie。<br>默认情况下，cookie 只有在当前域下才能被访问到。如果 cookie 设置在 site.com 下，我们在 other.com 下就无法获取它，甚至在 site.com 子域下也无法访问。显示的 domain 设置可以解决上述问题。</li>
+<li><code>expires=Tue, 19 Jan 2038 03:14:07 GMT</code>：cookie 的到期日期，那时浏览器会自动删除它。<br>日期必须完全采用 GMT 时区的这种格式。可以使用 <code>date.toUTCString</code> 来获取它。</li>
+<li><code>max-age=3600</code>：expires 的替代选项，具指明 cookie 的过期时间距离当前时间的秒数。</li>
+<li><code>secure</code>：设置 Cookie 只能通过 HTTPS 传输<br>cookie 是基于域的，它们不区分协议。默认情况下，如果我们在 <a target="_blank" rel="noopener" href="http://site.com/">http://site.com</a> 上设置了 cookie，那么该 cookie 也会出现在 <a target="_blank" rel="noopener" href="https://site.com/">https://site.com</a> 上，反之亦然。使用此选项，如果一个 cookie 是通过 <a target="_blank" rel="noopener" href="https://site.com/">https://site.com</a> 设置的，那么它不会在相同域的 HTTP 环境下出现</li>
+<li><code>samesite</code>：防止 XSRF（跨网站请求伪造）攻击。<br>XSRF? 用户在某页面登陆时，会向该页面发送cookie，页面核实cookie后允许用户进行后续操作。通常发送cookie请求是用户登录时执行的，但是cookie请求可以通过脚本执行！即黑客在其他网站可以用脚本模拟用户登录，从而欺骗页面。<br><code>samesite=strict</code> 保证如果用户来自同一网站之外，那么设置了 samesite=strict 的 cookie 永远不会被发送。只有在该网站下的操作才会发送 cookie。但是这样同样会屏蔽一些用户默许的合法链接，比如通过用户自己的笔记或收藏夹访问等。<strong>解决办法：</strong>通过使用两个 cookie 来解决这个问题：一个 cookie 用于“一般识别”，另一个带有 samesite=strict 的 cookie 用于进行数据更改的操作。这样，从网站外部来的用户可以访问网站，但是支付操作等必须是从银行网站启动的，这样第二个 cookie 才能被发送。<br><code>samesite=lax</code> 宽松模式，当从外部来到网站，则禁止浏览器发送 cookie，但是增加了一个例外。如果以下两个条件均成立，则会发送 samesite=lax cookie：a. HTTP 方法是“安全的”（例如 GET 方法，而不是 POST）b. 执行顶级导航（更改浏览器地址栏中的 URL）</li>
+<li>httpOnly：禁止任何 JavaScript 访问 cookie。我们使用 document.cookie 看不到此类 cookie，也无法对此类 cookie 进行操作。即 Cookie 操作只能在服务端进行。</li>
 </ol>
 
             </div>
@@ -306,20 +287,6 @@
             <div>
               <div class="post-metas mb-3">
                 
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
-                    
-                  </div>
                 
               </div>
               
@@ -334,18 +301,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/03/28/Cookie,document.cookie/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile"></span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/03/28/Vue%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/">
-                        <span class="hidden-mobile">Vue组件通信</span>
+                      <a href="/2021/03/28/LocalStorage,sessionStorage/">
+                        <span class="hidden-mobile">LocalStorage,sessionStorage</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
