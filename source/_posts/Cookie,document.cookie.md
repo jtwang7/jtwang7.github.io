@@ -1,3 +1,11 @@
+---
+title: Cookie,document.cookie
+date: 2021-03-28 17:03
+tags: JavaScript
+categories: JavaScript
+excerpt:  Cookie由服务端在响应阶段设置，浏览器请求阶段添加，属于HTTP协议的一部分。通常存储在浏览器中，数据量较小，常用于用户登录身份验证。
+---
+
 # Cookie,document.cookie
 1. Cookie : 直接**存储在浏览器**中的一小串数据。是 **HTTP 协议的一部分**，由 RFC 6265 规范定义。
 2. Cookie 通常是**由 Web 服务器使用响应 `Set-Cookie HTTP-header` 设置**的。然后**浏览器**使用 `Cookie HTTP-header` 将它们自动添加到（几乎）每个对相同域的请求中。(服务器设置，并由浏览器添加至请求)
