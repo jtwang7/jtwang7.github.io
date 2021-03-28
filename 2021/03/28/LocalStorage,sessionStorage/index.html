@@ -1,0 +1,614 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Web 存储对象 localStorage 和 sessionStorage, 允许我们在浏览器上保存键/值对。在页面刷新后（对于 sessionStorage）甚至浏览器完全重启（对于 localStorage）后，数据仍然保留在浏览器中。">
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>LocalStorage,sessionStorage - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="LocalStorage,sessionStorage">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-28 15:26" pubdate>
+        2021年3月28日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      883 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      13
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">LocalStorage,sessionStorage</h1>
+            
+            <div class="markdown-body">
+              <h1 id="LocalStorage-sessionStorage"><a href="#LocalStorage-sessionStorage" class="headerlink" title="LocalStorage,sessionStorage"></a>LocalStorage,sessionStorage</h1><h2 id="LocalStorage-sessionStorage-与-Cookie-的区别"><a href="#LocalStorage-sessionStorage-与-Cookie-的区别" class="headerlink" title="LocalStorage,sessionStorage 与 Cookie 的区别"></a>LocalStorage,sessionStorage 与 Cookie 的区别</h2><ol>
+<li><strong>Web存储对象(LocalStorage,sessionStorage)不会随每个请求被发送到服务器。可以保存更多数据</strong>。大多数浏览器都允许保存至少 2MB 的数据（或更多），并且具有用于配置数据的设置。</li>
+<li><strong>服务器无法通过 HTTP header 操纵存储对象</strong>。对于Web存储对象的操作一切都是在 JavaScript 中完成的。</li>
+<li>存储对象绑定到源（域/协议/端口三者）。不同协议或子域 对应 不同的存储对象，它们之间无法访问彼此数据。</li>
+</ol>
+<h2 id="LocalStorage-sessionStorage-存储对象的方法和属性"><a href="#LocalStorage-sessionStorage-存储对象的方法和属性" class="headerlink" title="LocalStorage,sessionStorage 存储对象的方法和属性"></a>LocalStorage,sessionStorage 存储对象的方法和属性</h2><ol>
+<li>setItem(key, value) —— 存储键/值对。</li>
+<li>getItem(key) —— 按照键获取值。</li>
+<li>removeItem(key) —— 删除键及其对应的值。</li>
+<li>clear() —— 删除所有数据。</li>
+<li>key(index) —— 获取该索引下的键名。</li>
+<li>length —— 存储的内容的长度。</li>
+</ol>
+<h2 id="LocalStorage"><a href="#LocalStorage" class="headerlink" title="LocalStorage"></a>LocalStorage</h2><h3 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h3><ol>
+<li>在<strong>同源(协议/域/端口均相同)**的所有标签页和窗口之间</strong>共享数据**。(url路径可以不同，即源下路径不同，也可以获取数据)</li>
+<li><strong>数据不会过期</strong>。它在浏览器重启甚至系统重启后仍然存在。</li>
+</ol>
+<h2 id="sessionStorage"><a href="#sessionStorage" class="headerlink" title="sessionStorage"></a>sessionStorage</h2><h3 id="特点：-1"><a href="#特点：-1" class="headerlink" title="特点："></a>特点：</h3><ol>
+<li>sessionStorage 的数据<strong>只存在于当前浏览器标签页</strong>。不同标签页存储数据不同。</li>
+<li>数据在页面刷新后仍然保留，但在关闭/重新打开浏览器标签页后不会被保留。</li>
+</ol>
+<h2 id="存储对象遍历"><a href="#存储对象遍历" class="headerlink" title="存储对象遍历"></a>存储对象遍历</h2><p>存储对象不可迭代(<code>for..of..</code>不适用)</p>
+<h3 id="for-let-i-0-i-lt-localStorage-length-i"><a href="#for-let-i-0-i-lt-localStorage-length-i" class="headerlink" title="for(let i=0; i&lt;localStorage.length; i++)"></a>for(let i=0; i&lt;localStorage.length; i++)</h3><p>用最普通的for循环遍历：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">localStorage</span>.length; i++</span>)</span> &#123;<br>  <span class="hljs-keyword">let</span> key = <span class="hljs-built_in">localStorage</span>.key(i);<br>  alert(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;<span class="hljs-built_in">localStorage</span>.getItem(key)&#125;</span>`</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="for-let-key-in-localStorage"><a href="#for-let-key-in-localStorage" class="headerlink" title="for(let key in localStorage)"></a>for(let key in localStorage)</h3><p>用遍历对象键的方式：<br>缺点：遍历所有键，会输出 localStorage 或 sessionStorage 的内建字段</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> <span class="hljs-built_in">localStorage</span></span>)</span> &#123;<br>  alert(key); <span class="hljs-comment">// 显示 getItem，setItem 和其他内建的东西</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h4 id="通过-hasOwnProperty-或使用-Object-keys-过滤原型内建字段"><a href="#通过-hasOwnProperty-或使用-Object-keys-过滤原型内建字段" class="headerlink" title="通过 hasOwnProperty 或使用 Object.keys 过滤原型内建字段"></a>通过 hasOwnProperty 或使用 Object.keys 过滤原型内建字段</h4><p><strong><code>.hasOwnProperty()</code></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> <span class="hljs-built_in">localStorage</span></span>)</span> &#123;<br>  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">localStorage</span>.hasOwnProperty(key)) &#123;<br>    <span class="hljs-keyword">continue</span>; <span class="hljs-comment">// 跳过像 &quot;setItem&quot;，&quot;getItem&quot; 等这样的键</span><br>  &#125;<br>  alert(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;<span class="hljs-built_in">localStorage</span>.getItem(key)&#125;</span>`</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p><strong><code>Object.keys()</code></strong><br>更佳的选择，不需要写额外判断条件，Object.keys()只返回属于对象的键，会忽略原型上的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> keys = <span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">localStorage</span>);<br><span class="hljs-function"><span class="hljs-title">for</span>(<span class="hljs-params"><span class="hljs-keyword">let</span> key <span class="hljs-keyword">of</span> keys</span>)</span> &#123;<br>  alert(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;<span class="hljs-built_in">localStorage</span>.getItem(key)&#125;</span>`</span>);<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="存储格式"><a href="#存储格式" class="headerlink" title="存储格式"></a>存储格式</h2><p>Web存储对象(localStorage,sessionStorage)的键值对都必须是字符串，其内部会进行自动转化。<br>因此，对象类型的值存储要手动通过 <code>JSON.stringify()</code> 处理，以免出错。<br>或者可以对整个存储对象进行字符串化处理。</p>
+<h2 id="Storage-事件"><a href="#Storage-事件" class="headerlink" title="Storage 事件"></a>Storage 事件</h2><h3 id="触发条件："><a href="#触发条件：" class="headerlink" title="触发条件："></a>触发条件：</h3><p>当 localStorage 或 sessionStorage 中的数据更新后，storage 事件就会触发。<br><strong>事件会在所有可访问到存储对象的 window 对象上触发，导致当前数据改变的 window 对象除外。</strong></p>
+<h3 id="应用："><a href="#应用：" class="headerlink" title="应用："></a>应用：</h3><p><strong>其允许同源的不同窗口交换消息</strong><br>常用于监听同源下不同窗口 LocalStorage 变化，当一个窗口数据更新时，另一个窗口及时进行反应。</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs coffeescript"><span class="hljs-regexp">//</span> 等同于 <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">&#x27;storage&#x27;</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;&#125;)<br><span class="hljs-built_in">window</span>.onstorage = event =&gt; &#123;<br>  <span class="hljs-keyword">if</span> (event.key != <span class="hljs-string">&#x27;now&#x27;</span>) <span class="hljs-keyword">return</span>;<br>  alert(event.key + <span class="hljs-string">&#x27;:&#x27;</span> + event.newValue + <span class="hljs-string">&quot; at &quot;</span> + event.url);<br>&#125;;<br><br><span class="hljs-built_in">localStorage</span>.setItem(<span class="hljs-string">&#x27;now&#x27;</span>, <span class="hljs-built_in">Date</span>.now());<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="事件属性："><a href="#事件属性：" class="headerlink" title="事件属性："></a>事件属性：</h3><ol>
+<li>key —— 发生更改的数据的 key（如果调用的是 .clear() 方法，则为 null）。</li>
+<li>oldValue —— 旧值（如果是新增数据，则为 null）。</li>
+<li>newValue —— 新值（如果是删除数据，则为 null）。</li>
+<li>url —— 发生数据更新的文档的 url。</li>
+<li>storageArea —— 发生数据更新的 localStorage 或 sessionStorage 对象。</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/03/28/Vue%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1/">
+                        <span class="hidden-mobile">Vue组件通信</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
