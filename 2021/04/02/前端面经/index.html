@@ -270,19 +270,17 @@
 <li>无法直接操作内部存储, 通过引用地址访问</li>
 <li>通过代码分配内存空间</li>
 </ol>
-<hr>
-<p>从内存理解原始值与引用值的区别:<br>原始值(Null, Undefined, Boolean, Number, String, Symbol):<br>存储于栈内存, 值本身不可被改变. (变量定义时,栈已经完成内存空间分配,且栈内存空间大小固定)<br><code>str += 6</code> 等操作不违背原始值 “不可变性” 的特点. 该操作实际是在栈中新开辟了内存空间存储新值, 并将原变量<code>str</code>指向该内存空间, 原数据内存空间若不存在引用则后续会被JS垃圾回收机制释放.</p>
+<p><strong>从内存理解原始值与引用值的区别:</strong><br>原始值(Null, Undefined, Boolean, Number, String, Symbol):<br>存储于栈内存, 值本身不可被改变. (变量定义时,栈已经完成内存空间分配,且栈内存空间大小固定)<br><code>str += 6</code> 等操作不违背原始值 “不可变性” 的特点. 该操作实际是在栈中新开辟了内存空间存储新值, 并将原变量<code>str</code>指向该内存空间, 原数据内存空间若不存在引用则后续会被JS垃圾回收机制释放.</p>
 <p>引用值(Object, Array, Function, Date,…):<br>值本身存储于堆内存, 在栈内存中存储了一个指向该值的定长地址. 引用值可被改变, 例如数组等,存在许多可改变其自身的方法(pop; push; …)</p>
-<p>从操作角度对比原始值与引用值的区别:</p>
+<p><strong>从操作角度对比原始值与引用值的区别:</strong></p>
 <ol>
 <li><p>复制:<br>原始值复制, 栈内存中开辟新的空间存储拷贝的变量值, 由于开辟了新的空间, 因此拷贝值与被拷贝值虽然值相同, 但指向的内存空间互不相同, 两者的任何操作都是独立的, 互不影响.<br>引用值复制, 复制的是其栈内存中的地址, 栈内存新开辟一个空间存储拷贝的地址. 拷贝值与被拷贝值的地址均指向堆内存中同一对象, 因此两者操作的实际上是同一对象, 互相影响.</p>
 </li>
 <li><p>比较:<br>两个原始值之间比较, 直接比较它们值是否相等, 若相等则返回 <code>true</code>;<br>两个引用值之间比较, 比较它们存储在栈内存中的地址, 由于两者地址不同, 即使它们在堆内存中的存储对象具有相同属性值, 比较值仍返回 <code>false</code>;</p>
 </li>
-<li><p>值传递:</p>
+<li><p>值传递: <strong>JS所有函数的参数都是按值传递!</strong><br>原始值与引用值作为函数参数传递, 本质上传递的是变量拷贝的副本, 在函数内操作的是拷贝值而非变量背身. 两者区别在于:<br>原始值与其复制的局部变量, 两者内存空间不同, 修改局部变量不影响外部原值;<br>引用值复制的是指向堆内存的地址, 函数内修改局部变量会对外部变量造成影响;</p>
 </li>
 </ol>
-<p><strong>JS所有函数的参数都是按值传递!</strong><br>原始值与引用值作为函数参数传递, 本质上传递的是变量拷贝的副本, 在函数内操作的是拷贝值而非变量背身. 两者区别在于:<br>原始值与其复制的局部变量, 两者内存空间不同, 修改局部变量不影响外部原值;<br>引用值复制的是指向堆内存的地址, 函数内修改局部变量会对外部变量造成影响;</p>
 <h4 id="判断数据类型的方式-typeof-instanceof-Object-prototype-toString-call-constructor"><a href="#判断数据类型的方式-typeof-instanceof-Object-prototype-toString-call-constructor" class="headerlink" title="判断数据类型的方式 typeof; instanceof; Object.prototype.toString.call(); constructor"></a>判断数据类型的方式 typeof; instanceof; Object.prototype.toString.call(); constructor</h4><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903854882947080">你真的掌握变量和类型了吗</a><br><strong>题解</strong><br>typeof:<br>使用场景: 可准确判断变量的原始类型, 例如 <code>typeof 123 === &#39;number&#39;</code>; 还可以判断函数类型, 例如 <code>typeof function()&#123;&#125; === &#39;function&#39;</code><br>不适用于判断引用类型, 例如 <code>typeof [] === &#39;object&#39;</code>; <code>typeof &#123;&#125; === &#39;object&#39;</code>; <code>typeof new Date() === &#39;object&#39;</code></p>
 <p>instanceof:<br>使用场景: 判断引用类型对象的具体类型, 例如 <code>[] instanceof Array === true</code><br>本质: 通过原型链判断, 上例中主要判断 Array.prototype(原型) 是否在 [] 的原型链上, 若是则返回 <code>true</code><br>缺点:</p>
 <ol>
