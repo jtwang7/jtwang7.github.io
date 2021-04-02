@@ -16,11 +16,11 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="记录前端各个需要掌握的知识点，按照类别分享一些在探索过程中碰到的有趣的文章。">
+  <meta name="description" content="用js简单实现Vue中的EventBus通信方式, 简要记录。">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
-  <title>前端小记 - 王锦添的博客</title>
+  <title>简单实现EventBus - 王锦添的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -177,7 +177,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="前端小记">
+            <span class="h2" id="subtitle" title="简单实现EventBus">
               
             </span>
 
@@ -192,8 +192,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-01 11:16" pubdate>
-        2021年4月1日 上午
+      <time datetime="2021-04-02 09:58" pubdate>
+        2021年4月2日 上午
       </time>
     </span>
   
@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      317 字
+      321 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      6
        分钟
     </span>
   
@@ -252,18 +252,13 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">前端小记</h1>
+            <h1 style="display: none">简单实现EventBus</h1>
             
             <div class="markdown-body">
-              <h1 id="闭包篇"><a href="#闭包篇" class="headerlink" title="闭包篇"></a>闭包篇</h1><h2 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903606311714824">深入理解闭包之前置知识→作用域与词法作用域</a></p>
-<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903612879994887">闭包详解一</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903616885555214">闭包详解二：JavaScript中的高阶函数</a></p>
-<h1 id="原型及原型链"><a href="#原型及原型链" class="headerlink" title="原型及原型链"></a>原型及原型链</h1><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903797039300615">图解原型和原型链</a> <strong>PS:个人认为非常适合初入了解的一篇文章</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904093828251662">2020面试收获 - js原型及原型链</a></p>
-<h1 id="设计模式篇"><a href="#设计模式篇" class="headerlink" title="设计模式篇"></a>设计模式篇</h1><h2 id="Vue双向绑定-发布订阅-数据劫持"><a href="#Vue双向绑定-发布订阅-数据劫持" class="headerlink" title="Vue双向绑定(发布订阅 + 数据劫持)"></a>Vue双向绑定(发布订阅 + 数据劫持)</h2><blockquote>
-<p>该部分较难理解,但该部分是Vue响应式原理的重要体现,请仔细阅读,并动手实现!</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903903822086151">0 到 1 掌握：Vue 核心之数据双向绑定</a> <strong>很详细的代码解释</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903601416978439">面试官: 实现双向绑定Proxy比defineproperty优劣如何?</a> <strong>PS:Vue3的双向绑定趋势 – Proxy</strong></p>
-<h2 id="设计模式-发布订阅-amp-观察者模式"><a href="#设计模式-发布订阅-amp-观察者模式" class="headerlink" title="设计模式(发布订阅 &amp; 观察者模式)"></a>设计模式(发布订阅 &amp; 观察者模式)</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903698154389517">JavaScript设计模式</a> <strong>前半部分为发布订阅代码实现,后半部分为Vue双向绑定</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903587043082247">面试官:既然React/Vue可以用Event Bus进行组件通信,你可以实现下吗?</a> <strong>发布订阅实现Event Bus</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903556714070024">从vue源码看观察者模式</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903603107266567">不好意思，观察者模式跟发布订阅模式就是不一样</a> <strong>发布订阅与观察者模式的区别? 评论各执己见,酌情参考</strong></p>
+              <h1 id="EventBus-原理"><a href="#EventBus-原理" class="headerlink" title="EventBus 原理"></a>EventBus 原理</h1><p>通过维护类内的一个的受保护属性, 将<code>emit</code>发送的事件及参数存储, 并通过<code>on</code>监听事件并接收参数执行回调.<br>事件的存储和检索都通过 Map 来完成, Map 可以存储任何类型的键名, 非常适合检索工作.</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-comment">// 定义EventEmitter类</span><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EventEmitter</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>._events = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>(); <span class="hljs-comment">// 存储事件</span><br>    <span class="hljs-built_in">this</span>._maxListnersNum = <span class="hljs-number">10</span>; <span class="hljs-comment">// 设置最大监听数上限</span><br>  &#125;<br>  <span class="hljs-comment">// 发送事件 (同Vue.$emit())</span><br>  <span class="hljs-function"><span class="hljs-title">emit</span>(<span class="hljs-params">event, ...args</span>)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">this</span>._events.get(event)) &#123;<br>      <span class="hljs-built_in">this</span>._events.set(event, args); <span class="hljs-comment">// 将事件名和对应传递参数保存</span><br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">// 监听事件并出发回调 (同Vue.on())</span><br>  <span class="hljs-function"><span class="hljs-title">on</span>(<span class="hljs-params">event, callback</span>)</span> &#123;<br>    <span class="hljs-keyword">let</span> payload = <span class="hljs-built_in">this</span>._events.get(event); <span class="hljs-comment">// 执行时触发,监听事件名是否存在</span><br>    <span class="hljs-keyword">if</span> (payload &amp;&amp; payload.length &gt; <span class="hljs-number">0</span>) &#123;<br>      callback.apply(<span class="hljs-built_in">this</span>, payload); <span class="hljs-comment">// 通过 call/apply 方法触发回调</span><br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      callback.call(<span class="hljs-built_in">this</span>, payload);<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">// 移除事件监听</span><br>  <span class="hljs-function"><span class="hljs-title">off</span>(<span class="hljs-params">event</span>)</span> &#123;<br>    <span class="hljs-function"><span class="hljs-title">if</span>(<span class="hljs-params"><span class="hljs-built_in">this</span>._events.has(event)</span>)</span> &#123;<br>      <span class="hljs-built_in">this</span>._events.delete(event);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;No Event&#x27;</span>);<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-built_in">module</span>.exports = EventEmitter;<br></code></pre></div></td></tr></table></figure>
 
+<h1 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h1><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> EventEmitter = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./eventEmitter&#x27;</span>);<br><br><span class="hljs-keyword">const</span> eventEmitter = <span class="hljs-keyword">new</span> EventEmitter();<br><br>eventEmitter.emit(<span class="hljs-string">&#x27;sayHi&#x27;</span>, &#123;<span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;Siri&#x27;</span>,<span class="hljs-attr">text</span>:<span class="hljs-string">&#x27;Hi&#x27;</span>&#125;);<br>eventEmitter.on(<span class="hljs-string">&#x27;sayHi&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">&#123;name,text&#125;</span>)</span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;text&#125;</span> <span class="hljs-subst">$&#123;name&#125;</span>`</span>);<br>&#125;)<br><br>eventEmitter.off(<span class="hljs-string">&#x27;sayHi&#x27;</span>)<br>eventEmitter.on(<span class="hljs-string">&#x27;sayHi&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">val</span>)</span>&#123;<br>  <span class="hljs-built_in">console</span>.log(val);<br>&#125;)<br><br><span class="hljs-comment">// result</span><br><span class="hljs-comment">// Hi Siri</span><br><span class="hljs-comment">// undefined</span><br></code></pre></div></td></tr></table></figure>
             </div>
             <hr>
             <div>
@@ -279,6 +274,8 @@
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Vue/">Vue</a>
                     
                       <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
                     
@@ -296,6 +293,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/04/02/%E5%89%8D%E7%AB%AF%E5%B0%8F%E8%AE%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">前端小记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

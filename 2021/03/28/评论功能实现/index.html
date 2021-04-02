@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.1k 字
+      4.3k 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      69
+      71
        分钟
     </span>
   
@@ -302,6 +302,8 @@
 <li>在需要接收参数的地方导入 js，通过 <code>vm.$on</code> 方法监听事件并触发回调 <a target="_blank" rel="noopener" href="https://cn.vuejs.org/v2/api/#vm-on">vm.$on</a></li>
 </ol>
 <p>该方式的好处在于，新建了一个“可自由放置位置”的中转站，代替了通过父组件(甚至更多上层组件)进行传值的问题。我们只需要在传递数据的源头和接受数据的尽头引入中转站即可。<br><strong>疑问：</strong><br>我们实例化了一个新的Vue对象，其内部 this 指向承接上下文吗？以<code>CommentBtn.vue</code>为例，this 指向点符号前对象，即 Middle，但 Middle 作为空 Vue 实例，应该不存在 <code>this.content</code> 才对，但实际上打印出 this 发现，this 与当前组件 <code>&lt;CommentBtn&gt;</code> 相同。猜测：可能空Vue实例没有挂载到某节点，因此this从上下文获取。</p>
+<hr>
+<h4 id="2021-04-02-更新"><a href="#2021-04-02-更新" class="headerlink" title="2021-04-02 更新"></a>2021-04-02 更新</h4><p>关于上述 eventBus this 指向的疑问, 有如下解释:<br>虽然 emit 和 on 都在一个全局的 Vue 实例进行的, 但是基于箭头函数 this 指向取决于定义时上层块级作用域.<br>因此通过分析可知, 此时 on 的回调是在相应的组件中定义的 (使用箭头函数,那么回调函数中的 this 就是组件), 而 bus 则充当了一个挺有趣的中间人</p>
 <h2 id="评论功能代码"><a href="#评论功能代码" class="headerlink" title="评论功能代码"></a>评论功能代码</h2><p>见 <a target="_blank" rel="noopener" href="https://github.com/jtwang7/vue-project">vue-project</a> &amp; <a target="_blank" rel="noopener" href="https://github.com/jtwang7/vue-project-egg">vue-project-egg</a></p>
 
             </div>
