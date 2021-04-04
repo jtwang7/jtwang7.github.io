@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      3.7k 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      29
+      52
        分钟
     </span>
   
@@ -347,6 +347,52 @@
 <h3 id="bind、call、apply的区别"><a href="#bind、call、apply的区别" class="headerlink" title="bind、call、apply的区别"></a>bind、call、apply的区别</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903768132157447">细说 call、apply 以及 bind 的区别和用法</a><br><a target="_blank" rel="noopener" href="https://zh.javascript.info/call-apply-decorators">装饰器模式和转发，call/apply</a><br><a target="_blank" rel="noopener" href="https://zh.javascript.info/bind">函数绑定</a><br><strong>题解</strong><br>call / apply 区别:<br>主要体现在参数: call 第二参数接收任何可迭代对象; apply 第二参数接收数组或类数组对象</p>
 <p>bind / (call; apply) 区别:<br>bind 方法返回新的函数, 该函数 this 指向提供的第一参数;<br>bind 方法不会立即执行, 需要手动调用; call/apply 方法立即执行</p>
 <p>bind / call / apply 共同点:<br>作用对象必须是一个函数, 即 <code>Function.apply()</code> 等;<br>目的是改变函数执行时的上下文;</p>
+<h3 id="new的原理"><a href="#new的原理" class="headerlink" title="new的原理"></a>new的原理</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903789070123021">重学 JS 系列：聊聊 new 操作符</a><br><a target="_blank" rel="noopener" href="https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/12">如何实现一个 new</a><br><a target="_blank" rel="noopener" href="https://zh.javascript.info/prototype-methods">Object.create</a><br><strong>题解</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-comment">// 1.</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Test</span>(<span class="hljs-params">name</span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.name = name;<br>&#125;<br><span class="hljs-keyword">const</span> test = <span class="hljs-keyword">new</span> Test(<span class="hljs-string">&#x27;Siri&#x27;</span>);<br><span class="hljs-built_in">console</span>.log(test.name) <span class="hljs-comment">// Siri</span><br><br><span class="hljs-comment">// 2.</span><br>Test.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.name)<br>&#125;<br>test.sayName() <span class="hljs-comment">// Siri</span><br><br><span class="hljs-comment">// 3.</span><br>fuction <span class="hljs-function"><span class="hljs-title">Test2</span>(<span class="hljs-params">name</span>)</span> &#123;<br>  <span class="hljs-built_in">this</span>.name = name;<br>  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>&#125;<br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Test3</span>(<span class="hljs-params">name</span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.name = name;<br>  <span class="hljs-keyword">return</span> &#123;<br>    age: <span class="hljs-number">18</span>,<br>  &#125;<br>&#125;<br><span class="hljs-keyword">const</span> test2 = <span class="hljs-keyword">new</span> Test2(<span class="hljs-string">&#x27;Siri&#x27;</span>);<br><span class="hljs-built_in">console</span>.log(test2.name) <span class="hljs-comment">// Siri</span><br><br><span class="hljs-keyword">const</span> test3 = <span class="hljs-keyword">new</span> Test3(<span class="hljs-string">&#x27;Siri&#x27;</span>);<br><span class="hljs-built_in">console</span>.log(test3) <span class="hljs-comment">// &#123;age: 18&#125;</span><br><span class="hljs-built_in">console</span>.log(test3.name) <span class="hljs-comment">// undefined</span><br></code></pre></div></td></tr></table></figure>
+<p>new 作用:</p>
+<ol>
+<li>new 创建的实例可以访问构造函数中的属性</li>
+<li>new 创建的实例可以访问构造函数原型中的属性, new 将实例和构造函数通过原型链连接</li>
+<li>构造函数返回原始值, 返回值不会生效; 构造函数返回对象, 该对象有效, 返回对象会导致 new 操作符不起作用(new 操作符本质上返回了该构造函数的 this 对象)</li>
+</ol>
+<p>new 操作符的实现:</p>
+<ol>
+<li>new 操作符需要返回一个 this 对象(构造函数的 this)</li>
+<li>为了可以访问构造函数原型, 该 this 对象需要连接构造函数构成一条原型链</li>
+<li>返回原值时要忽略, 返回对象则正常返回</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-keyword">function</span> <span class="hljs-constructor">_new(Fn, <span class="hljs-operator">...</span><span class="hljs-params">args</span>)</span> &#123;<br>  <span class="hljs-keyword">let</span> _this = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Object</span>.</span></span>create(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Fn</span>.</span></span>prototype); <span class="hljs-comment">// 通过 Object.create , 基于 Fn.prototype 原型创建空对象</span><br>  <span class="hljs-keyword">let</span> obj = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Fn</span>.</span></span>apply(_this, args); <span class="hljs-comment">// 基于 _this 空对象立即执行 Fn , 在 _this 上挂载 args 参数. Fn 可能有返回值, 创建一个 obj 变量接收</span><br>  return obj instanceof Object ? obj : _this <span class="hljs-comment">// 若返回值为对象, 则返回该对象, 否则返回 _this 对象, 这样就忽略了原始值</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h3 id="如何正确判断this？"><a href="#如何正确判断this？" class="headerlink" title="如何正确判断this？"></a>如何正确判断this？</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903805587619854">嗨，你真的懂this吗？</a><br><strong>题解</strong><br>建议看完下述题解后, 参考上方文章的例子, 自己尝试分析一遍 this 指向.</p>
+<p>this 绑定优先级: new 绑定 &gt; 显示绑定 &gt; 隐式绑定 &gt; 默认绑定<br>判断顺序如下: </p>
+<ol>
+<li>函数是否通过 new 绑定, 若是, 则 this 绑定创建的实例对象;</li>
+<li>函数是否通过 call, apply, bind 绑定, 若是, 则 this 绑定第一参数指定的对象;</li>
+<li>函数是否在某个上下文对象中调用(隐式绑定), 若是, this 绑定该上下文对象, 一般是obj.foo(), 若对象链式调用, this 指向最近的调用上下文对象; </li>
+<li>如果以上都不是, 那么使用默认绑定; 如果在严格模式下, 则绑定到undefined, 否则绑定到全局对象;</li>
+<li>null / undefined 作为 this 的绑定对象传入 call, apply, bind 会被忽略(无效), 此时应用默认绑定规则;</li>
+<li>如果是箭头函数, 箭头函数的 this 继承的是外层代码块的this </li>
+</ol>
+<p>箭头函数 this 是动态的, 当箭头函数被使用时(JS代码执行时) this 指向才能确定, 其指向上一层代码块的 this; 个人理解: 普通函数 this 未被调用时默认指向全局, 在调用时确定指向, 其指向调用它的对象, 而箭头函数为被调用时不存在 this, 调用时 this 指向其定义位置(注意是定义区域而不是调用区域, 与普通函数差别体现在这)的上层块级作用域;<br><strong>PS: 箭头函数不能用 call/apply/bind; yield; arguments 等</strong></p>
+<h3 id="闭包及其作用"><a href="#闭包及其作用" class="headerlink" title="闭包及其作用"></a>闭包及其作用</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903990656761864">动画：什么是闭包？</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903815041253390">为了前端的深度-闭包概念与应用</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903612879994887">闭包详解一</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903606311714824">深入理解闭包之前置知识→作用域与词法作用域</a><br><strong>题解</strong><br>前置知识(作用于 &amp; 词法作用域):<br>作用域: 一套用于如何查找变量以及如何确定变量位置的规则. 简单理解作用域就是查找变量的地方; 作用域又分为静态作用域(词法作用域) &amp; 动态作用域;<br>作用域链: 查找变量时所遵循从下到上逐层查找的规则.<br><strong>词法作用域</strong>: 作用域的一种工作模式, 是静态的作用域. 其作用域位置由书写代码时<strong>函数声明的位置</strong>来决定的.</p>
+<p><strong>闭包概念</strong>(网上有很多种说法, 但都大同小异):</p>
+<ul>
+<li>一个内部函数保持着其对外部函数词法作用域的访问权限;</li>
+<li>一个函数对其周围状态(词法环境)的引用, 与该函数捆绑在一起的组合称为闭包;</li>
+<li>保护一个可重用的局部变量的词法结构;</li>
+<li>当函数可以记住并访问所在的词法作用域时, 就产生了闭包, 即使函数是在当前词法作用域之外执行; (&lt;&lt;你不知道的JavaScript&gt;&gt;)</li>
+</ul>
+<p>个人理解:<br>函数在书写代码时, 就已经确定了其周围的词法环境, 当函数被调用时, 会创建一个执行上下文环境, 在这里将完成一系列的变量初始化与赋值等. 当函数执行完成后, 该执行上下文环境会被销毁, 被回收机制回收, 此时若环境内的变量没有被引用, 那么会随着上下文环境一同被回收; 但是! 若在该函数执行完成后, 其内部(只有内部的情况,外部是无法访问内部变量的)仍有对该变量的引用(常见的就是内部嵌套函数, 函数回调等), 那么该变量就不会被回收.<br>综上所述, 若一个内部函数持有对其外部函数词法作用域的访问权限, 那么闭包就形成了; 广义上讲任何函数都是闭包, 最外层函数引用全局作用域的变量, 其也保持了全局作用域的访问权限, 因此也是闭包; 一般我们提及的闭包都指的是有效(能给代码产生效益)的闭包.</p>
+<p><strong>闭包应用</strong><br>优点: <strong>保存</strong> &amp; <strong>保护</strong></p>
+<ol>
+<li>私有变量</li>
+<li>回调与计时器</li>
+<li>绑定函数上下文</li>
+<li>偏应用函数</li>
+<li>函数重载: 缓存记忆 / 函数包装</li>
+<li>即时函数: 独立作用域 / 简介代码 / 循环 / 类库包装 / 通过参数限制作用域内名称</li>
+</ol>
+<p>缺点: 闭包信息始终会保存在内存里<br>小疑问: 函数仅对外部函数词法环境内某个变量持有引用, 其他变量仍会存在吗? 个人认为会存在, 因为变量和其环境是绑定关系(同生共死); 但是好像这些变量也无法再被利用了, 回收机制可以清除吗?</p>
 
             </div>
             <hr>
