@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      10.9k 字
+      11.6k 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      159
+      170
        分钟
     </span>
   
@@ -529,8 +529,40 @@
 <li><strong>总结:</strong> 新增或替换的节点若存在于页面上, 则其原来位置的节点将被移除, 同一个节点不能同时存在于页面的多个位置; 节点绑定的事件不会因为页面修改操作消失, 会一直保留;</li>
 </ul>
 <ol start="3">
-<li></li>
+<li>节点查询型API</li>
 </ol>
+<ul>
+<li>document.getElementById: 根据元素id返回元素, 返回值是Element类型, 如果不存在该元素, 则返回null; <code>let element = document.getElementById(id)</code>; (<strong>注意:</strong> HTML 中若存在多个相同 id 的元素, 则返回第一个元素)</li>
+<li>document.getElementsByTagName: 返回一个包括所有给定标签名称的元素的HTML集合; <code>let elements = document.getElementByTagName(name)</code>; (<strong>注意:</strong> 搜索范围是整个 HTML 文档, 返回的 HTML 集合是动态的, 它可以自动更新并保持与 DOM 树的同步; 若不存在指定标签, 接口返回空的 HTML Collection 而不是 null)</li>
+<li>document.getElementsByName: 通过指定 name 属性获取元素, 返回一个 NodeList 对象; <code>let elements = document.getElementsByName(name)</code>; (<strong>注意:</strong> NodeList 是会随时变化的)</li>
+<li>document.getElementsByClassName: 根据元素的class返回一个即时的HTMLCollection; <code>let elements = document.getElementsByClassName(names)</code>; elements 为 HTML 集合, 包含了匹配的所有元素, names 为字符串, 包含所要匹配的类名列表, 类名通过空格分隔; (<strong>注意:</strong> getElementsByClassName 可在任何元素上调用, 不仅仅是 document)</li>
+<li>document.querySelector: 通过 css 选择器来查找元素, 返回第一个匹配的元素(深度优先搜索), 若没有则返回 null; <code>let element = document.querySelector(selectors)</code>; </li>
+<li>document.querySelectorAll: 通过 css 选择器来查找元素, 返回所有匹配的元素; <code>let elementList = document.querySelectorAll(selectors)</code>; elementList 是一个静态的 NodeList 类型的对象, selectors 是一个由逗号连接的包含一个或多个CSS选择器的字符串; (<strong>注意:</strong> 返回的 NodeList 是静态非即时的, 结果不会随着文档树变化而变化)</li>
+</ul>
+<ol start="4">
+<li>节点关系型API</li>
+</ol>
+<ul>
+<li>parentNode: 返回元素父节点;</li>
+<li>parentElement: 返回元素的父元素节点, 与 parentNode 不同在于, 父节点必须是 Element, 若不是则返回 null;</li>
+<li>childNodes: 即时 NodeList, 表示元素的子节点列表; </li>
+<li>children: 即时 HTML Collection, 返回 Element 子节点; 注意 HTML Collection 和 NodeList 的区别;</li>
+<li>firstChild: 返回 DOM 树节点的第一个子节点, 若无子节点则返回 null;</li>
+<li>lastChild: 返回当前节点的最后一个子节点, 若无子节点返回 null;</li>
+<li>hasChildNodes: 返回布尔值, 表明当前节点是否包含子节点;</li>
+<li>previousSibling: 返回当前节点的前一个兄弟节点,没有则返回null;</li>
+<li>previousElementSibling: 返回当前元素在其父元素的子元素节点中的前一个元素节点;</li>
+<li>nextSibling: 返回其父节点的childNodes列表中紧跟在其后面的节点;</li>
+<li>nextElementSibling: 返回当前元素在其父元素的子元素节点中的后一个元素节点;</li>
+</ul>
+<ol start="5">
+<li>元素属性API</li>
+</ol>
+<ul>
+<li>setAttribute: 设置指定元素的一个属性值, 若属性存在则更新其值, 否则添加新的属性; <code>element.setAttribute(name, value)</code>; name 为属性值, value 为属性值; </li>
+<li>getAttribute: 返回元素内的一个指定属性值, 若不存在返回 null 或 “”; <code>let attr = element.setAttribute(attrName)</code>;</li>
+<li>removeAttribute: 移除指定元素的一个属性; <code>element.removeAttribute(attrName)</code>;</li>
+</ul>
 
             </div>
             <hr>
