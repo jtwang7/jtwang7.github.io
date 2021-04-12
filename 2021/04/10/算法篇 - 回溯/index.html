@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      835 字
+      1.2k 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10
+      16
        分钟
     </span>
   
@@ -282,7 +282,10 @@
 
 
 <h2 id="39-组合总和"><a href="#39-组合总和" class="headerlink" title="39 - 组合总和"></a>39 - 组合总和</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/combination-sum/submissions/">LeetCode题目地址</a><br><img src="/img/posts_img/%E7%AE%97%E6%B3%95%E7%AF%87-%E5%9B%9E%E6%BA%AF-39%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8C-1.png" srcset="/img/loading.gif" lazyload><br><strong>题解</strong><br>树形图:<br><img src="/img/posts_img/%E7%AE%97%E6%B3%95%E7%AF%87-%E5%9B%9E%E6%BA%AF-39%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8C-2.png" srcset="/img/loading.gif" lazyload></p>
-<figure class="highlight plain"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs plain"><br></code></pre></div></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">/**<br> * @param &#123;number[]&#125; candidates<br> * @param &#123;number&#125; target<br> * @return &#123;number[][]&#125;<br> */<br>var combinationSum = <span class="hljs-keyword">function</span> (candidates, target) &#123;<br>  <span class="hljs-regexp">//</span> 数组排序<br>  candidates = candidates.sort((a,b)=&gt;a-b);<br>  <span class="hljs-regexp">//</span> 结果数组<br>  let res = [];<br><br>  <span class="hljs-regexp">//</span> 递归函数<br>  <span class="hljs-regexp">//</span> curSum: 当前总和<br>  <span class="hljs-regexp">//</span> combList: 当前组合列表<br>  <span class="hljs-regexp">//</span> start: 遍历的节点(去重)<br>  <span class="hljs-keyword">function</span> backTrack (curSum, combList, start) &#123;<br>    <span class="hljs-regexp">//</span> 递归出口<br>    <span class="hljs-keyword">if</span> (curSum &gt;= target) &#123;<br>      <span class="hljs-regexp">//</span> 若符合条件, 添加当前组合至结果数组<br>      <span class="hljs-regexp">//</span> (注意此处为克隆, combList 既存储当前组合又是一个状态栈)<br>      <span class="hljs-regexp">//</span> (直接存储只保留其引用地址, 最终结果会是 [], 因为状态栈最终会回溯到根节点)<br>      curSum === target &amp;&amp; res.push(combList.slice())<br>      return;<br>    &#125;<br>    <span class="hljs-regexp">//</span> 遍历当前层节点<br>    <span class="hljs-keyword">for</span> (let i=start; i&lt;candidates.length; i++) &#123;<br>      <span class="hljs-regexp">//</span> 状态栈入栈<br>      combList.push(candidates[i]);<br>      <span class="hljs-regexp">//</span> 递归(进入下一层, 下层遍历基于上层节点开始遍历, 达到去重的目的)<br>      backTrack(curSum + candidates[i], combList, i)<br>      <span class="hljs-regexp">//</span>状态栈出栈(状态重置到当前层, 遍历当前层其他节点)<br>      combList.pop();<br>    &#125;<br>  &#125;<br><br>  backTrack(<span class="hljs-number">0</span>, [], <span class="hljs-number">0</span>);<br><br>  return res;<br>&#125;;<br></code></pre></div></td></tr></table></figure>
+
+<p><strong>上述代码实现了回溯的一个基本操作, 即通过递归和遍历实现对每一层节点的判断, 同时维护一个状态栈, 实现回溯算法最关键的状态重置; (回溯是由递归 + 遍历 + 状态栈共同实现的, 本质是递归, 遍历是搜索各节点的手段, 状态栈是状态重置的关键)</strong><br><strong><em>本题剪枝思想体现在递归出口处, 当求和结果大于目标值时, 直接终止递归达到剪枝的目的</em></strong></p>
+
             </div>
             <hr>
             <div>
