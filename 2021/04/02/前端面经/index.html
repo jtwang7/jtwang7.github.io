@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      24.1k 字
+      24.8k 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      370
+      378
        分钟
     </span>
   
@@ -771,8 +771,21 @@
 <p><strong>setInterval 的定时器误差</strong><br>setInterval 到达计时器阈值时, 会将其回调注入到宏任务队列中, 并且不断重复该过程, 但是! 回调函数是在宏任务队列等待而不是立即执行, 这就导致了定时误差, 它总是会被队列前的任务给阻塞, 并不断累积误差;</p>
 <hr>
 <h2 id="ES6"><a href="#ES6" class="headerlink" title="ES6"></a>ES6</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903775329583112">近一万字的ES6语法知识点补充</a></p>
-<h3 id="let、const和var的概念与区别"><a href="#let、const和var的概念与区别" class="headerlink" title="let、const和var的概念与区别"></a>let、const和var的概念与区别</h3><p><strong>参考文章</strong></p>
-<p><strong>题解</strong></p>
+<h3 id="let、const和var的区别-amp-变量提升与暂时性死区"><a href="#let、const和var的区别-amp-变量提升与暂时性死区" class="headerlink" title="let、const和var的区别 &amp; 变量提升与暂时性死区"></a>let、const和var的区别 &amp; 变量提升与暂时性死区</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903752139276301">var和let/const的区别</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903775329583112">近一万字的ES6语法知识点补充</a><br><strong>题解</strong><br>let/const 与 var 的区别:</p>
+<ol>
+<li>块级作用域<code>&#123;&#125;</code>;</li>
+<li>不存在变量提升;</li>
+<li>暂时性死区;</li>
+<li>不可重复声明;</li>
+<li>let/const 声明的全局变量不会挂载在顶层对象下;</li>
+</ol>
+<p>let/const 声明变量时, 会创建一个块级作用域(一个花括号内是一个新的作用域), 块级作用域内声明的变量只能在其内部(包括子作用域)使用;<br>在同一作用域下, var 声明的变量可在声明前使用, 值为 undefined, let/const 在未声明时使用报错, 值得讨论的是: let/const 其实也存在变量提升的现象, 这是因为 JS 在运行阶段构建执行上下文创建变量时, 会执行函数提升和变量提升, 其声明变量会被创建并提升至作用域顶部, 与 var 不同在于, var 在执行上下文创建变量时就被初始化并赋值为 undefined, 执行时遇到赋值语句则将 undefined 替换, let/const 声明的变量同样会在该阶段被创建, 但不会初始化赋值 undefined, 变量值直到赋值语句执行时才被初始化, 若此时声明变量没有赋值, 则默认赋值 undefined (ES6 标准解释: 由let/const声明的变量，当它们包含的词法环境(Lexical Environment)被实例化时会被创建，但只有在变量的词法绑定(LexicalBinding)已经被求值运算后，才能够被访问);<br>let/const 声明变量从创建到初始化之间的代码片段称为”暂时性死区”;<br>let/const 不允许在相同作用域内重复声明同一变量;<br>ES6 规定 let/const 声明的变量不属于顶层全局变量(浏览器是windows, Node是Global)的属性, let/const 声明的变量在 Script 作用域下, 我们在使用 let/const 时就无需担心污染全局 window 对象;</p>
+<p>const 特点:</p>
+<ol>
+<li>const 声明后必须初始化赋值;</li>
+<li>const 声明的简单类型变量值不可修改, 复杂类型(对象, 函数, 正则)等在栈内存中的指针地址不能更改, 指针所指向堆内存中的数据可以更改; </li>
+</ol>
+<h3 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/destructuring">ES6阮一峰: 变量的解构赋值</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903752139276301">var和let/const的区别</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903775329583112">近一万字的ES6语法知识点补充</a><br><strong>题解</strong><br>请移步阅读”阮一峰 ES6 入门”, 笔记后续补充…</p>
 <hr>
 <h2 id="手撕代码"><a href="#手撕代码" class="headerlink" title="手撕代码"></a>手撕代码</h2><p><a target="_blank" rel="noopener" href="https://github.com/jtwang7/Code-Shredded">GitHub - 手撕代码篇</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903989083897870">各种源码实现，你想要的这里都有</a></p>
 <h3 id="Promise-A-规范-及其常用方法"><a href="#Promise-A-规范-及其常用方法" class="headerlink" title="Promise(A+规范)及其常用方法"></a>Promise(A+规范)及其常用方法</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="http://www.fly63.com/article/detial/2071">手写一款符合Promise/A+规范的Promise</a><br><strong>题解</strong><br>自己实现的Promise: <a target="_blank" rel="noopener" href="https://github.com/jtwang7/Code-Shredded/blob/master/PromiseA%2B/MyPromise-NoAnnotation.js">Promise A+ – 无注释版</a><br>符合A+规范: 在文件路径下添加 defer 方法并运行 <code>promises-aplus-tests [文件名.js]</code></p>
