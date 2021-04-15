@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="文章是以&#34;阮一峰ES6入门&#34;为参考而著的一篇学习总结, 请酌情参考, 内容包括 Iterator 概念, Iterator API, 应用场景等;">
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>ES6篇 - Iterator - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6篇 - Iterator">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-15 16:48" pubdate>
+        2021年4月15日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6篇 - Iterator</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Iterator"><a href="#Iterator" class="headerlink" title="Iterator"></a>Iterator</h1><p>参考文章: <a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/iterator">ES6阮一峰 - Iterator 和 for…of 循环</a></p>
+<h2 id="Iterator-概念"><a href="#Iterator-概念" class="headerlink" title="Iterator 概念"></a>Iterator 概念</h2><p>Iterator (遍历器<strong>对象</strong>) 是为各种数据结构(Array, Object, Map, Set, …)提供的一个统一简便的<strong>访问接口</strong>;<br>Iterator 接口主要供 ES6 的<strong>遍历</strong>命令 for…of <strong>消费</strong>, 任何部署了 Iterator 接口的数据结构都可以完成遍历操作(程序可依次处理该数据结构的所有成员);<br>Iterator 能够将数据结构的成员按照某种次序进行<strong>排序</strong>;</p>
+<p><strong><em>Iterator 为程序遍历各种数据结构提供了统一的方法, ES6 的 for…of 通过访问和消耗 Iterator 接口, 实现对数据结构内所有成员的遍历操作</em></strong></p>
+<p>遍历 Iterator 的过程:</p>
+<ol>
+<li>创建一个<strong>指针对象</strong>, 指向当前数据结构的<strong>起始位置</strong>;</li>
+<li>调用指针对象的 <strong>next</strong> 方法, 将指针<strong>指向</strong>数据结构的第一个<strong>成员</strong>, <strong>返回成员信息</strong>; 每次调用 next 方法都会移动指针, 指向下一个成员, 并返回成员信息;</li>
+<li>不断调用指针对象的 next 方法, 直到<strong>指向</strong>数据结构<strong>结束位置, 停止遍历</strong>;</li>
+</ol>
+<p><strong>注意:</strong><br><strong><em>Iterator 开始遍历时创建的指针对象, 其指向的起始位置不是数据结构的第一个成员;</em></strong><br><strong><em>Iterator 每一次调用 next 方法, 都会返回当前指向的数据结构成员的成员信息(一个包含 value 和 done 属性的对象: <code>&#123;value: any, done: boolean&#125;</code>)</em></strong><br><strong><em>Iterator 结束位置不是数据结构的最后一个成员, Iterator 遍历结束的信号是当 <code>done === true</code> 时;</em></strong></p>
+<p><strong>Code</strong><br>要实现一个 Iterator 遍历器对象, 则主要实现三个要求:</p>
+<ul>
+<li>返回一个对象</li>
+<li>对象内包含 next 方法; <strong>next() {…} 是一个无参函数</strong></li>
+<li>next 方法返回一个 <code>&#123;value: any, done: boolean&#125;</code> 对象</li>
+</ul>
+<p><strong><em>Iterator 实现用到了闭包的思想, 当前遍历的索引变量被保留在了内存中, 没有随着 makeIterator 函数执行结束后上下文销毁而消失;</em></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeIterator</span>(<span class="hljs-params">arrayLike</span>) </span>&#123;<br>  <span class="hljs-keyword">const</span> lens = arrayLike.length;<br>  <span class="hljs-keyword">let</span> idx = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-function"><span class="hljs-title">next</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-comment">// done: false 和 value: undefined 可以被省略;</span><br>      <span class="hljs-keyword">return</span> idx &lt; lens ? &#123;<br>        value: arrayLike[idx++], <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> <br>      &#125; : &#123;<br>        value: <span class="hljs-literal">undefined</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>Iterator 遍历操作实现:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-string">const</span> <span class="hljs-string">arrayLike</span> <span class="hljs-string">=</span> &#123;<br>  <span class="hljs-attr">&#x27;0&#x27;:</span> <span class="hljs-string">&#x27;Hello&#x27;</span>,<br>  <span class="hljs-attr">&#x27;1&#x27;:</span> <span class="hljs-string">&#x27;World&#x27;</span>,<br>  <span class="hljs-attr">&#x27;length&#x27;:</span> <span class="hljs-number">2</span>,<br>&#125;<br><span class="hljs-string">const</span> <span class="hljs-string">iterator</span> <span class="hljs-string">=</span> <span class="hljs-string">makeIterator(arrayLike);</span><br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">//</span> <span class="hljs-string">done</span> <span class="hljs-string">===</span> <span class="hljs-literal">true</span> <span class="hljs-string">后仍可以手动调用</span> <span class="hljs-string">next()</span> <span class="hljs-string">移动指针,</span> <span class="hljs-string">后续返回对象均为</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">undefined</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">true</span> &#125;<br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">/**</span><br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">&#x27;Hello&#x27;</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">false</span> &#125;<br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">&#x27;World&#x27;</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">false</span> &#125;<br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">undefined</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">true</span> &#125;<br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">undefined</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">true</span> &#125;<br> <span class="hljs-string">*/</span><br></code></pre></div></td></tr></table></figure>
+
+<h2 id="可迭代对象"><a href="#可迭代对象" class="headerlink" title="可迭代对象"></a>可迭代对象</h2><p>上述我们实现了手动调用 Iterator 遍历器对象的 next 方法, 模拟对数据结构所有成员的遍历过程, ES6 通过 for…of 遍历数据结构时, 会<strong>自动寻找 Iterator 接口</strong>, 我们称<strong>部署了 Iterator 接口的数据结构</strong>为”可遍历对象(Iterable)”<br><strong>注: Iterator 遍历器对象是不可以被 for…of 遍历的, 因为它只是一个指针对象, 只有部署了它的数据结构才是 for…of 遍历的目标;</strong><br>ES6 规定, 默认的 Iterator 接口要部署在数据结构的 <code>Symbol.iterator</code> 属性上; <code>Symbol.iterator</code> 属性是当前数据结构默认的<strong>遍历器生成函数</strong>; <code>Symbol.iterator</code> 是一个表达式, 返回 Symbol 对象的 iterator 属性, 作为属性名时用方括号引用;</p>
+<p><strong><em>for…of 只能遍历实现了 Symbol.iterator 属性部署的数据结构 (若目标原型链上具有 Symbol.iterator 属性也可被遍历); for…of 每次循环调用 next 方法后, 都会检查返回值 done 属性, 若遍历未结束 done === false, 则继续调用 next 方法循环, 若检查到 done === true, 则结束遍历, 且不会将 value 赋值给临时变量;</em></strong></p>
+<p><strong>Code</strong><br>实现一个可迭代对象(可被遍历的数据结构), 需满足以下几点:</p>
+<ol>
+<li>数据结构内包含 <code>Symbol.iterator</code> 属性;</li>
+<li><code>Symbol.iterator</code> 属性值是一个<strong>函数</strong>, 返回一个<strong>遍历器对象</strong>(上述已实现)<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> arrayLike = &#123;<br>  <span class="hljs-string">&#x27;0&#x27;</span>: <span class="hljs-string">&#x27;Hello&#x27;</span>,<br>  <span class="hljs-string">&#x27;1&#x27;</span>: <span class="hljs-string">&#x27;World&#x27;</span>,<br>  <span class="hljs-string">&#x27;length&#x27;</span>: <span class="hljs-number">2</span>,<br>  [<span class="hljs-built_in">Symbol</span>.iterator]() &#123;<br>    <span class="hljs-keyword">const</span> ctx = <span class="hljs-built_in">this</span>;<br>    <span class="hljs-keyword">let</span> idx = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">return</span> &#123;<br>      <span class="hljs-function"><span class="hljs-title">next</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> idx &lt; ctx.length ?<br>          &#123; <span class="hljs-attr">value</span>: ctx[idx++], <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125; :<br>          &#123; <span class="hljs-attr">value</span>: <span class="hljs-literal">undefined</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;<br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+</li>
+</ol>
+<p>ES6 原生具备 Iterator 接口的数据结构:</p>
+<ol>
+<li>Array</li>
+<li>Map</li>
+<li>Set</li>
+<li>String</li>
+<li>TypedArray</li>
+<li>arguments</li>
+<li>NodeList</li>
+</ol>
+<p><strong><em>普通对象没有原生 Iterator 接口部署, 需要自己在 Symbol.iterator 属性上部署, 才能被 for…of 循环遍历; (对象 Object 之所以没有默认部署 Iterator 接口, 是因为对象属性遍历的顺序是不确定的, 需要开发者手动指定)</em></strong></p>
+<h2 id="遍历-Iterator-接口的场景"><a href="#遍历-Iterator-接口的场景" class="headerlink" title="遍历 Iterator 接口的场景"></a>遍历 Iterator 接口的场景</h2><p>除了 for…of 循环外, 还有几个操作也要求数据结构部署 Iterator 接口;</p>
+<ol>
+<li>解构赋值</li>
+<li>扩展运算符</li>
+<li><code>yield*</code></li>
+<li>Array.from()</li>
+<li>Map(), Set(), WeakMap(), WeakSet()</li>
+<li>Promise.all()</li>
+<li>Promise.race()</li>
+</ol>
+<h2 id="for…of-循环"><a href="#for…of-循环" class="headerlink" title="for…of 循环"></a>for…of 循环</h2><p>ES6 遍历所有数据结构的统一方法;<br>前提: 数据结构具有 <code>Symbol.iterator</code> 属性, 即具有 iterator 接口;<br>本质: for…of 循环内部调用数据结构的 <code>Symbol.iterator</code> 方法, 其返回一个迭代器对象, 并执行 next 方法, next 方法会返回 <code>&#123;value: any, done: boolean&#125;</code> 对象, 检查是否 <code>done === true</code>, 若不是则将 value 值赋值给 for…of 临时变量, 若是则终止迭代, 且不执行赋值操作;</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6/">ES6</a>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/10/%E7%AE%97%E6%B3%95%E7%AF%87%20-%20%E5%9B%9E%E6%BA%AF/">
+                        <span class="hidden-mobile">算法篇 - 回溯</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
