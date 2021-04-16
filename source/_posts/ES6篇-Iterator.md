@@ -131,12 +131,3 @@ ES6 遍历所有数据结构的统一方法;
 前提: 数据结构具有 `Symbol.iterator` 属性, 即具有 iterator 接口;
 本质: for...of 循环内部调用数据结构的 `Symbol.iterator` 方法, 其返回一个迭代器对象, 并执行 next 方法, next 方法会返回 `{value: any, done: boolean}` 对象, 检查是否 `done === true`, 若不是则将 value 值赋值给 for...of 临时变量, 若是则终止迭代, 且不执行赋值操作;
 
-
-
-
-
-
-
-
-
-
