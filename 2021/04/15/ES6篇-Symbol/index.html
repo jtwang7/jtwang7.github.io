@@ -16,11 +16,11 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="文章是以&#34;阮一峰ES6入门&#34;为参考而著的一篇学习总结, 请酌情参考, 内容包括 Iterator 概念, Iterator API, 应用场景等;">
+  <meta name="description" content="文章是以&#34;阮一峰ES6入门&#34;为参考而著的一篇学习总结, 请酌情参考;">
   <meta name="author" content="王锦添">
   <meta name="keywords" content="">
   
-  <title>ES6篇 - Iterator - 王锦添的博客</title>
+  <title>ES6篇 - Symbol - 王锦添的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
 
@@ -177,7 +177,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="ES6篇 - Iterator">
+            <span class="h2" id="subtitle" title="ES6篇 - Symbol">
               
             </span>
 
@@ -192,8 +192,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-15 16:48" pubdate>
-        2021年4月15日 下午
+      <time datetime="2021-04-15 20:44" pubdate>
+        2021年4月15日 晚上
       </time>
     </span>
   
@@ -204,7 +204,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.3k 字
+      1k 字
     </span>
   
 
@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      20
+      16
        分钟
     </span>
   
@@ -252,61 +252,46 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">ES6篇 - Iterator</h1>
+            <h1 style="display: none">ES6篇 - Symbol</h1>
             
             <div class="markdown-body">
-              <h1 id="Iterator"><a href="#Iterator" class="headerlink" title="Iterator"></a>Iterator</h1><p>参考文章: <a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/iterator">ES6阮一峰 - Iterator 和 for…of 循环</a></p>
-<h2 id="Iterator-概念"><a href="#Iterator-概念" class="headerlink" title="Iterator 概念"></a>Iterator 概念</h2><p>Iterator (遍历器<strong>对象</strong>) 是为各种数据结构(Array, Object, Map, Set, …)提供的一个统一简便的<strong>访问接口</strong>;<br>Iterator 接口主要供 ES6 的<strong>遍历</strong>命令 for…of <strong>消费</strong>, 任何部署了 Iterator 接口的数据结构都可以完成遍历操作(程序可依次处理该数据结构的所有成员);<br>Iterator 能够将数据结构的成员按照某种次序进行<strong>排序</strong>;</p>
-<p><strong><em>Iterator 为程序遍历各种数据结构提供了统一的方法, ES6 的 for…of 通过访问和消耗 Iterator 接口, 实现对数据结构内所有成员的遍历操作</em></strong></p>
-<p>遍历 Iterator 的过程:</p>
-<ol>
-<li>创建一个<strong>指针对象</strong>, 指向当前数据结构的<strong>起始位置</strong>;</li>
-<li>调用指针对象的 <strong>next</strong> 方法, 将指针<strong>指向</strong>数据结构的第一个<strong>成员</strong>, <strong>返回成员信息</strong>; 每次调用 next 方法都会移动指针, 指向下一个成员, 并返回成员信息;</li>
-<li>不断调用指针对象的 next 方法, 直到<strong>指向</strong>数据结构<strong>结束位置, 停止遍历</strong>;</li>
-</ol>
-<p><strong>注意:</strong><br><strong><em>Iterator 开始遍历时创建的指针对象, 其指向的起始位置不是数据结构的第一个成员;</em></strong><br><strong><em>Iterator 每一次调用 next 方法, 都会返回当前指向的数据结构成员的成员信息(一个包含 value 和 done 属性的对象: <code>&#123;value: any, done: boolean&#125;</code>)</em></strong><br><strong><em>Iterator 结束位置不是数据结构的最后一个成员, Iterator 遍历结束的信号是当 <code>done === true</code> 时;</em></strong></p>
-<p><strong>Code</strong><br>要实现一个 Iterator 遍历器对象, 则主要实现三个要求:</p>
+              <h1 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h1><p>ES6 新增的一种<strong>原始数据类型</strong>;<br>Symbol 值是<strong>独一无二</strong>的, 基于此特性, Symbol 值通常作为对象的属性名使用, 从根本上<strong>防止属性名的冲突</strong>;<br>Symbol 值不能与其他类型的值进行运算, 它可以显式转为字符串(<code>.toString()</code>), 也可转为布尔值, 但不能转为数值, 因此<strong>不能做运算操作</strong>;</p>
+<h2 id="Symbol-创建"><a href="#Symbol-创建" class="headerlink" title="Symbol 创建"></a>Symbol 创建</h2><p>Symbol 值<strong>通过 Symbol() 函数生成</strong>;<br>Symbol() 函数<strong>不能使用 new 命令</strong>, 因为生成的 Symbol 是一个原始类型的值, 不是对象, 其不能添加属性;<br>Symbol() 函数<strong>可接受一个字符串作为参数</strong>, 该字符串用于表示 Symbol 实例的描述, 便于 Symbol 值的区分; </p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">Symbol</span>();<br><span class="hljs-keyword">let</span> s2 = <span class="hljs-built_in">Symbol</span>();<br><span class="hljs-keyword">let</span> s3 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">&#x27;foo&#x27;</span>);<br><br>s1 <span class="hljs-comment">// Symbol()</span><br>s2 <span class="hljs-comment">// Symbol(), 虽然与 s1 两者不相同, 但在显示台不能区分;</span><br>s3 <span class="hljs-comment">// Symbol(foo)</span><br></code></pre></div></td></tr></table></figure>
+<p>Symbol 实例的描述可以通过显示转为字符串或通过 ES2019 提供的实例属性 <code>Symbol.prototype.description</code> 获得, <code>sym.description</code> 可以直接返回 Symbol 的描述;</p>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk">const sym = Symbol(<span class="hljs-string">&#x27;foo&#x27;</span>);<br><br>String(sym) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;Symbol(foo)&quot;</span><br>sym.toString() <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;Symbol(foo)&quot;</span><br>sym.description <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;foo&quot;</span>, 可以发现与显式转为字符串还是有区别的;<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="Symbol-用作对象属性名"><a href="#Symbol-用作对象属性名" class="headerlink" title="Symbol 用作对象属性名"></a>Symbol 用作对象属性名</h2><p>好处: 保证对象不会出现同名属性, 避免属性被改写或覆盖;<br>将 Symbol 值用于属性定义或属性调用时, Symbol 值必须放在<strong>方括号</strong>中; <strong>(Symbol 值本身被存储在变量中, 因此要符合变量调用的方式)</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs csharp"><span class="hljs-keyword">const</span> mySymbol = Symbol();<br><span class="hljs-comment">// 写法一</span><br><span class="hljs-keyword">const</span> obj = &#123;<br>  [<span class="hljs-meta">mySymbol</span>] = <span class="hljs-string">&#x27;Hello&#x27;</span>,<br>&#125;<br><span class="hljs-comment">// 写法二</span><br>obj[mySymbol] = <span class="hljs-string">&#x27;World&#x27;</span>;<br><span class="hljs-comment">// 写法三</span><br>Object.defineProperty(obj, mySymbol, &#123; <span class="hljs-keyword">value</span>: <span class="hljs-string">&#x27;Hello&#x27;</span> &#125;)<br></code></pre></div></td></tr></table></figure>
+
+<p>Symbol 值作为属性名时, 属性是公开的而不是私有的:</p>
 <ul>
-<li>返回一个对象</li>
-<li>对象内包含 next 方法; <strong>next() {…} 是一个无参函数</strong></li>
-<li>next 方法返回一个 <code>&#123;value: any, done: boolean&#125;</code> 对象</li>
+<li>Symbol 属性名不会被 for…in, for…of 遍历, 也不会被 Object.keys(), Object.getOwnPropertyNames(), JSON.stringify() 查找; </li>
+<li>Symbol 属性名只能被 Obeject.getOwnPropertySymbols() 和 Reflect.ownKeys() 查找, 因此它不是私有属性;</li>
 </ul>
-<p><strong><em>Iterator 实现用到了闭包的思想, 当前遍历的索引变量被保留在了内存中, 没有随着 makeIterator 函数执行结束后上下文销毁而消失;</em></strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeIterator</span>(<span class="hljs-params">arrayLike</span>) </span>&#123;<br>  <span class="hljs-keyword">const</span> lens = arrayLike.length;<br>  <span class="hljs-keyword">let</span> idx = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">return</span> &#123;<br>    <span class="hljs-function"><span class="hljs-title">next</span>(<span class="hljs-params"></span>)</span> &#123;<br>      <span class="hljs-comment">// done: false 和 value: undefined 可以被省略;</span><br>      <span class="hljs-keyword">return</span> idx &lt; lens ? &#123;<br>        value: arrayLike[idx++], <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> <br>      &#125; : &#123;<br>        value: <span class="hljs-literal">undefined</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
-<p>Iterator 遍历操作实现:</p>
-<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-string">const</span> <span class="hljs-string">arrayLike</span> <span class="hljs-string">=</span> &#123;<br>  <span class="hljs-attr">&#x27;0&#x27;:</span> <span class="hljs-string">&#x27;Hello&#x27;</span>,<br>  <span class="hljs-attr">&#x27;1&#x27;:</span> <span class="hljs-string">&#x27;World&#x27;</span>,<br>  <span class="hljs-attr">&#x27;length&#x27;:</span> <span class="hljs-number">2</span>,<br>&#125;<br><span class="hljs-string">const</span> <span class="hljs-string">iterator</span> <span class="hljs-string">=</span> <span class="hljs-string">makeIterator(arrayLike);</span><br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">//</span> <span class="hljs-string">done</span> <span class="hljs-string">===</span> <span class="hljs-literal">true</span> <span class="hljs-string">后仍可以手动调用</span> <span class="hljs-string">next()</span> <span class="hljs-string">移动指针,</span> <span class="hljs-string">后续返回对象均为</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">undefined</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">true</span> &#125;<br><span class="hljs-string">console.log(iterator.next());</span><br><span class="hljs-string">/**</span><br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">&#x27;Hello&#x27;</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">false</span> &#125;<br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">&#x27;World&#x27;</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">false</span> &#125;<br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">undefined</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">true</span> &#125;<br> <span class="hljs-string">*</span> &#123; <span class="hljs-attr">value:</span> <span class="hljs-string">undefined</span>, <span class="hljs-attr">done:</span> <span class="hljs-literal">true</span> &#125;<br> <span class="hljs-string">*/</span><br></code></pre></div></td></tr></table></figure>
+<p>基于 Symbol 值的特性(不会被常规方法遍历访问), 我们可以用 Symbol 为对象定义一些<strong>非私有的, 但只用于内部</strong>的属性;</p>
+<figure class="highlight qml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs qml"><span class="hljs-keyword">const</span> age = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">&#x27;age&#x27;</span>);<br><br><span class="hljs-keyword">const</span> obj = &#123;<br>  <span class="hljs-attribute">firstName</span>: <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  <span class="hljs-attribute">lastName</span>: <span class="hljs-string">&#x27;John&#x27;</span>,<br>  [age]: <span class="hljs-number">18</span>,<br>&#125;<br><br><span class="hljs-comment">// 一般的遍历无法访问到 Symbol 属性名</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.entries(obj)) &#123;<br>  <span class="hljs-built_in">console</span>.log(key);<br>  <span class="hljs-comment">/**</span><br><span class="hljs-comment">   * firstName</span><br><span class="hljs-comment">   * lastName</span><br><span class="hljs-comment">   */</span><br>&#125;<br><br><span class="hljs-comment">// Object.getOwnPropertySymbols() 获取指定对象的所有 Symbol 属性名并返回一个数组, 成员是当前对象的所有用作属性名的 Symbol 值</span><br><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.getOwnPropertySymbols(obj));<br><span class="hljs-comment">// [ Symbol(age) ]</span><br><br><span class="hljs-comment">// Reflect.ownKeys()方法可以返回所有类型的键名, 包括常规键名和 Symbol 键名</span><br><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Reflect</span>.ownKeys(obj));<br><span class="hljs-comment">// [ &#x27;firstName&#x27;, &#x27;lastName&#x27;, Symbol(age) ]</span><br></code></pre></div></td></tr></table></figure>
 
-<h2 id="可迭代对象"><a href="#可迭代对象" class="headerlink" title="可迭代对象"></a>可迭代对象</h2><p>上述我们实现了手动调用 Iterator 遍历器对象的 next 方法, 模拟对数据结构所有成员的遍历过程, ES6 通过 for…of 遍历数据结构时, 会<strong>自动寻找 Iterator 接口</strong>, 我们称<strong>部署了 Iterator 接口的数据结构</strong>为”可遍历对象(Iterable)”<br><strong>注: Iterator 遍历器对象是不可以被 for…of 遍历的, 因为它只是一个指针对象, 只有部署了它的数据结构才是 for…of 遍历的目标;</strong><br>ES6 规定, 默认的 Iterator 接口要部署在数据结构的 <code>Symbol.iterator</code> 属性上; <code>Symbol.iterator</code> 属性是当前数据结构默认的<strong>遍历器生成函数</strong>; <code>Symbol.iterator</code> 是一个表达式, 返回 Symbol 对象的 iterator 属性, 作为属性名时用方括号引用;</p>
-<p><strong><em>for…of 只能遍历实现了 Symbol.iterator 属性部署的数据结构 (若目标原型链上具有 Symbol.iterator 属性也可被遍历); for…of 每次循环调用 next 方法后, 都会检查返回值 done 属性, 若遍历未结束 done === false, 则继续调用 next 方法循环, 若检查到 done === true, 则结束遍历, 且不会将 value 赋值给临时变量;</em></strong></p>
-<p><strong>Code</strong><br>实现一个可迭代对象(可被遍历的数据结构), 需满足以下几点:</p>
-<ol>
-<li>数据结构内包含 <code>Symbol.iterator</code> 属性;</li>
-<li><code>Symbol.iterator</code> 属性值是一个<strong>函数</strong>, 返回一个<strong>遍历器对象</strong>(上述已实现)<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> arrayLike = &#123;<br>  <span class="hljs-string">&#x27;0&#x27;</span>: <span class="hljs-string">&#x27;Hello&#x27;</span>,<br>  <span class="hljs-string">&#x27;1&#x27;</span>: <span class="hljs-string">&#x27;World&#x27;</span>,<br>  <span class="hljs-string">&#x27;length&#x27;</span>: <span class="hljs-number">2</span>,<br>  [<span class="hljs-built_in">Symbol</span>.iterator]() &#123;<br>    <span class="hljs-keyword">const</span> ctx = <span class="hljs-built_in">this</span>;<br>    <span class="hljs-keyword">let</span> idx = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">return</span> &#123;<br>      <span class="hljs-function"><span class="hljs-title">next</span>(<span class="hljs-params"></span>)</span> &#123;<br>        <span class="hljs-keyword">return</span> idx &lt; ctx.length ?<br>          &#123; <span class="hljs-attr">value</span>: ctx[idx++], <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125; :<br>          &#123; <span class="hljs-attr">value</span>: <span class="hljs-literal">undefined</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;<br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<h2 id="Symbol-for"><a href="#Symbol-for" class="headerlink" title="Symbol.for()"></a>Symbol.for()</h2><p><code>Symbol.for()</code> 接收一个字符串作为参数, 它会<strong>在全局环境中搜索</strong>是否存在该参数名的 Symbol 值, 若<strong>存在</strong>, 则<strong>返回</strong>该 Symbol 值, 若<strong>不存在</strong>, 则<strong>新建</strong>一个以该字符串为名称的 Symbol 值, 并<strong>注册到全局</strong>;</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> foo = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">&#x27;desc&#x27;</span>)<br><span class="hljs-keyword">const</span> foo1 = <span class="hljs-built_in">Symbol</span>.for(<span class="hljs-string">&#x27;foo&#x27;</span>)<br><span class="hljs-keyword">const</span> foo2 = <span class="hljs-built_in">Symbol</span>.for(<span class="hljs-string">&#x27;foo&#x27;</span>)<br><br><span class="hljs-built_in">console</span>.log(foo === foo1); <span class="hljs-comment">// false</span><br><span class="hljs-built_in">console</span>.log(foo2 === foo1); <span class="hljs-comment">// true</span><br></code></pre></div></td></tr></table></figure>
+<p><em>注: 通过 Symbol() 创建的 Symbol 值不会被登记在全局环境中, 因此不能被 Symbol.for() 搜索, 所以 <code>foo === foo1</code> 结果为 false; 通过 Symbol.for() 创建的 Symbol 值会被登记在全局环境中, <code>foo1</code> 通过 <code>Symbol.for(&#39;foo&#39;)</code> 创建后, 全局环境中被登记了一个名为 foo 的 Symbol 值, 因此 <code>foo2</code> 接收的就是该 Symbol 值, 所以两者相等;</em></p>
+<h3 id="Symbol-for-与-Symbol"><a href="#Symbol-for-与-Symbol" class="headerlink" title="Symbol.for() 与 Symbol()"></a>Symbol.for() 与 Symbol()</h3><p>共同点: 都用于生成 Symbol 值;<br>区别: 前者会被登记在全局环境中供搜索, 后者不会;<br>Symbol.for()不会每次调用就返回一个新的 Symbol 类型的值, 而是会先检查给定的key是否已经存在, 如果不存在才会新建一个值;<br>由于Symbol()写法没有登记机制, 所以每次调用都会返回一个不同的值</p>
+<h2 id="Symbol-keyFor"><a href="#Symbol-keyFor" class="headerlink" title="Symbol.keyFor()"></a>Symbol.keyFor()</h2><p>返回一个已登记的 Symbol 类型值的 key;</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">const foo = <span class="hljs-constructor">Symbol(&#x27;<span class="hljs-params">desc</span>&#x27;)</span><br>const foo1 = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Symbol</span>.</span></span><span class="hljs-keyword">for</span>(&#x27;foo&#x27;)<br><br>console.log(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Symbol</span>.</span></span>key<span class="hljs-constructor">For(<span class="hljs-params">foo</span>)</span>); <span class="hljs-comment">// undefined</span><br>console.log(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Symbol</span>.</span></span>key<span class="hljs-constructor">For(<span class="hljs-params">foo1</span>)</span>); <span class="hljs-comment">// foo</span><br></code></pre></div></td></tr></table></figure>
 
-</li>
+<h2 id="内置的-Symbol-值"><a href="#内置的-Symbol-值" class="headerlink" title="内置的 Symbol 值"></a>内置的 Symbol 值</h2><ol>
+<li>Symbol.hasInstance</li>
+<li>Symbol.isConcatSpreadable</li>
+<li>Symbol.species</li>
+<li>Symbol.match</li>
+<li>Symbol.replace</li>
+<li>Symbol.search</li>
+<li>Symbol.split</li>
+<li>Symbol.iterator</li>
+<li>Symbol.toPrimitive</li>
+<li>Symbol.toStringTag</li>
+<li>Symbol.unscopables</li>
 </ol>
-<p>ES6 原生具备 Iterator 接口的数据结构:</p>
-<ol>
-<li>Array</li>
-<li>Map</li>
-<li>Set</li>
-<li>String</li>
-<li>TypedArray</li>
-<li>arguments</li>
-<li>NodeList</li>
-</ol>
-<p><strong><em>普通对象没有原生 Iterator 接口部署, 需要自己在 Symbol.iterator 属性上部署, 才能被 for…of 循环遍历; (对象 Object 之所以没有默认部署 Iterator 接口, 是因为对象属性遍历的顺序是不确定的, 需要开发者手动指定)</em></strong></p>
-<h2 id="遍历-Iterator-接口的场景"><a href="#遍历-Iterator-接口的场景" class="headerlink" title="遍历 Iterator 接口的场景"></a>遍历 Iterator 接口的场景</h2><p>除了 for…of 循环外, 还有几个操作也要求数据结构部署 Iterator 接口;</p>
-<ol>
-<li>解构赋值</li>
-<li>扩展运算符</li>
-<li><code>yield*</code></li>
-<li>Array.from()</li>
-<li>Map(), Set(), WeakMap(), WeakSet()</li>
-<li>Promise.all()</li>
-<li>Promise.race()</li>
-</ol>
-<h2 id="for…of-循环"><a href="#for…of-循环" class="headerlink" title="for…of 循环"></a>for…of 循环</h2><p>ES6 遍历所有数据结构的统一方法;<br>前提: 数据结构具有 <code>Symbol.iterator</code> 属性, 即具有 iterator 接口;<br>本质: for…of 循环内部调用数据结构的 <code>Symbol.iterator</code> 方法, 其返回一个迭代器对象, 并执行 next 方法, next 方法会返回 <code>&#123;value: any, done: boolean&#125;</code> 对象, 检查是否 <code>done === true</code>, 若不是则将 value 值赋值给 for…of 临时变量, 若是则终止迭代, 且不执行赋值操作;</p>
 
             </div>
             <hr>
@@ -345,18 +330,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/15/ES6%E7%AF%87-Symbol/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">ES6篇 - Symbol</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/04/10/%E7%AE%97%E6%B3%95%E7%AF%87%20-%20%E5%9B%9E%E6%BA%AF/">
-                        <span class="hidden-mobile">算法篇 - 回溯</span>
+                      <a href="/2021/04/15/ES6%E7%AF%87-Iterator/">
+                        <span class="hidden-mobile">ES6篇 - Iterator</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
