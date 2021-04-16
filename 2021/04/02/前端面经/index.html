@@ -214,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      384
+      385
        分钟
     </span>
   
@@ -786,6 +786,7 @@
 <li>const 声明的简单类型变量值不可修改, 复杂类型(对象, 函数, 正则)等在栈内存中的指针地址不能更改, 指针所指向堆内存中的数据可以更改; </li>
 </ol>
 <h3 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/destructuring">ES6阮一峰: 变量的解构赋值</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903752139276301">var和let/const的区别</a><br><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903775329583112">近一万字的ES6语法知识点补充</a><br><strong>题解</strong><br>请移步阅读”阮一峰 ES6 入门”, 笔记后续补充…</p>
+<h3 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h3><p><a href="https://wangjintian.com/2021/04/15/ES6%E7%AF%87-Symbol/">ES6篇 - Symbol</a><br><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/symbol">ES6阮一峰: Symbol</a></p>
 <h3 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h3><p><strong>参考文章</strong><br><a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/generator">ES6阮一峰: Generator 函数的语法</a><br><a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/generator-async">ES6阮一峰: Generator 函数的异步应用</a><br><strong>题解</strong><br>Generator 函数 (一种异步编程解决方案):</p>
 <figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-comment">// 2</span><br><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">Gen</span>(<span class="hljs-params"></span>) </span>&#123;<br>  <span class="hljs-comment">// 3</span><br>  <span class="hljs-keyword">yield</span> <span class="hljs-string">&#x27;hello&#x27;</span>;<br>  <span class="hljs-keyword">yield</span> <span class="hljs-string">&#x27;world&#x27;</span>;<br>  <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;ending&#x27;</span>;<br>  <span class="hljs-comment">// throw new Error(&#x27;Some Errors&#x27;);</span><br>&#125;<br><br><span class="hljs-keyword">const</span> gen = Gen(); <span class="hljs-comment">// 1</span><br></code></pre></div></td></tr></table></figure>
 <p><strong>Generator 函数基本组成:</strong></p>
