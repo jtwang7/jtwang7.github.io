@@ -1,0 +1,689 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="文章是以&#34;阮一峰ES6入门&#34;为参考而著的一篇学习总结, 请酌情参考;">
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>ES6篇 - Reflect - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6篇 - Reflect">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-17 17:59" pubdate>
+        2021年4月17日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      38
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6篇 - Reflect</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Reflect"><a href="#Reflect" class="headerlink" title="Reflect"></a>Reflect</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>Reflect 对象: ES6 为<strong>操作对象</strong>而提供的新 API, 用于替代 Object 的一些操作方法:</p>
+<ol>
+<li>将Object对象的一些明显属于<strong>语言内部的方法</strong>（比如<code>Object.defineProperty</code>），放到Reflect对象上。<blockquote>
+<p>现阶段，某些方法同时在Object和Reflect对象上部署，未来的新方法将只部署在Reflect对象上。</p>
+</blockquote>
+</li>
+<li>修改某些Object方法的返回结果，让其变得更合理。比如，<code>Object.defineProperty(obj, name, desc)</code>在无法定义属性时，会抛出一个错误，而<code>Reflect.defineProperty(obj, name, desc)</code>则会返回<code>false</code>。<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-comment">// Object.defineProperty()</span><br><span class="hljs-keyword">try</span> &#123;<br>  <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Object</span>.</span></span>define<span class="hljs-constructor">Property(<span class="hljs-params">target</span>, <span class="hljs-params">property</span>, <span class="hljs-params">attributes</span>)</span>;<br>  <span class="hljs-comment">// success</span><br>&#125; catch (err) &#123;<br>  <span class="hljs-comment">// failure</span><br>&#125;<br><br><span class="hljs-comment">// Reflect.defineProperty()</span><br><span class="hljs-keyword">if</span> (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>define<span class="hljs-constructor">Property(<span class="hljs-params">target</span>, <span class="hljs-params">property</span>, <span class="hljs-params">attributes</span>)</span>) &#123;<br>  <span class="hljs-comment">// success</span><br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  <span class="hljs-comment">// failure</span><br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<li>统一所有 Object 操作为函数式行为;<blockquote>
+<p>例如: <code>name in obj</code>, <code>delete obj[name]</code> 等 Object 操作是命令式的, 现用 Reflect 将其统一成函数式, <code>Reflect.has(obj, name)</code>, <code>Reflect.deleteProperty(obj, name)</code></p>
+</blockquote>
+<figure class="highlight awk"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs awk"><span class="hljs-regexp">//</span> 命令式 Object 操作<br><span class="hljs-string">&#x27;assign&#x27;</span> <span class="hljs-keyword">in</span> obj;<br><br><span class="hljs-regexp">//</span> 函数式 Object 操作<br>Reflect.has(obj, <span class="hljs-string">&#x27;assign&#x27;</span>);<br></code></pre></div></td></tr></table></figure></li>
+<li>Reflect 对象方法与 Proxy 对象方法一一对应; 使得 Proxy 对象可以方便调用 Reflect 对象方法, 完成默认行为, 作为修改行为的基础; 无论 Proxy 怎么修改该默认行为, 都可以通过 Reflect 获取原生的默认行为;<figure class="highlight routeros"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs routeros">let<span class="hljs-built_in"> proxy </span>= new Proxy(target, &#123;<br>  <span class="hljs-builtin-name">set</span>(target, name, value, receiver) &#123;<br>    let success = Reflect.<span class="hljs-builtin-name">set</span>(target, name, value, receiver);<br>    return success;<br>  &#125;<br>&#125;)<br></code></pre></div></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="Reflect-对象的静态方法"><a href="#Reflect-对象的静态方法" class="headerlink" title="Reflect 对象的静态方法"></a>Reflect 对象的静态方法</h2><blockquote>
+<p>Reflect.get(target, name, receiver)<br>Reflect.set(target, name, value, receiver)<br>Reflect.has(obj, name)<br>Reflect.apply(target, thisArg, args)</p>
+</blockquote>
+<ol>
+<li>Reflect.get(target, name, receiver)<br>查找并返回 target 对象 name 属性所对应的值, 如果没有该属性, 则返回 undefined;<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;<br>name: 对象键名 key;<br>receiver: 当 name 属性部署了 getter 时的 this 指向;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> obj = &#123;<br>  name: <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  age: <span class="hljs-number">18</span>,<br>  action: [<br>    <span class="hljs-string">&#x27;eat&#x27;</span>,<br>    <span class="hljs-string">&#x27;run&#x27;</span>,<br>    <span class="hljs-string">&#x27;sleep&#x27;</span>,<br>  ],<br>  <span class="hljs-keyword">get</span> <span class="hljs-title">dosomething</span>() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">`Hi <span class="hljs-subst">$&#123;<span class="hljs-built_in">this</span>.name&#125;</span>`</span><br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">const</span> myObj = &#123;<br>  name: <span class="hljs-string">&#x27;Wang&#x27;</span>,<br>  age: <span class="hljs-number">20</span>,<br>&#125;<br><br><span class="hljs-keyword">let</span> name = <span class="hljs-built_in">Reflect</span>.get(obj, <span class="hljs-string">&#x27;name&#x27;</span>); <span class="hljs-comment">// Siri</span><br><span class="hljs-keyword">let</span> height = <span class="hljs-built_in">Reflect</span>.get(obj, <span class="hljs-string">&#x27;height&#x27;</span>); <span class="hljs-comment">// undefined</span><br><span class="hljs-keyword">let</span> res = <span class="hljs-built_in">Reflect</span>.get(obj, <span class="hljs-string">&#x27;dosomething&#x27;</span>); <span class="hljs-comment">// Hi Siri</span><br>res = <span class="hljs-built_in">Reflect</span>.get(obj, <span class="hljs-string">&#x27;dosomething&#x27;</span>, myObj); <span class="hljs-comment">// Hi Wang</span><br><span class="hljs-keyword">let</span> err = <span class="hljs-built_in">Reflect</span>.get(<span class="hljs-number">1</span>, <span class="hljs-string">&#x27;name&#x27;</span>) <span class="hljs-comment">// TypeError: Reflect.get called on non-object; 第一参数不是对象, 无法读取属性;</span><br></code></pre></div></td></tr></table></figure>
+<ol start="2">
+<li>Reflect.set(target, name, value, receiver)<br>设置target对象的name属性等于value; 若不存在 name 属性则先创建再赋值, 若存在则覆盖 name 属性值;<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;<br>name: 对象键名 key;<br>value: 期望设置的键值 value;<br>receiver: 当 name 属性部署了 setter 时的 this 指向;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> obj = &#123;<br>  name: <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  age: <span class="hljs-number">18</span>,<br>  action: [<br>    <span class="hljs-string">&#x27;eat&#x27;</span>,<br>    <span class="hljs-string">&#x27;run&#x27;</span>,<br>    <span class="hljs-string">&#x27;sleep&#x27;</span>,<br>  ],<br>  <span class="hljs-keyword">get</span> <span class="hljs-title">dosomething</span>() &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Hi <span class="hljs-subst">$&#123;<span class="hljs-built_in">this</span>.name&#125;</span>`</span>);<br>  &#125;,<br>  <span class="hljs-keyword">set</span> <span class="hljs-title">setAge</span>(<span class="hljs-params">value</span>) &#123;<br>    <span class="hljs-keyword">if</span> (value !== <span class="hljs-built_in">this</span>.age) &#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Can&#x27;t Change Your Age&quot;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.age);<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">const</span> myObj = &#123;<br>  name: <span class="hljs-string">&#x27;Wang&#x27;</span>,<br>  age: <span class="hljs-number">20</span>,<br>&#125;<br><br><span class="hljs-keyword">let</span> res = <span class="hljs-built_in">Reflect</span>.get(obj, <span class="hljs-string">&#x27;height&#x27;</span>); <span class="hljs-comment">// undefined</span><br><span class="hljs-built_in">Reflect</span>.set(obj, <span class="hljs-string">&#x27;height&#x27;</span>, <span class="hljs-number">1.6</span>);<br>res = <span class="hljs-built_in">Reflect</span>.get(obj, <span class="hljs-string">&#x27;height&#x27;</span>); <span class="hljs-comment">// 1.6</span><br><span class="hljs-built_in">Reflect</span>.set(obj, <span class="hljs-string">&#x27;height&#x27;</span>, <span class="hljs-number">1.8</span>);<br>res = <span class="hljs-built_in">Reflect</span>.get(obj, <span class="hljs-string">&#x27;height&#x27;</span>); <span class="hljs-comment">// 1.8</span><br><br><span class="hljs-built_in">Reflect</span>.set(obj, <span class="hljs-string">&#x27;setAge&#x27;</span>, <span class="hljs-number">20</span>); <span class="hljs-comment">// Can&#x27;t Change Your Age</span><br><span class="hljs-built_in">Reflect</span>.set(obj, <span class="hljs-string">&#x27;setAge&#x27;</span>, <span class="hljs-number">20</span>, myObj); <span class="hljs-comment">// 20</span><br></code></pre></div></td></tr></table></figure>
+<ol start="3">
+<li>Reflect.has(obj, name)<br>查找 obj 对象内是否存在 name 属性, 若存在返回 true, 不存在返回 false; 等价于 <code>name in obj</code> 的 in 运算符, 是命令行为向函数行为统一的体现;<blockquote>
+<p>obj: 目标对象, 若不是对象类型, 报错;<br>name: 所要查找的属性名</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight qml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs qml"><span class="hljs-keyword">const</span> myObj = &#123;<br>  <span class="hljs-attribute">name</span>: <span class="hljs-string">&#x27;Wang&#x27;</span>,<br>  <span class="hljs-attribute">age</span>: <span class="hljs-number">20</span>,<br>&#125;<br><br><span class="hljs-keyword">let</span> <span class="hljs-built_in">bool</span> = <span class="hljs-built_in">Reflect</span>.has(myObj, <span class="hljs-string">&#x27;name&#x27;</span>); <span class="hljs-comment">// true</span><br><span class="hljs-built_in">bool</span> = <span class="hljs-built_in">Reflect</span>.has(myObj, <span class="hljs-string">&#x27;height&#x27;</span>); <span class="hljs-comment">// false</span><br></code></pre></div></td></tr></table></figure>
+
+<ol start="4">
+<li>Reflect.deleteProperty(obj, name)<br>等同于<code>delete obj[name]</code>，用于删除对象的属性; 返回一个布尔值。如果删除成功，或者被删除的属性不存在，返回true；删除失败，被删除的属性依然存在，返回false;<blockquote>
+<p>obj: 目标对象, 若不是对象类型, 报错;<br>name: 所要删除的属性名</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">const myObj = &#123;<br>  name: &#x27;Wang&#x27;,<br>  age: <span class="hljs-number">20</span>,<br>&#125;<br><br><span class="hljs-keyword">let</span> <span class="hljs-built_in">bool</span> = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>delete<span class="hljs-constructor">Property(<span class="hljs-params">myObj</span>, &#x27;<span class="hljs-params">age</span>&#x27;)</span>; <span class="hljs-comment">// true</span><br><span class="hljs-built_in">bool</span> = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>delete<span class="hljs-constructor">Property(<span class="hljs-params">myObj</span>, &#x27;<span class="hljs-params">height</span>&#x27;)</span>; <span class="hljs-comment">// true</span><br>console.log(myObj); <span class="hljs-comment">// &#123; name: &#x27;Wang&#x27; &#125;</span><br></code></pre></div></td></tr></table></figure>
+
+<ol start="5">
+<li>Reflect.construct(target, args)<br>等同于<code>new target(...args)</code>，提供了一种不使用 new 来调用构造函数的方法; 返回构造函数实例;<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;<br>args: 构造函数初始化参数;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">F</span>(<span class="hljs-params">name, age</span>) </span>&#123;<br>  <span class="hljs-built_in">this</span>.name = name;<br>  <span class="hljs-built_in">this</span>.age = age;<br>&#125;<br><br><span class="hljs-keyword">const</span> obj = <span class="hljs-built_in">Reflect</span>.construct(F, [<span class="hljs-string">&#x27;Siri&#x27;</span>, <span class="hljs-number">18</span>]); <span class="hljs-comment">// F &#123; name: &#x27;Siri&#x27;, age: 18 &#125;</span><br></code></pre></div></td></tr></table></figure>
+
+<ol start="6">
+<li><p>Reflect.getPrototypeOf(obj)</p>
+<blockquote>
+<p>obj: 目标对象, 若不是对象类型, 报错;<br>读取并返回对象的__proto__属性，对应 <code>Object.getPrototypeOf(obj)</code>; <code>Reflect.getPrototypeOf</code> 和 <code>Object.getPrototypeOf</code> 的一个区别是: 如果参数不是对象，<code>Object.getPrototypeOf</code> 会将这个参数转为对象，然后再运行，而 <code>Reflect.getPrototypeOf</code> 会报错。(体现了开头介绍的 Reflect 特性, 其修改了原先 Object 方法的一些不合理操作);</p>
+</blockquote>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">const obj = &#123;<br>  name: &#x27;Siri&#x27;,<br>  age: <span class="hljs-number">18</span>,<br>&#125;<br><br><span class="hljs-keyword">let</span> res = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>get<span class="hljs-constructor">PrototypeOf(<span class="hljs-params">obj</span>)</span>; <span class="hljs-comment">// Object.prototype</span><br><br><span class="hljs-comment">// 区别</span><br><span class="hljs-keyword">let</span> msg1 = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Object</span>.</span></span>get<span class="hljs-constructor">PrototypeOf(1)</span>; <span class="hljs-comment">// [Number: 0]</span><br><span class="hljs-keyword">let</span> msg2 = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>get<span class="hljs-constructor">PrototypeOf(1)</span>; <span class="hljs-comment">// TypeError: Reflect.getPrototypeOf called on non-object</span><br></code></pre></div></td></tr></table></figure>
+</li>
+<li><p>Reflect.setPrototypeOf(obj, newProto)<br>设置目标对象的原型（prototype），对应 <code>Object.setPrototypeOf(obj, newProto)</code> 方法。它返回一个布尔值，若成功则返回 true, 设置失败返回 false;<br><code>Reflect.setPrototypeOf</code> 与 <code>Object.setPrototypeOf</code> 区别: 如果第一个参数不是对象，<code>Object.setPrototypeOf</code> 会返回第一个参数本身，而 <code>Reflect.setPrototypeOf</code> 会报错; 如果第一个参数是 undefined 或 null，<code>Object.setPrototypeOf</code> 和 <code>Reflect.setPrototypeOf</code> 都会报错;</p>
+<blockquote>
+<p>obj: 目标对象, 若不是对象类型, 报错;<br>newProto: 期望设置的原型;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight qml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs qml"><span class="hljs-keyword">const</span> obj = &#123;<br>  <span class="hljs-attribute">name</span>: <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  <span class="hljs-attribute">age</span>: <span class="hljs-number">18</span>,<br>&#125;<br><br><span class="hljs-built_in">console</span>.log(obj.length); <span class="hljs-comment">// undefined</span><br><br><span class="hljs-keyword">let</span> <span class="hljs-built_in">bool</span> = <span class="hljs-built_in">Reflect</span>.setPrototypeOf(obj, <span class="hljs-built_in">Array</span>.prototype); <span class="hljs-comment">// true</span><br><span class="hljs-built_in">console</span>.log(obj.length);  <span class="hljs-comment">// 0</span><br></code></pre></div></td></tr></table></figure>
+
+<ol start="8">
+<li>Reflect.apply(func, thisArg, args)<br>等同于 <code>Function.prototype.apply.call(func, thisArg, args)</code> ，用于绑定 this 对象后执行回调函数。<br>一般来说，如果要绑定一个函数的this对象，用 <code>fn.apply(obj, args)</code> 即可，但是如果函数定义了自己的 apply 方法，就只能写成 <code>Function.prototype.apply.call(fn, obj, args)</code>，而采用Reflect对象可以简化这种操作。<blockquote>
+<p>func: 绑定 this 对象后触发的回调函数<br>thisArg: 期望绑定的 this 对象<br>args: 传递给 func 的函数参数</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight typescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs typescript"><span class="hljs-keyword">const</span> ages = [<span class="hljs-number">11</span>, <span class="hljs-number">33</span>, <span class="hljs-number">12</span>, <span class="hljs-number">54</span>, <span class="hljs-number">18</span>, <span class="hljs-number">96</span>];<br><br><span class="hljs-comment">// 旧写法</span><br><span class="hljs-keyword">const</span> youngest = <span class="hljs-built_in">Math</span>.min.apply(<span class="hljs-built_in">Math</span>, ages);<br><span class="hljs-keyword">const</span> oldest = <span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-built_in">Math</span>, ages);<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">type</span> = <span class="hljs-built_in">Object</span>.prototype.toString.call(youngest);<br><br><span class="hljs-comment">// 新写法</span><br><span class="hljs-keyword">const</span> youngest = <span class="hljs-built_in">Reflect</span>.apply(<span class="hljs-built_in">Math</span>.min, <span class="hljs-built_in">Math</span>, ages);<br><span class="hljs-keyword">const</span> oldest = <span class="hljs-built_in">Reflect</span>.apply(<span class="hljs-built_in">Math</span>.max, <span class="hljs-built_in">Math</span>, ages);<br><span class="hljs-keyword">const</span> <span class="hljs-keyword">type</span> = <span class="hljs-built_in">Reflect</span>.apply(<span class="hljs-built_in">Object</span>.prototype.toString, youngest, []);<br></code></pre></div></td></tr></table></figure>
+
+<ol start="9">
+<li>Reflect.defineProperty(target, propertyKey, attributes)<br>等同于 <code>Object.defineProperty</code>，为对象定义属性, 若属性存在则覆盖原属性值, 返回一个布尔值。未来，后者会被逐渐废除，请从现在开始就使用 <code>Reflect.defineProperty</code> 代替它;<br><code>Reflect.defineProperty()</code> 与 <code>Reflect.set()</code> 使用场景区别: <code>Reflect.defineProperty()</code> 用于赋值和修改对象属性的属性描述(value, get, set, writable等), <code>Reflect.set()</code> 只能用于修改属性值(value);<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;<br>propertyKey: 需要赋值的对象属性;<br>attributes: 属性描述对象;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> obj = &#123;<br>  name: <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  age: <span class="hljs-number">20</span>,<br>&#125;<br><br><span class="hljs-built_in">Reflect</span>.defineProperty(obj, <span class="hljs-string">&#x27;age&#x27;</span>, &#123;<br>  <span class="hljs-function"><span class="hljs-title">get</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`I&#x27;m 18 years old`</span>);<br>  &#125;,<br>&#125;)<br><br>obj.age; <span class="hljs-comment">// I&#x27;m 18 years old</span><br></code></pre></div></td></tr></table></figure>
+<ol start="10">
+<li>Reflect.getOwnPropertyDescriptor(target, propertyKey)<br>等同于 <code>Object.getOwnPropertyDescriptor</code>，返回指定属性的描述对象，将来会替代掉后者;<br><code>Reflect.getOwnPropertyDescriptor</code> 和 <code>Object.getOwnPropertyDescriptor</code> 的区别: 如果第一个参数不是对象，<code>Object.getOwnPropertyDescriptor()</code> 不报错，返回 undefined，而 <code>Reflect.getOwnPropertyDescriptor()</code> 会抛出错误，表示参数非法;<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;<br>propertyKey: 属性键名;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-string">const</span> <span class="hljs-string">obj</span> <span class="hljs-string">=</span> &#123;<br>  <span class="hljs-attr">name:</span> <span class="hljs-string">&#x27;Wang&#x27;</span><br>&#125;<br><br><span class="hljs-string">Reflect.defineProperty(obj,</span> <span class="hljs-string">&#x27;name&#x27;</span><span class="hljs-string">,</span> &#123;<br>  <span class="hljs-attr">value:</span> <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  <span class="hljs-attr">writable:</span> <span class="hljs-literal">false</span>,<br>&#125;<span class="hljs-string">)</span><br><br><span class="hljs-string">let</span> <span class="hljs-string">objDescriptor</span> <span class="hljs-string">=</span> <span class="hljs-string">Reflect.getOwnPropertyDescriptor(obj,</span> <span class="hljs-string">&#x27;name&#x27;</span><span class="hljs-string">);</span><br><br><span class="hljs-string">/*</span><br>&#123;<br>  <span class="hljs-attr">value:</span> <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  <span class="hljs-attr">writable:</span> <span class="hljs-literal">false</span>,<br>  <span class="hljs-attr">enumerable:</span> <span class="hljs-literal">true</span>,<br>  <span class="hljs-attr">configurable:</span> <span class="hljs-literal">true</span><br>&#125;<br><span class="hljs-string">*/</span><br><span class="hljs-string">console.log(objDescriptor);</span><br><span class="hljs-string">console.log(obj);</span> <span class="hljs-string">//</span> &#123; <span class="hljs-attr">name:</span> <span class="hljs-string">&#x27;Siri&#x27;</span> &#125;<br></code></pre></div></td></tr></table></figure>
+
+<ol start="11">
+<li>Reflect.isExtensible(target)<br>对应 <code>Object.isExtensible</code>，返回一个布尔值，表示当前对象是否可扩展; 与 <code>Object.isExtensible</code> 区别: 如果参数不是对象，<code>Object.isExtensible</code> 会返回 false，因为非对象本来就是不可扩展的，而 <code>Reflect.isExtensible</code> 会报错;<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">const myObj = &#123;&#125;;<br><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>is<span class="hljs-constructor">Extensible(<span class="hljs-params">myObj</span>)</span>; <span class="hljs-comment">// true</span><br></code></pre></div></td></tr></table></figure>
+
+<ol start="12">
+<li>Reflect.preventExtensions(target)<br>对应 <code>Object.preventExtensions</code> 方法，用于让一个对象变为不可扩展。返回一个布尔值，表示是否操作成功, 若操作成功则返回 true, 反之返回 false;<br>与 <code>Object.preventExtensions</code> 的区别: 如果参数不是对象，<code>Object.preventExtensions</code> 在 ES5 环境报错，在 ES6 环境返回传入的参数，而 <code>Reflect.preventExtensions</code> 会报错;<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">const myObject = &#123;&#125;;<br><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>prevent<span class="hljs-constructor">Extensible(<span class="hljs-params">myObject</span>)</span>; <span class="hljs-comment">// true</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>is<span class="hljs-constructor">Extensible(<span class="hljs-params">myObject</span>)</span>; <span class="hljs-comment">// false</span><br></code></pre></div></td></tr></table></figure>
+
+<ol start="13">
+<li>Reflect.ownKeys(target)<br>返回对象的所有属性(用数组包裹)，基本等同于 <code>Object.getOwnPropertyNames</code> 与 <code>Object.getOwnPropertySymbols</code> 之和;<blockquote>
+<p>target: 目标对象, 若不是对象类型, 报错;</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight coffeescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs coffeescript">const obj = &#123;<br>  name: <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>  age: <span class="hljs-number">18</span>,<br>  [<span class="hljs-built_in">Symbol</span>(<span class="hljs-string">&#x27;action&#x27;</span>)]: <span class="hljs-string">&#x27;eat&#x27;</span>,<br>&#125;<br><br>let arr = <span class="hljs-built_in">Reflect</span>.ownKeys(obj); <span class="hljs-regexp">//</span> [ <span class="hljs-string">&#x27;name&#x27;</span>, <span class="hljs-string">&#x27;age&#x27;</span>, <span class="hljs-built_in">Symbol</span>(action) ]<br></code></pre></div></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6/">ES6</a>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/17/webpack%E6%A6%82%E5%BF%B5/">
+                        <span class="hidden-mobile">前端工程化 - webpack 概念</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
