@@ -54,7 +54,16 @@ let proxy = new Proxy(target, {
 > Reflect.get(target, name, receiver)
 > Reflect.set(target, name, value, receiver)
 > Reflect.has(obj, name)
+> Reflect.deleteProperty(obj, name)
+> Reflect.construct(target, args)
+> Reflect.getPrototypeOf(obj)
+> Reflect.setPrototypeOf(obj, newProto)
 > Reflect.apply(target, thisArg, args)
+> Reflect.defineProperty(target, propertyKey, attributes)
+> Reflect.getOwnPropertyDescriptor(target, propertyKey)
+> Reflect.isExtensible(target)
+> Reflect.preventExtensions(target)
+> Reflect.ownKeys(target)
 
 1. Reflect.get(target, name, receiver)
 查找并返回 target 对象 name 属性所对应的值, 如果没有该属性, 则返回 undefined;
