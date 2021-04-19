@@ -1,0 +1,630 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="文章是以&#34;阮一峰ES6入门&#34;为参考而著的一篇学习总结, 请酌情参考;">
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>ES6篇 - class 继承 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6篇 - class 继承">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-19 13:26" pubdate>
+        2021年4月19日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6篇 - class 继承</h1>
+            
+            <div class="markdown-body">
+              <p>请结合 <a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/class-extends">Class 的继承</a> 一起阅读本文;</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><figure class="highlight scala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ColorPoint</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Point</span> </span>&#123;<br>  constructor(x, y, color) &#123;<br>    <span class="hljs-keyword">super</span>(x, y); <span class="hljs-comment">// 调用父类的constructor(x, y)</span><br>    <span class="hljs-keyword">this</span>.color = color;<br>  &#125;<br><br>  toString() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.color + &#x27; &#x27; + <span class="hljs-keyword">super</span>.toString(); <span class="hljs-comment">// 调用父类的toString()</span><br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>Class 类通过 <strong>extends</strong> 关键字实现继承;<br>extends 可看作是构造函数寄生组合式继承的封装; 它能让子类继承父类的所有属性和方法;</p>
+<h1 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h1><p>super 是 class 类继承的一个重点, 它既可以当作<strong>函数</strong>使用，也可以当作<strong>对象</strong>使用; 使用super的时候，必须显式指定是作为函数、还是作为对象使用，否则会报错;</p>
+<h2 id="super"><a href="#super" class="headerlink" title="super()"></a>super()</h2><p>当 super 作为函数调用时，代表父类的构造函数;</p>
+<figure class="highlight scala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">A</span> </span>&#123;<br>  constructor() &#123;<br>    <span class="hljs-keyword">super</span>();<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>ES6 规定<strong>在子类 constructor 方法中必须调用 super 方法</strong>, 否则新建实例时会报错; 在子类的构造函数中，只有调用 <code>super()</code> 之后，才可以使用 this 关键字，否则会报错;<br><strong>原因:</strong> 子类自己的 this 对象，必须先通过父类的构造函数完成塑造，得到与父类同样的实例属性和方法，然后再对其进行加工，加上子类自己的实例属性和方法。如果不调用 <code>super()</code>，子类就得不到 this 对象;</p>
+<p>与 ES5 继承的<strong>区别</strong>: </p>
+<ul>
+<li>ES5 的继承实质: 先创造子类的实例对象 this，然后再将父类的方法添加到 this 上面 <code>Parent.apply(this)</code>;</li>
+<li>ES6 的继承机制实质: 先将父类实例对象的属性和方法，加到this上面（所以必须先调用 <code>super()</code>），然后再用子类的构造函数修改 this;</li>
+</ul>
+<p><code>super()</code> 虽然代表了父类 A 的构造函数，但是返回的是子类 B 的实例，即 <code>super</code> 内部的 this 指的是 B 的实例，因此 <code>super()</code> 在这里相当于 <code>A.prototype.constructor.call(this)</code>;</p>
+<blockquote>
+<p>super() &lt;=&gt; A.prototype.constructor.call(this, …args)</p>
+</blockquote>
+<p>作为函数时，<code>super()</code> 只能用在<strong>子类的构造函数</strong>之中，用在其他地方就会报错;</p>
+<h2 id="super-对象"><a href="#super-对象" class="headerlink" title="super 对象"></a>super 对象</h2><figure class="highlight scala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;<br>  p() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;<br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">A</span> </span>&#123;<br>  constructor() &#123;<br>    <span class="hljs-keyword">super</span>();<br>    console.log(<span class="hljs-keyword">super</span>.p()); <span class="hljs-comment">// super 作为对象使用, 输出 2</span><br>  &#125;<br>&#125;<br><br>let b = <span class="hljs-keyword">new</span> <span class="hljs-type">B</span>();<br></code></pre></div></td></tr></table></figure>
+<p>super 作为对象时，在<strong>普通方法</strong>中，指向<strong>父类的原型对象</strong>; 在<strong>静态方法</strong>中，指向<strong>父类</strong>;</p>
+<figure class="highlight scala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;<br>  constructor() &#123;<br>    <span class="hljs-keyword">this</span>.p = <span class="hljs-number">2</span>;<br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">A</span> </span>&#123;<br>  get m() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.p;<br>  &#125;<br>&#125;<br><br>let b = <span class="hljs-keyword">new</span> <span class="hljs-type">B</span>();<br>b.m <span class="hljs-comment">// undefined</span><br></code></pre></div></td></tr></table></figure>
+<p>注: 定义在父类实例上的方法或属性，是无法通过 super 对象调用的;</p>
+<figure class="highlight scala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> </span>&#123;<br>  constructor() &#123;<br>    <span class="hljs-keyword">this</span>.x = <span class="hljs-number">2</span>;<br>  &#125;<br><br>  print() &#123;<br>    console.log(<span class="hljs-keyword">this</span>.x)<br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">A</span> </span>&#123;<br>  constructor() &#123;<br>    <span class="hljs-keyword">super</span>()<br>    <span class="hljs-keyword">this</span>.x = <span class="hljs-number">3</span>;<br>    <span class="hljs-keyword">super</span>.print(); <span class="hljs-comment">// 输出 3</span><br>  &#125;<br>&#125;<br><br>let b = <span class="hljs-keyword">new</span> <span class="hljs-type">B</span>();<br></code></pre></div></td></tr></table></figure>
+<p>ES6 规定，在子类普通方法中通过 super 对象调用父类的方法时，父类方法内部的 this 指向当前的子类实例;</p>
+<blockquote>
+<p>super.print() &lt;=&gt; super.print.call(this)</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Parent</span> </span>&#123;<br>  <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-title">myMethod</span>(<span class="hljs-params">msg</span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;static&#x27;</span>, msg);<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">myMethod</span>(<span class="hljs-params">msg</span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;instance&#x27;</span>, msg);<br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Child</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Parent</span> </span>&#123;<br>  <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-title">myMethod</span>(<span class="hljs-params">msg</span>)</span> &#123;<br>    <span class="hljs-built_in">super</span>.myMethod(msg);<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">myMethod</span>(<span class="hljs-params">msg</span>)</span> &#123;<br>    <span class="hljs-built_in">super</span>.myMethod(msg);<br>  &#125;<br>&#125;<br><br>Child.myMethod(<span class="hljs-number">1</span>); <span class="hljs-comment">// static 1</span><br></code></pre></div></td></tr></table></figure>
+<p>如果 super 作为对象，用在静态方法之中，这时 super 将指向父类，而不是父类的原型对象; 在子类的静态方法中通过 super 调用父类的方法时，方法内部的 this 指向当前的子类，而不是子类的实例。</p>
+<h1 id="类的-prototype-属性和-proto-属性"><a href="#类的-prototype-属性和-proto-属性" class="headerlink" title="类的 prototype 属性和 proto 属性"></a>类的 prototype 属性和 <strong>proto</strong> 属性</h1><p>class 类同时有 <code>prototype</code> 属性和<code> __proto__</code> 属性, 同时存在两条继承链;</p>
+<ol>
+<li>子类的<code>__proto__</code>属性，表示构造函数的继承，总是指向父类; <code>B.__proto__ === A</code>;</li>
+<li>子类prototype属性的<code>__proto__</code>属性，表示方法的继承，总是指向父类的<code>prototype</code>属性; <code>B.prototype.__proto__ === A.prototype</code>;</li>
+</ol>
+<p>这两条继承链，可以这样理解：</p>
+<ul>
+<li>作为一个对象，子类的原型（__proto__属性）是父类;</li>
+<li>作为一个构造函数，子类的原型对象（prototype属性）是父类的原型对象（prototype属性）的实例;</li>
+</ul>
+<p>其原因与 ES6 类的继承实现模式有关:</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-keyword">class</span> A &#123;&#125;<br><span class="hljs-keyword">class</span> B &#123;&#125;<br><br><span class="hljs-comment">// 原型链继承(继承共享方法)</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>set<span class="hljs-constructor">PrototypeOf(B.<span class="hljs-params">prototype</span>, A.<span class="hljs-params">prototype</span>)</span>;<br><span class="hljs-comment">// 静态属性继承(继承静态定义)</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>set<span class="hljs-constructor">PrototypeOf(B, A)</span>;<br></code></pre></div></td></tr></table></figure>
+<p>class 继承时, 实例属性通过 <code>constructor()</code> 创建 this 对象并挂载父类实例属性实现, 共享方法通过原型链继承实现, 静态方法和属性通过类继承实现; </p>
+<blockquote>
+<p>个人认为类之所以有两条继承链, 是因为类既可以被视为对象, 又可以被视为构造函数, 类作为对象时具有了添加静态属性和方法的能力, 类作为构造函数时实现了 ES5 构造函数的功能;</p>
+</blockquote>
+<h1 id="实例的-proto-属性"><a href="#实例的-proto-属性" class="headerlink" title="实例的 proto 属性"></a>实例的 <strong>proto</strong> 属性</h1><figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml">var p1 = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Point(2, 3)</span>;<br>var p2 = <span class="hljs-keyword">new</span> <span class="hljs-constructor">ColorPoint(2, 3, &#x27;<span class="hljs-params">red</span>&#x27;)</span>;<br><br>p2.__proto__<span class="hljs-operator"> === </span>p1.__proto__ <span class="hljs-comment">// false</span><br>p2.<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">__proto__</span>.</span><span class="hljs-module"><span class="hljs-identifier">__proto__</span> </span><span class="hljs-operator">==</span></span>= p1.__proto__ <span class="hljs-comment">// true</span><br></code></pre></div></td></tr></table></figure>
+<p>子类实例的<code>__proto__</code>属性的<code>__proto__</code>属性，指向父类实例的<code>__proto__</code>属性; 即子类实例的原型的原型，是父类实例的原型; </p>
+<blockquote>
+<p>看似很绕口, 其实很好理解: 子类实例的原型实际就是父类实例(参考ES5 构造函数组合式继承)<code>p2.__proto__ === p1</code>;<br>另一种理解: 类实例的原型同于类的原型<code>p1.__proto__ === Point.prototype</code>, 因此上等式又可以写为 <code>ColorPoint.prototype.__proto__ === Point.prototype</code>, 是不是很熟悉, 就是类的其中一条继承链;</p>
+</blockquote>
+<h1 id="原生构造函数继承"><a href="#原生构造函数继承" class="headerlink" title="原生构造函数继承"></a>原生构造函数继承</h1><h2 id="原生构造函数"><a href="#原生构造函数" class="headerlink" title="原生构造函数"></a>原生构造函数</h2><p>Boolean()<br>Number()<br>String()<br>Array()<br>Date()<br>Function()<br>RegExp()<br>Error()<br>Object()</p>
+<h2 id="ES5-和-ES6-原生构造函数继承的区别"><a href="#ES5-和-ES6-原生构造函数继承的区别" class="headerlink" title="ES5 和 ES6 原生构造函数继承的区别"></a>ES5 和 ES6 原生构造函数继承的区别</h2><p><strong>ES5 的原生构造函数无法继承;</strong> 这是因为原生构造函数会忽略 apply 等 thisArgs 绑定方法传入的 this, 也就是说, 原生构造函数的 this 无法绑定, 导致拿不到父类的内部属性;<br><strong>ES6 允许继承原生构造函数定义子类</strong><br>产生上述差异的原因: ES5 是先新建子类的实例对象this，再将父类的属性添加到子类上，由于父类的内部属性无法获取，导致无法继承原生的构造函数; ES6 是先新建父类的实例对象this，然后再用子类的构造函数修饰this，使得父类的所有行为都可以继承;<br>因此, <strong>ES6 的 class extends 能够自定义原生数据结构的子类</strong>, 相较于 ES5 有较大的提升;</p>
+<h1 id="Mixin-模式实现"><a href="#Mixin-模式实现" class="headerlink" title="Mixin 模式实现"></a>Mixin 模式实现</h1><p>Mixin 指的是多个对象合成一个新的对象，新对象具有各个组成成员的接口;</p>
+<blockquote>
+<p>即将多个对象整合到一个对象内, 并提供统一的调用接口;</p>
+</blockquote>
+<h2 id="简单实现"><a href="#简单实现" class="headerlink" title="简单实现"></a>简单实现</h2><figure class="highlight yaml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs yaml"><span class="hljs-string">const</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> &#123;<br>  <span class="hljs-attr">name:</span> <span class="hljs-string">&#x27;Siri&#x27;</span>,<br>&#125;<br><br><span class="hljs-string">const</span> <span class="hljs-string">b</span> <span class="hljs-string">=</span> &#123;<br>  <span class="hljs-attr">age:</span> <span class="hljs-number">18</span>,<br>&#125;<br><br><span class="hljs-string">const</span> <span class="hljs-string">c</span> <span class="hljs-string">=</span> &#123;<span class="hljs-string">...a</span>, <span class="hljs-string">...b</span>&#125; <span class="hljs-string">//</span> &#123;<span class="hljs-attr">name:</span> <span class="hljs-string">&#x27;Siri&#x27;</span>, <span class="hljs-attr">age:</span> <span class="hljs-number">18</span>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<h2 id="类的-Mixin-模式完整实现"><a href="#类的-Mixin-模式完整实现" class="headerlink" title="类的 Mixin 模式完整实现"></a>类的 Mixin 模式完整实现</h2><figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-keyword">function</span> mix(...MixClasses) &#123;<br>  <span class="hljs-keyword">class</span> Mix &#123;<br>    constructor<span class="hljs-literal">()</span> &#123;<br>      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> MixClass <span class="hljs-keyword">of</span> MixClasses) &#123;<br>        copy<span class="hljs-constructor">Properties(<span class="hljs-params">this</span>, <span class="hljs-params">new</span> MixClass()</span>); <span class="hljs-comment">// 克隆实例属性</span><br>      &#125;<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> MixClass <span class="hljs-keyword">of</span> MixClasses) &#123;<br>    copy<span class="hljs-constructor">Properties(Mix, MixClass)</span>; <span class="hljs-comment">// 克隆静态属性</span><br>    copy<span class="hljs-constructor">Properties(Mix.<span class="hljs-params">prototype</span>, MixClass.<span class="hljs-params">prototype</span>)</span>; <span class="hljs-comment">// 克隆原型属性</span><br>  &#125;<br><br>  return Mix;<br>&#125;<br><br><span class="hljs-comment">// 私有方法, 将 source 克隆至 target;</span><br><span class="hljs-keyword">function</span> copy<span class="hljs-constructor">Properties(<span class="hljs-params">target</span>, <span class="hljs-params">source</span>)</span> &#123;<br>  <span class="hljs-comment">// 遍历 source 所有属性</span><br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">of</span> <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>own<span class="hljs-constructor">Keys(<span class="hljs-params">source</span>)</span>) &#123;<br>    <span class="hljs-keyword">if</span> (key !== &#x27;constructor&#x27;<br><span class="hljs-operator">      &amp;&amp; </span>key !== &#x27;name&#x27;<br><span class="hljs-operator">      &amp;&amp; </span>key !== &#x27;prototype&#x27;<br>    ) &#123;<br>      <span class="hljs-comment">// 克隆属性描述对象</span><br>      <span class="hljs-keyword">let</span> desc = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>get<span class="hljs-constructor">OwnPropertyDescriptor(<span class="hljs-params">source</span>, <span class="hljs-params">key</span>)</span>;<br>      <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Reflect</span>.</span></span>define<span class="hljs-constructor">Property(<span class="hljs-params">target</span>, <span class="hljs-params">key</span>, <span class="hljs-params">desc</span>)</span>;<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> A &#123;&#125;<br><span class="hljs-keyword">class</span> B &#123;&#125;<br><span class="hljs-keyword">class</span> SubClass extends mix(A, B) &#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6/">ES6</a>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/18/ES6%E7%AF%87-class%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">
+                        <span class="hidden-mobile">ES6篇 - class 基本语法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
