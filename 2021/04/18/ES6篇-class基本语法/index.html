@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="文章是以&#34;阮一峰ES6入门&#34;为参考而著的一篇学习总结, 请酌情参考;">
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>ES6篇 - class 基本语法 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ES6篇 - class 基本语法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-18 22:29" pubdate>
+        2021年4月18日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      58
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ES6篇 - class 基本语法</h1>
+            
+            <div class="markdown-body">
+              <p>请结合 <a target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/class">Class 的基本语法</a> 一起阅读本文;</p>
+<h1 id="class"><a href="#class" class="headerlink" title="class"></a>class</h1><h2 id="类的由来"><a href="#类的由来" class="headerlink" title="类的由来"></a>类的由来</h2><p>JavaScript 通过<em>构造函数</em>生成<em>实例对象</em>;<br>ES6 提出的 class 写法只是让对象原型的写法更加清晰、更像<strong>面向对象编程</strong>的语法而已, 可以看作是 ES5 构造函数的<strong>语法糖</strong>; </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Point</span> </span>&#123;<br>  <span class="hljs-keyword">constructor</span>(x, y) &#123;<br>    <span class="hljs-keyword">this</span>.x = x;<br>    <span class="hljs-keyword">this</span>.y = y;<br>  &#125;<br><br>  toString() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;(&#x27;</span> + <span class="hljs-keyword">this</span>.x + <span class="hljs-string">&#x27;, &#x27;</span> + <span class="hljs-keyword">this</span>.y + <span class="hljs-string">&#x27;)&#x27;</span>;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p><code>constructor()</code> 是类的默认方法实现, 是该类的<strong>构造函数</strong>; 类中的 <code>this</code> 关键字代表类的<strong>实例对象</strong>; 除构造函数外, 还能在 class 内自定义任意方法, 如 <code>toString()</code> 方法, <strong>方法与方法之间不需要逗号分隔</strong>;</p>
+<blockquote>
+<p>还记得 class 是 ES5 构造函数的语法糖实现吗? 看上例代码可知, 从形式上看 class 无非是对构造函数和自定义方法做了一层包装, 同时规定构造方法名为 constructor;</p>
+</blockquote>
+<figure class="highlight arcade"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs arcade">class <span class="hljs-built_in">Point</span> &#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br><br>typeof <span class="hljs-built_in">Point</span> <span class="hljs-comment">// &quot;function&quot;</span><br><span class="hljs-built_in">Point</span> === <span class="hljs-built_in">Point</span>.prototype.constructor <span class="hljs-comment">// true</span><br></code></pre></div></td></tr></table></figure>
+<p>类的数据类型: <strong>函数</strong>;<br><strong>类</strong>本身就指向<strong>构造函数</strong>;</p>
+<blockquote>
+<p>new Point() 实际上就是 new Point.prototype.constructor(), 因此 ES6 的类，完全可以看作构造函数的另一种写法;<br>类与构造函数的一点<strong>区别</strong>: 类必须通过 new 操作符创建实例;</p>
+</blockquote>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> pt = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Point(1, 2)</span>;<br>pt.x <span class="hljs-comment">// 直接从实例对象获取: this.x</span><br>pt.<span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span>; <span class="hljs-comment">// 通过原型链调用: Point.prototype.toString()</span><br></code></pre></div></td></tr></table></figure>
+<p>不得不提的一点是: class 类中有两种对象值得去关注, 1. <strong>this</strong> 实例对象 2. <strong>prototype</strong> 原型对象; <strong>在 class 中定义的属性或方法, 若没有显式定义挂载到 this 对象上, 则都会被添加至类的 prototype 原型对象</strong>;</p>
+<blockquote>
+<p>class 声明类时, 一般将方法添加到原型对象上, 将属性添加至 this 实例对象上; 这也符合 ES5 构造函数添加方法和属性的习惯, 创建的实例拥有独有的属性, 同时共享原型对象的方法;</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Point</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span>&#123;<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br>&#125;<br><br><span class="hljs-built_in">Object</span>.assign(Point.prototype, &#123;<br>  <span class="hljs-function"><span class="hljs-title">toString</span>(<span class="hljs-params"></span>)</span>&#123;&#125;,<br>  <span class="hljs-function"><span class="hljs-title">toValue</span>(<span class="hljs-params"></span>)</span>&#123;&#125;<br>&#125;);<br></code></pre></div></td></tr></table></figure>
+<p>类的所有方法都定义在类的 prototype 属性上面, 因此在添加新的方法时, 通过 <code>Object.assign()</code> 方法一次向类添加多个方法;</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-keyword">class</span> Point &#123;<br>  constructor(x, y) &#123;<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br><br>  <span class="hljs-keyword">to</span><span class="hljs-constructor">String()</span> &#123;<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br>&#125;<br><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Object</span>.</span></span>keys(<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Point</span>.</span></span>prototype)<br><span class="hljs-comment">// []</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Object</span>.</span></span>get<span class="hljs-constructor">OwnPropertyNames(Point.<span class="hljs-params">prototype</span>)</span><br><span class="hljs-comment">// [&quot;constructor&quot;,&quot;toString&quot;]</span><br></code></pre></div></td></tr></table></figure>
+<p>类内部定义的所有方法都是<strong>不可枚举</strong>的; ES5 构造函数通过 <code>xxx.prototype.funcName = function() &#123;...&#125;</code> 添加方法是可枚举的;</p>
+<h2 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor()"></a>constructor()</h2><figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript"><span class="hljs-keyword">class</span> <span class="hljs-symbol">Point</span> &#123;&#125;<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">class</span> <span class="hljs-symbol">Point</span> &#123;<br>  constructor() &#123;&#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>constructor()方法是类的<strong>默认方法</strong>; 一个类必须有 <code>constructor()</code> 方法，如果没有显式定义，一个空的 <code>constructor()</code> 方法会被<strong>默认添加</strong>。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-keyword">let</span> pt = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Point()</span><br><span class="hljs-comment">// 等同于</span><br><span class="hljs-keyword">let</span> pt = <span class="hljs-keyword">new</span> <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Point</span>.</span></span>prototype.constructor<span class="hljs-literal">()</span><br></code></pre></div></td></tr></table></figure>
+<p>通过 new 命令生成对象实例时，自动调用<code>constructor()</code>。</p>
+<blockquote>
+<p>前面提到: 类本身指向构造函数, 因此 new 实例化类实际上就是调用了类内的 constructor();</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo1</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.name = <span class="hljs-string">&#x27;Siri&#x27;</span>;<br>    <span class="hljs-comment">// return this;</span><br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo2</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.name = <span class="hljs-string">&#x27;Siri&#x27;</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.create(&#123;<br>      name: <span class="hljs-string">&#x27;John&#x27;</span>,<br>    &#125;);<br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo3</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.name = <span class="hljs-string">&#x27;Siri&#x27;</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">let</span> foo1 = <span class="hljs-keyword">new</span> Foo1();<br><span class="hljs-keyword">let</span> foo2 = <span class="hljs-keyword">new</span> Foo2();<br><span class="hljs-keyword">let</span> foo3 = <span class="hljs-keyword">new</span> Foo3();<br><br><span class="hljs-built_in">console</span>.log(foo1.name); <span class="hljs-comment">// Siri</span><br><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Reflect</span>.getPrototypeOf(foo1) === Foo1.prototype); <span class="hljs-comment">// true</span><br><span class="hljs-built_in">console</span>.log(foo2.name); <span class="hljs-comment">// John</span><br><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Reflect</span>.getPrototypeOf(foo2) === Foo2.prototype); <span class="hljs-comment">// false</span><br><span class="hljs-built_in">console</span>.log(foo3.name); <span class="hljs-comment">// Siri</span><br></code></pre></div></td></tr></table></figure>
+<p>constructor()方法<strong>默认返回实例对象 this</strong>，当然也可以返回自定义对象; constructor 方法会隐式返回类的实例对象, this 对象原型为类(构造函数)的原型(见<code>foo1</code>); 若显式 return 值, 当 return 一对象时, 生成的实例即为该返回值对象, 它不在类的原型链上(见<code>foo2</code>), 当 return 非对象类型的返回值时, 会忽略该返回值(见<code>foo3</code>);</p>
+<blockquote>
+<p>同 new 操作符内部实现一致, 无论是普通构造函数还是类构造函数生成实例对象, 都依赖于 new 的内部实现;</p>
+</blockquote>
+<h2 id="类的实例"><a href="#类的实例" class="headerlink" title="类的实例"></a>类的实例</h2><figure class="highlight kotlin"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Point</span> </span>&#123;<br>  <span class="hljs-keyword">constructor</span>(x, y) &#123;<br>    <span class="hljs-keyword">this</span>.x = x;<br>    <span class="hljs-keyword">this</span>.y = y;<br>  &#125;<br><br>  toString() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;(&#x27;</span> + <span class="hljs-keyword">this</span>.x + <span class="hljs-string">&#x27;, &#x27;</span> + <span class="hljs-keyword">this</span>.y + <span class="hljs-string">&#x27;)&#x27;</span>;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>用构造函数实现如下:</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs actionscript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Point</span><span class="hljs-params">(x, y)</span> </span>&#123;<br>  <span class="hljs-keyword">this</span>.x = x;<br>  <span class="hljs-keyword">this</span>.y = y;<br>&#125;<br><br>Point.prototype.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>&#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;(&#x27;</span> + <span class="hljs-keyword">this</span>.x + <span class="hljs-string">&#x27;, &#x27;</span> + <span class="hljs-keyword">this</span>.y + <span class="hljs-string">&#x27;)&#x27;</span>;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>实例的属性除非显式定义在其本身（即定义在this对象上），否则都是定义在原型上（即定义在class上）;</p>
+<blockquote>
+<p>如上例, 显式定义在 this 对象上的属性(或方法), 最终会挂载在创建的实例对象上, 为该实例对象所<strong>独有</strong>; 其余没有定义在 this 上的属性或方法(如<code>toString()</code>)都被定义在类原型(<code>Point.prototype</code>)上, 被该类的所有实例对象所<strong>共享</strong>(这是因为<strong>类的所有实例共享一个原型对象</strong>, 同 ES5);</p>
+</blockquote>
+<h2 id="取值函数-getter-和存值函数-setter"><a href="#取值函数-getter-和存值函数-setter" class="headerlink" title="取值函数(getter)和存值函数(setter)"></a>取值函数(getter)和存值函数(setter)</h2><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyClass</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br>  <span class="hljs-keyword">get</span> <span class="hljs-title">prop</span>() &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;getter&#x27;</span>;<br>  &#125;<br>  <span class="hljs-keyword">set</span> <span class="hljs-title">prop</span>(<span class="hljs-params">value</span>) &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;setter: &#x27;</span>+value);<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">let</span> inst = <span class="hljs-keyword">new</span> MyClass();<br><br>inst.prop = <span class="hljs-number">123</span>; <span class="hljs-comment">// setter: 123</span><br>inst.prop <span class="hljs-comment">// &#x27;getter</span><br></code></pre></div></td></tr></table></figure>
+<p>类内部可以使用 <strong>get</strong> 和 <strong>set</strong> 关键字，对某个属性设置存值函数和取值函数，<strong>拦截该属性的存取行为</strong>;</p>
+<blockquote>
+<p>关于 getter 和 setter 可参考<a target="_blank" rel="noopener" href="https://zh.javascript.info/property-descriptors">数据属性</a>和<a target="_blank" rel="noopener" href="https://zh.javascript.info/property-accessors">访问器属性</a></p>
+</blockquote>
+<h2 id="类属性名的表达式表示"><a href="#类属性名的表达式表示" class="headerlink" title="类属性名的表达式表示"></a>类属性名的表达式表示</h2><figure class="highlight markdown"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs markdown">const METHODNAME = &#x27;methodName&#x27;;<br><br>class Square &#123;<br>  constructor(length) &#123;...&#125;<br><br>  [<span class="hljs-string">METHODNAME</span>](<span class="hljs-link"></span>) &#123;<br><span class="hljs-code">    ...</span><br><span class="hljs-code">  &#125;</span><br><span class="hljs-code">&#125;</span><br></code></pre></div></td></tr></table></figure>
+<p>类的属性名，可以采用表达式;</p>
+<h2 id="class-的表达式定义"><a href="#class-的表达式定义" class="headerlink" title="class 的表达式定义"></a>class 的表达式定义</h2><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> MyClass = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Me</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;&#125;<br>  <span class="hljs-function"><span class="hljs-title">getClassName</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-keyword">return</span> Me.name;<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>与函数一样，类也可以使用<strong>表达式定义</strong>(类本身就是函数类型); 上例中 <code>MyClass</code> 是类的外部名称, 用于外部引用, <code>Me</code> 是类内部名称, 只能在 Class 的内部可用, 如果类的内部没用到的话，可以省略类的內部命名;</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> person = <span class="hljs-keyword">new</span> <span class="hljs-class"><span class="hljs-keyword">class</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">name</span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.name = name;<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">sayName</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">this</span>.name);<br>  &#125;<br>&#125;(<span class="hljs-string">&#x27;张三&#x27;</span>);<br></code></pre></div></td></tr></table></figure>
+<p>应用: 与常规 class 声明相比, 采用 Class 表达式，我们可以写出<strong>立即执行的 Class</strong>;</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><h3 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h3><p>考虑到未来所有的代码，其实都是运行在模块之中，所以 ES6 实际上把整个语言升级到了严格模式; 因此, <strong>类和模块的内部，默认就是严格模式</strong>。只要你的代码写在类或模块之中，就只有严格模式可用。</p>
+<h3 id="不存在提升"><a href="#不存在提升" class="headerlink" title="不存在提升"></a>不存在提升</h3><p>类不存在变量提升:  ES6 不会把类的声明提升到代码头部;</p>
+<figure class="highlight scala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scala">&#123;<br>  let <span class="hljs-type">Foo</span> = <span class="hljs-class"><span class="hljs-keyword">class</span> </span>&#123;&#125;;<br>  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bar</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Foo</span></span>&#123;&#125;;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>原因: 在后续提及的类的继承中, 子类需要调用父类的构造函数来构建自己的实例对象 this, 因此就要保证父类在子类前被定义, 因此 ES6 规定类声明不能发生变量提升, 否则会导致子类在父类前定义的情况;如上例, Bar 子类由 class 声明, 若存在变量提升, 则会被提升到 let 命令(<em>let 不会发生变量提升</em>)之前, 导致 Bar 继承 Foo 时 Foo 还未被定义;</p>
+<h3 id="name-属性"><a href="#name-属性" class="headerlink" title="name 属性"></a>name 属性</h3><p>本质上，ES6 的类只是 ES5 的构造函数的一层包装，所以函数的许多特性都被Class继承，包括name属性;</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> pt = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Point</span> </span>&#123;&#125;<br><span class="hljs-built_in">console</span>.log(pt.name); <span class="hljs-comment">// Point</span><br></code></pre></div></td></tr></table></figure>
+<p>name 属性总是返回<strong>紧跟在 class 关键字后面的类名(即类內部命名)</strong></p>
+<h3 id="Generator-方法"><a href="#Generator-方法" class="headerlink" title="Generator 方法"></a>Generator 方法</h3><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">...args</span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.args = args;<br>  &#125;<br><br>  * [<span class="hljs-built_in">Symbol</span>.iterator]() &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> arg <span class="hljs-keyword">of</span> <span class="hljs-built_in">this</span>.args) &#123;<br>      <span class="hljs-keyword">yield</span> arg;<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x <span class="hljs-keyword">of</span> <span class="hljs-keyword">new</span> Foo(<span class="hljs-string">&#x27;hello&#x27;</span>, <span class="hljs-string">&#x27;world&#x27;</span>)) &#123;<br>  <span class="hljs-built_in">console</span>.log(x);<br>&#125;<br><span class="hljs-comment">// hello</span><br><span class="hljs-comment">// world</span><br></code></pre></div></td></tr></table></figure>
+<p>类内原型链上的普通方法定义不需要 function 关键字;<br>类内 Generator 方法定义即在普通函数基础上加上 <code>*</code>, 表示该方法是个 Generator 函数;</p>
+<h3 id="this-指向"><a href="#this-指向" class="headerlink" title="this 指向"></a>this 指向</h3><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> logger = <span class="hljs-keyword">new</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Logger</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">printName</span>(<span class="hljs-params">name = <span class="hljs-string">&#x27;there&#x27;</span></span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.print(<span class="hljs-string">`Hello <span class="hljs-subst">$&#123;name&#125;</span>`</span>);<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-params">text</span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(text);<br>  &#125;<br>&#125;();<br>logger.printName()<br></code></pre></div></td></tr></table></figure>
+<p><strong>类方法内部 this 默认指向类的实例</strong>(因为通常通过类的实例来调用方法); </p>
+<figure class="highlight crmsh"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs crmsh">const &#123; printName &#125; = logger;<br>printName(); // TypeError: Cannot <span class="hljs-keyword">read</span> <span class="hljs-keyword">property</span><span class="hljs-title"> </span>&#x27;print&#x27; of undefined<br></code></pre></div></td></tr></table></figure>
+<p>但是若单独使用类内方法, this 会指向方法运行的环境(class 严格模式下, this 指向 undefined);</p>
+<blockquote>
+<p>结合 this 指向的知识点进行判断即可;</p>
+</blockquote>
+<p>为防止类内方法因不当调用导致 this 指向出错的问题, 通常有两种方法解决:</p>
+<ol>
+<li>在构造函数<code>constructor()</code>中为方法绑定 this<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Logger</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">name</span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.name = name<br>    <span class="hljs-built_in">this</span>.printName = <span class="hljs-built_in">this</span>.printName.bind(<span class="hljs-built_in">this</span>);<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">printName</span>(<span class="hljs-params">name = <span class="hljs-string">&#x27;there&#x27;</span></span>)</span> &#123;<br>    <span class="hljs-comment">// 类内方法的 this 代表类实例, 通过 this 调用类方法, 再通过原型链找到 print() 并执行;</span><br>    <span class="hljs-built_in">this</span>.print(<span class="hljs-string">`Hello <span class="hljs-subst">$&#123;name&#125;</span>`</span>);<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-params">text</span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(text);<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<li>在构造函数<code>constructor()</code>中使用箭头函数<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Logger</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params">name</span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.printName = <span class="hljs-function">(<span class="hljs-params">name = <span class="hljs-string">&#x27;there&#x27;</span></span>) =&gt;</span> &#123;<span class="hljs-built_in">this</span>.print(<span class="hljs-string">`Hello <span class="hljs-subst">$&#123;name&#125;</span>`</span>)&#125;;<br>  &#125;<br><br>  <span class="hljs-function"><span class="hljs-title">print</span>(<span class="hljs-params">text</span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(text);<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure></li>
+<li>使用 Proxy 拦截, 获取方法时触发拦截, 并自动绑定 this<figure class="highlight csharp"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs csharp"><span class="hljs-function">function <span class="hljs-title">selfish</span> (<span class="hljs-params">target</span>)</span> &#123;<br>  <span class="hljs-keyword">const</span> cache = <span class="hljs-keyword">new</span> WeakMap();<br>  <span class="hljs-keyword">const</span> handler = &#123;<br>    <span class="hljs-comment">// 拦截属性访问</span><br>    <span class="hljs-keyword">get</span> (target, key) &#123;<br>      <span class="hljs-keyword">const</span> <span class="hljs-keyword">value</span> = Reflect.<span class="hljs-keyword">get</span>(target, key);<br>      <span class="hljs-comment">// 若不是函数则原值返回</span><br>      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">value</span> !== <span class="hljs-string">&#x27;function&#x27;</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">value</span>;<br>      &#125;<br>      <span class="hljs-comment">// 是函数, 绑定实例对象, 并将添加记录到哈希表;</span><br>      <span class="hljs-keyword">if</span> (!cache.has(<span class="hljs-keyword">value</span>)) &#123;<br>        cache.<span class="hljs-keyword">set</span>(<span class="hljs-keyword">value</span>, <span class="hljs-keyword">value</span>.bind(target));<br>      &#125;<br>      <span class="hljs-comment">// 返回绑定后的函数</span><br>      <span class="hljs-keyword">return</span> cache.<span class="hljs-keyword">get</span>(<span class="hljs-keyword">value</span>);<br>    &#125;<br>  &#125;;<br>  <span class="hljs-keyword">const</span> proxy = <span class="hljs-keyword">new</span> Proxy(target, handler);<br>  <span class="hljs-comment">// 返回 proxy 包装</span><br>  <span class="hljs-keyword">return</span> proxy;<br>&#125;<br><br><span class="hljs-keyword">const</span> logger = selfish(<span class="hljs-keyword">new</span> Logger())<br></code></pre></div></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="class-静态方法"><a href="#class-静态方法" class="headerlink" title="class 静态方法"></a>class 静态方法</h1><figure class="highlight reasonml"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs reasonml"><span class="hljs-keyword">class</span> Foo &#123;<br>  static <span class="hljs-keyword">class</span><span class="hljs-constructor">Method()</span> &#123;<br>    return &#x27;hello&#x27;;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">let</span> foo = <span class="hljs-keyword">new</span> <span class="hljs-constructor">Foo()</span>;<br><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Foo</span>.</span></span><span class="hljs-keyword">class</span><span class="hljs-constructor">Method()</span> <span class="hljs-comment">// &#x27;hello&#x27;</span><br>foo.<span class="hljs-keyword">class</span><span class="hljs-constructor">Method()</span> <span class="hljs-comment">// TypeError: foo.classMethod is not a function</span><br></code></pre></div></td></tr></table></figure>
+<p>类内所有属性和方法都通过类生成的实例调用; 但如果在一个方法前，加上 <strong>static</strong> 关键字, 表示声明了一个<strong>静态方法</strong>，该方法不在实例调用，而是<strong>直接通过类来调用</strong>, 如果在实例上调用静态方法，会抛出一个错误，表示不存在该方法;</p>
+<h2 id="注意事项-1"><a href="#注意事项-1" class="headerlink" title="注意事项"></a>注意事项</h2><ol>
+<li>静态方法直接定义在类上, 而不是定义在类的原型上;</li>
+<li><strong>静态方法的 this 关键字指向类</strong>，而不是实例(因为调用时通过 <code>Foo.bar()</code> 调用, 根据 this 隐式调用规则可判断);<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> </span>&#123;<br>  <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-title">bar</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">this</span>.baz();<br>  &#125;<br>  <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-title">baz</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;hello&#x27;</span>);<br>  &#125;<br>  <span class="hljs-function"><span class="hljs-title">baz</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;world&#x27;</span>);<br>  &#125;<br>&#125;<br><br>Foo.bar() <span class="hljs-comment">// hello</span><br></code></pre></div></td></tr></table></figure></li>
+<li>静态方法可以与非静态方法重名;</li>
+<li>父类的静态方法，可以被子类继承;</li>
+<li>静态方法可从 super 对象上调用(super 对象代表父类的构造函数, 构造函数也就是类);</li>
+</ol>
+<h1 id="实例属性新写法"><a href="#实例属性新写法" class="headerlink" title="实例属性新写法"></a>实例属性新写法</h1><figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">foo</span> </span>&#123;<br>  bar = <span class="hljs-string">&#x27;hello&#x27;</span>;<br>  baz = <span class="hljs-string">&#x27;world&#x27;</span>;<br><br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>实例属性除了定义在 <code>constructor()</code> 方法里面的 this 上面，也可以<strong>定义在类的最顶层</strong>;<br>好处: 所有实例对象自身的属性都定义在类的头部，看上去比较整齐，一眼就能看出这个类有哪些实例属性。<br>坏处: 之前提及类中除显式定义在 this 实力上的属性外, 其余都定义在类的原型上; 若省略 this 可能会将其判断到原型上;</p>
+<h1 id="静态属性"><a href="#静态属性" class="headerlink" title="静态属性"></a>静态属性</h1><p>静态属性指的是 Class 本身的属性，即 <code>Class.propName</code>，而不是定义在实例对象（this）上的属性;<br>目前声明静态属性的方式(ES6 目前规定 Class 内部只有静态方法, 没有静态属性):</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs angelscript"><span class="hljs-keyword">class</span> <span class="hljs-symbol">Foo</span> &#123;&#125;<br>Foo.prop = <span class="hljs-number">1</span>;<br></code></pre></div></td></tr></table></figure>
+<p>类的静态属性提案: 在类内部显式声明, 在实例属性前加上 static 关键字;</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> </span>&#123;<br>  <span class="hljs-keyword">static</span> prop = <span class="hljs-number">1</span>;<br><br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>老写法的静态属性定义在类的外部。整个类生成以后，再生成静态属性。<br>缺点: 容易忽略静态属性，也不符合相关代码应该放在一起的代码组织原则。<br>提案是显式声明（declarative），而不是赋值处理，语义更好。</p>
+</blockquote>
+<h1 id="私有方法和私有属性"><a href="#私有方法和私有属性" class="headerlink" title="私有方法和私有属性"></a>私有方法和私有属性</h1><p>概念: 只能在类的内部访问的方法和属性，外部不能访问;<br>作用: 有利于代码的封装;<br>ES6 没有提供私有方法和私有属性的显式声明方式, 因此只能通过变通方法进行模拟实现;</p>
+<ol>
+<li><p>命名上区别私有和共有: 私有变量以 <code>_</code> 开头; 这种命名是不保险的，在类的外部，还是可以调用到这个方法。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs kotlin"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Widget</span> </span>&#123;<br>  <span class="hljs-comment">// 公有方法</span><br>  foo (baz) &#123;<br>    <span class="hljs-keyword">this</span>._bar(baz);<br>  &#125;<br><br>  <span class="hljs-comment">// 私有方法</span><br>  _bar(baz) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.snaf = baz;<br>  &#125;<br><br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+</li>
+<li><p>在类外部定义私有方法;</p>
+<figure class="highlight fortran"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs fortran"><span class="hljs-keyword">class</span> Widget &#123;<br>  foo (<span class="hljs-keyword">name</span>) &#123;<br>    <span class="hljs-built_in">print</span><span class="hljs-number">.</span><span class="hljs-keyword">call</span>(this, <span class="hljs-keyword">name</span>);<br>  &#125;<br><br>  // <span class="hljs-number">.</span><span class="hljs-number">.</span><span class="hljs-number">.</span><br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span></span> <span class="hljs-built_in">print</span>(<span class="hljs-keyword">name</span>) &#123;<br>  <span class="hljs-keyword">return</span> this<span class="hljs-number">.</span><span class="hljs-keyword">name</span> = <span class="hljs-keyword">name</span><br>&#125;<br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>Widget 实例只能访问到 foo 方法, foo 实际是对 print 方法的封装, 保证了 print 方法的私有性;</p>
+</blockquote>
+</li>
+<li><p>利用Symbol值的唯一性，将私有方法的名字命名为一个Symbol值; Symbol 值无法被一般的遍历方式获取, 基本达到了私有的效果, 但是不能排除通过 <code>Reflect.ownKeys()</code> 等方法获取;</p>
+<figure class="highlight markdown"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs markdown">const bar = Symbol(&#x27;bar&#x27;);<br><br>class MyClass &#123;<br>  // 公有方法<br>  foo(baz) &#123;<br><span class="hljs-code">    this[bar](baz);</span><br><span class="hljs-code">  &#125;</span><br><span class="hljs-code"></span><br><span class="hljs-code">  // 私有方法</span><br><span class="hljs-code">  [bar]() &#123;</span><br><span class="hljs-code">    // ...</span><br><span class="hljs-code">  &#125;</span><br><span class="hljs-code"></span><br><span class="hljs-code">&#125;</span><br></code></pre></div></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="私有属性和私有方法的提案"><a href="#私有属性和私有方法的提案" class="headerlink" title="私有属性和私有方法的提案"></a>私有属性和私有方法的提案</h2><figure class="highlight livescript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs livescript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> &#123;</span><br>  <span class="hljs-comment">#a;</span><br>  <span class="hljs-comment">#b;</span><br>  constructor(a, b) &#123;<br>    <span class="hljs-built_in">this</span>.<span class="hljs-comment">#a = a;</span><br>    <span class="hljs-built_in">this</span>.<span class="hljs-comment">#b = b;</span><br>  &#125;<br>  <span class="hljs-comment">#sum() &#123;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.<span class="hljs-comment">#a + this.#b;</span><br>  <br>&#125;<br><br><span class="hljs-keyword">const</span> foo = <span class="hljs-keyword">new</span> Foo();<br>foo.<span class="hljs-comment">#a // 报错</span><br>foo.<span class="hljs-comment">#a = 42 // 报错</span><br></code></pre></div></td></tr></table></figure>
+<p>在属性名之前, 使用 <code>#</code> 关键字声明私有;<br>上面代码中，<code>#a</code> 就是私有属性, <code>#sum</code> 就是私有方法，<strong>只能在类的内部使用</strong>。如果在类的外部使用，就会报错。</p>
+<h1 id="new-target-属性"><a href="#new-target-属性" class="headerlink" title="new.target 属性"></a>new.target 属性</h1><p><code>new.target</code> 返回 new 命令<strong>当前</strong>所作用的构造函数; 如果构造函数不是通过 new 命令或 Reflect.construct() 调用的，<code>new.target</code> 会返回 <code>undefined</code>;<br><strong>在函数外部使用 <code>new.target</code> 会报错</strong>;</p>
+<p><strong>约束构造函数必须经 new 操作符调用</strong></p>
+<figure class="highlight haxe"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs haxe"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span></span>(name) &#123;<br>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span><span class="hljs-type"></span>.target === Person) &#123;<br>    <span class="hljs-built_in">this</span>.name = name;<br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Error</span>(<span class="hljs-string">&#x27;必须使用 new 命令生成实例&#x27;</span>);<br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+
+<p>Class 类内部使用 <code>new.target</code>, <strong>返回当前 Class</strong>; (因为类本身就是构造函数)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs javascript"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> </span>&#123;<br>  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">new</span>.target === Person);<br>  &#125;<br>&#125;<br><span class="hljs-keyword">const</span> person = <span class="hljs-keyword">new</span> Person(); <span class="hljs-comment">// 输出 true</span><br></code></pre></div></td></tr></table></figure>
+<blockquote>
+<p>注意, new.target 返回的是当前的 Class, 当子类继承父类时, 父类内的 <code>new.target</code> 返回的是子类构造函数;</p>
+</blockquote>
+<p><strong>基于 new.target 返回当前构造函数特性, 实现不能独立使用、必须继承后才能使用的类</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs scala"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Shape</span> </span>&#123;<br>  constructor() &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span>.target === <span class="hljs-type">Shape</span>) &#123;<br>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-type">Error</span>(&#x27;本类不能实例化&#x27;);<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Rectangle</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Shape</span> </span>&#123;<br>  constructor(length, width) &#123;<br>    <span class="hljs-keyword">super</span>();<br>    <span class="hljs-comment">// ...</span><br>  &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure>
+<p>上例中, Shape 自身不能实例化, 只能通过继承的子类实例化;</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JavaScript/">JavaScript</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ES6/">ES6</a>
+                    
+                      <a class="hover-with-bg" href="/tags/JavaScript/">JavaScript</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/17/ES6%E7%AF%87-Reflect/">
+                        <span class="hidden-mobile">ES6篇 - Reflect</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
