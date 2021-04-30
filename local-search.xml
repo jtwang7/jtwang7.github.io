@@ -4,6 +4,64 @@
   
   
   <entry>
+    <title>TCP/IP 协议分层管理</title>
+    <link href="/2021/04/30/TCPIP%E5%8D%8F%E8%AE%AE%E5%88%86%E5%B1%82%E7%AE%A1%E7%90%86/"/>
+    <url>/2021/04/30/TCPIP%E5%8D%8F%E8%AE%AE%E5%88%86%E5%B1%82%E7%AE%A1%E7%90%86/</url>
+    
+    <content type="html"><![CDATA[<p>参考文章: </p><ul><li><a href="https://zhuanlan.zhihu.com/p/84316213">计算机网络太难？了解这一篇就够了</a></li><li><a href="https://zhuanlan.zhihu.com/p/147370653">太厉害了，终于有人能把TCP/IP 协议讲的明明白白了</a></li></ul><h1 id="OSI-与-TCP-IP-诞生背景"><a href="#OSI-与-TCP-IP-诞生背景" class="headerlink" title="OSI 与 TCP/IP 诞生背景:"></a>OSI 与 TCP/IP 诞生背景:</h1><p>早期的网络协议没有统一标准化管理, 不同公司都推出属于自己的私有网络协议, 导致不同网络协议间不能相互兼容;<br>为<strong>解决网络通信协议兼容性</strong>问题, 国际标准化组织(<strong>ISO</strong>)制定了一个符合国际标准的<strong>通用网络通信协议族 – OSI协议族</strong>;</p><h2 id="OSI-开放系统互联"><a href="#OSI-开放系统互联" class="headerlink" title="OSI: 开放系统互联"></a>OSI: 开放系统互联</h2><p>OSI 又名”开放系统互联”, 是 ISO 国际标准化组织博览众家之长, 所制订出的包含了”一堆”详细的, 复杂的, 繁琐的, 精确的网络通信协议的集合;<br>如上所述, OSI 是许多网络通信协议的<strong>集合</strong>, 由于其包含的协议过于详细和复杂, 不同协议有着自己不同的功能;<br>因此, 为了方便管理和维护, OSI 协议族根据协议共有的一些特性被分为了 <strong>7 类(层)</strong>, 并规定<strong>不同层代表不同的功能, 同时制定(分配)相应的协议完成指定层的功能</strong>;</p><h2 id="TCP-IP-协议族"><a href="#TCP-IP-协议族" class="headerlink" title="TCP/IP 协议族"></a>TCP/IP 协议族</h2><p>OSI 国际标准提出后, 需要软件/硬件厂商去实现(OSI 协议族), 但是由于 OSI 协议族过于全面和完善, 实现成本太高, 实现过程复杂, 最终就导致鲜有厂商去按照 OSI 国际标准实现一套 OSI 协议族;<br>正所谓身处高位就容易忽略百姓疾苦, ISO 官方提出的标准过于全面和严格, 完全没有想到我们这些小公司根本没有人力财力去实现一套完备的 OSI; 好在民间不乏有高手存在, 他们实现了另一套通用网络通信协议族 – TCP/IP 协议族; 其同样能完成网络通信, 但实现的难度与 OSI 相比就可小太多了;<br>于是乎, 在长年竞争后, TCP/IP 协议族就完全统治了江山, 现在的因特网就是建立在 TCP/IP 协议族基础之上的;<br>早期的TCP/IP是自由发展, 后期有了属于自己的标准化组织, 叫做 <strong>IETF</strong>, 该组织所写的文档叫做 <strong>RFC</strong>;</p><h2 id="TCP-IP-与-OSI-的关系"><a href="#TCP-IP-与-OSI-的关系" class="headerlink" title="TCP/IP 与 OSI 的关系"></a>TCP/IP 与 OSI 的关系</h2><p>尽管 OSI 协议族内所涵盖的一大堆协议没人去实现和使用了, 不过 ISO 给网络协议做的 7 个分类仍具有科学性和参考价值; 因为 ISO 自己的协议已经不占统治地位了, 只剩网络协议的分类模型硕果仅存, 于是这 7 个分类的地位<strong>由“国际标准”降格为“仅供参考”</strong>, 因此, 现在我们提到 OSI 时通常将其称为<strong>开放系统互联参考模型(OSI 参考模型)</strong>; 而 TCP/IP 协议族正是参考了 OSI 的分层思想而实现的;</p><p>为什么不抛弃 OSI 的七层网络模型, 直接使用 TCP/IP 的四层网络模型呢?</p><ol><li>OSI 是 ISO (国际标准化组织) 制定的国际标准, 是 TCP/IP 协议族分层思想的参考基础(分类更加细致完善);</li><li>OSI 不仅仅针对因特网, 而且网络类型也不只是因特网;</li></ol><blockquote><p>个人理解: OSI 为制定通用网络协议提供了理论基础, 而 TCP/IP 则更像是 OSI 的”工业化产物”, 其更符合业界的使用场景; 因此, 我们在学习网络知识的时候, 一般都参照 OSI 模型进行学习, 但在实际使用时, 实际都是使用TCP/IP 协议族; 现阶段 OSI 参考模型的的每一层, 仅仅说明功能, 而不特指某种协议(ISO 自己指定的协议已经没人用了), 因特网的 4 层模型才具体说明协议;</p></blockquote><h1 id="TCP-IP-分层管理的必要性-优点"><a href="#TCP-IP-分层管理的必要性-优点" class="headerlink" title="TCP/IP 分层管理的必要性(优点):"></a>TCP/IP 分层管理的必要性(优点):</h1><ol><li>把协议集合内不同协议间的复杂功能抽象成不同的层, 使得理解和实现都更加简单;</li><li>方便改动, 只需规划各层的对外接口, 其内部可自由改动;</li><li>分层后各层的职能划分更加清晰, 方便管理;</li></ol><h1 id="网络模型层级结构"><a href="#网络模型层级结构" class="headerlink" title="网络模型层级结构"></a>网络模型层级结构</h1><p><img src="/img/posts_img/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84.png"></p><p>学习计算机网络时我们一般采用折中的办法, 中和 OSI(功能详细) 和 TCP/IP(实现简洁) 的优点, 采用一种只有五层协议的体系结构, 这样既简洁又能将概念阐述清楚;</p><h2 id="各层介绍"><a href="#各层介绍" class="headerlink" title="各层介绍"></a>各层介绍</h2><ol><li>应用层</li></ol><ul><li>功能: (<strong>同一主机内</strong>)通过<strong>应用进程</strong>间的交互来完成特定网络应用;</li><li>协议: 应用层协议 – 应用进程(<em>进程: 主机正在运行的程序</em>)间的<strong>通信和交互的规则</strong>; 应用层协议包括<strong>域名系统 DNS / 支持万维网应用的 HTTP 协议 / 支持电子邮件的 SMTP 协议</strong>等, 不同的网络应用需要不同的应用层协议;</li><li>数据单元: 报文;</li></ul><ol start="2"><li>传输层</li></ol><ul><li>功能: 负责为<strong>两台主机进程</strong>之间的通信提供<strong>通用的数据传输服务(传送应用层报文)</strong>; 由于一台主机可同时运行多个进程，因此传输层有<strong>复用</strong>和<strong>分用</strong>的功能; 复用: 指多个应用层进程可同时使用下面运输层的服务; 分用: 指传输层把收到的信息分别交付上面应用层中的相应进程(复用的逆过程);</li><li>协议: TCP 协议, UDP 协议;</li><li>数据单元: TCP 协议对应 <strong>TCP 报文段</strong>; UDP 协议对应<strong>用户数据包</strong>;</li></ul><ol start="3"><li>网络层</li></ol><ul><li>功能: 在计算机网络中进行通信的两个计算机之间可能会经过多个数据链路, 通信子网等所谓的”中转站”, 网络层就是负责<strong>选择合适的网间路由和交换结点(确定数据包的传输路线), 确保数据及时传送</strong>;</li><li>协议: IP 协议;</li><li>数据单元: 网络层在发送数据时, 会把传输层产生的报文段或用户数据包封装成分组和包的形式进行传送(分成小块发送, 接收时合并), 因此最小的数据单元为<strong>数据包</strong>;</li></ul><ol start="4"><li>数据链路层</li></ol><ul><li>功能: 两台主机间的数据传输发生在链路节点上, 数据链路层则是在<strong>两个相邻节点间</strong>传送数据时, 将网络层派发的 IP 数据包组装成<strong>帧</strong>进行传送; 每一帧包括数据和必要的控制信息 (帧内包括: 同步信息, 地址信息, 差错控制等); 数据链路层在接收数据时, 可通过接收帧的控制信息判断帧开始和结束的位置, 并从中提出数据部分继续传递给网络层; 控制信息还使接收端能够检测到所收到的帧中有无差错(复杂的协议还能实现纠错功能), 如果发现差错, 则能在数据链路层就丢弃存在差错的帧, 以避免继续在网络中传送从而浪费网络资源; </li><li>协议: ARP 协议; RARP 协议; 等…</li><li>数据单元: 帧; </li></ul><ol start="5"><li>物理层</li></ol><ul><li>功能: 实现<strong>相邻计算机节点</strong>之间比特流的<strong>透明传送(屏蔽传输介质和物理设备的差异, 使得经实际电路传送后的比特流不发生变化)</strong>;</li><li>数据单元: 比特;</li></ul><h2 id="各层对应的网络协议"><a href="#各层对应的网络协议" class="headerlink" title="各层对应的网络协议"></a>各层对应的网络协议</h2><p><img src="/img/posts_img/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%B1%82%E7%BA%A7%E5%AF%B9%E5%BA%94%E5%8D%8F%E8%AE%AE.png"></p><h1 id="TCP-IP-通信传输流过程"><a href="#TCP-IP-通信传输流过程" class="headerlink" title="TCP/IP 通信传输流过程"></a>TCP/IP 通信传输流过程</h1><h2 id="数据包组成"><a href="#数据包组成" class="headerlink" title="数据包组成"></a>数据包组成</h2><p>网络中传输的数据包由两部分组成: </p><ol><li>该层协议所用到的首部; (首部的结构由协议的具体规范详细定义, 数据包的首部包含了协议相关信息, 如协议内容, 发送目标地址等)</li><li>上一层传过来的数据;</li></ol><p><img src="/img/posts_img/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%B1%82%E9%97%B4%E6%95%B0%E6%8D%AE%E5%8C%85%E4%BC%A0%E9%80%92%E5%9B%BE%E8%A7%A3.png"></p><p>数据包从应用层往下走时, 要不断经历封装的过程, 而从链路层往上走时, 则不断经历解封的过程;<br>在相邻层之间数据传递过程中, 都会对所发送的数据附加一个首部, 在这个首部中包含了该层必要的信息, 如发送的目标地址以及协议相关信息;<br>通常, 为协议提供的信息为包首部, 所要发送的内容为数据; 在下一层的角度看, 从上一层收到的包全部都被认为是本层的数据;</p><h2 id="TCP-IP-数据传输过程"><a href="#TCP-IP-数据传输过程" class="headerlink" title="TCP/IP 数据传输过程"></a>TCP/IP 数据传输过程</h2><p><img src="/img/posts_img/TCPIP%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E8%BF%87%E7%A8%8B.png"></p><ol><li>应用程序处理<br>首先应用程序会进行编码处理(相当于 OSI 表示层); 编码转化后, 邮件不会立即被发送, 会等待建立通信连接,(相当于 OSI 会话层);</li><li>TCP 模块的处理<br>TCP 根据应用的指示, 负责<strong>建立连接、发送数据以及断开连接</strong>; TCP 提供将应用层发来的数据顺利发送至对端的可靠传输; 为了实现这一功能, 需要<strong>在应用层数据的前端附加一个 TCP 首部</strong>;</li><li>IP 模块的处理<br>IP 将 TCP 传过来的 TCP 首部和 TCP 数据合起来当做自己的数据, 并<strong>在 TCP 首部的前端加上自己的 IP 首部</strong>; IP 包生成后, 选择合适的网间路由和交换节点传送 IP 数据包;</li><li>网络接口(以太网驱动)的处理 (数据链路层 + 物理层)<br>接收 IP 传过来的 IP 包并附加上以太网首部, 从而生成以太网数据包, 通过物理层传输给接收端;</li><li>网络接口(以太网驱动)的处理 (数据链路层 + 物理层)<br>主机收到以太网数据包后, 首先<strong>从以太网包首部找到 MAC 地址</strong>判断是否为发送给自己的包, 若不是则丢弃数据;<br>如果是发送给自己的包, 则从以太网包首部中的类型确定数据类型, 再传给相应的模块, 如 IP、ARP 等;</li><li>IP 模块的处理<br>IP 模块接收到数据后, <strong>从包首部中判断此 IP 地址是否与自己的 IP 地址匹配</strong>, 如果匹配则根据首部的协议类型将数据(去除协议首部后的数据包 / 解封的过程)发送给对应的模块, 如 TCP、UDP; 对于有路由器的情况, 接收端地址往往不是自己的地址, 此时要借助路由控制表获取应该送往的主机或路由器之后再进行转发数据;</li><li>TCP 模块的处理<br>在 TCP 模块中, 首先会<strong>计算一下校验和</strong>, 判断数据是否被破坏, 然后<strong>检查是否在按照序号接收数据</strong>, 根据序号顺序重组数据, 最后检查端口号, 确定具体的应用程序; 数据被完整地接收以后, 会传给由端口号识别的应用程序;</li><li>应用程序的处理<br>接收端应用程序会直接接收发送端发送的数据, 通过解析数据, 展示相应的内容;</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>面试</tag>
+      
+      <tag>计算机网络</tag>
+      
+      <tag>HTTP</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>TCP/IP 协议基础</title>
+    <link href="/2021/04/30/TCPIP%E5%8D%8F%E8%AE%AE%E5%9F%BA%E7%A1%80/"/>
+    <url>/2021/04/30/TCPIP%E5%8D%8F%E8%AE%AE%E5%9F%BA%E7%A1%80/</url>
+    
+    <content type="html"><![CDATA[<p>参考文章: <a href="https://zhuanlan.zhihu.com/p/147370653">太厉害了，终于有人能把TCP/IP 协议讲的明明白白了</a></p><h1 id="TCP-IP-协议的具体含义"><a href="#TCP-IP-协议的具体含义" class="headerlink" title="TCP/IP 协议的具体含义"></a>TCP/IP 协议的具体含义</h1><h2 id="什么是”协议”"><a href="#什么是”协议”" class="headerlink" title="什么是”协议”?"></a>什么是”协议”?</h2><p>计算机与网络设备间相互通信所遵循的规则;</p><h2 id="什么是-TCP-IP-协议"><a href="#什么是-TCP-IP-协议" class="headerlink" title="什么是 TCP/IP 协议?"></a>什么是 TCP/IP 协议?</h2><p>两种说法:</p><ol><li>与互联网相关联的协议集合的统称;</li><li>在利用 IP 进行通信的过程中所用到的协议族统称;</li></ol><h1 id="数据单位"><a href="#数据单位" class="headerlink" title="数据单位"></a>数据单位</h1><p>TCP/IP 协议中共有 5 种术语来表述数据的单位: </p><ol><li>包: 全能性术语, 表达数据的最基本单位, 其余术语大多是基于此的延伸;</li><li>帧: <strong>数据链路层</strong>中包的单位;</li><li>数据包: IP 和 UDP 等网络层以上的分层中包的单位;</li><li>段: TCP 数据流中的信息;</li><li>消息: 应用协议中数据的单位;</li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>计算机网络</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>面试</tag>
+      
+      <tag>计算机网络</tag>
+      
+      <tag>HTTP</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>ES6篇 - Module 的加载实现</title>
     <link href="/2021/04/20/ES6%E7%AF%87-Module%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/"/>
     <url>/2021/04/20/ES6%E7%AF%87-Module%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/</url>

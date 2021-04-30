@@ -1,0 +1,655 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/webpage_icon.png">
+  <link rel="icon" href="/img/webpage_icon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="王锦添">
+  <meta name="keywords" content="">
+  
+  <title>TCP/IP 协议分层管理 - 王锦添的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.1.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"wangjintian.com","root":"/","version":"1.8.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":"§"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":200}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"d92bd432c38d1734448a75791fef174d","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王锦添的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('https://cdn.jsdelivr.net/gh/jtwang7/jtwang7.github.io@master/img/wallhaven-4gwdje_1920x1080.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="TCP/IP 协议分层管理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      王锦添
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-04-30 10:09" pubdate>
+        2021年4月30日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- 不蒜子统计文章PV -->
+      <span id="busuanzi_container_page_pv" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="busuanzi_value_page_pv"></span> 次
+      </span>
+    
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">TCP/IP 协议分层管理</h1>
+            
+            <div class="markdown-body">
+              <p>参考文章: </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/84316213">计算机网络太难？了解这一篇就够了</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/147370653">太厉害了，终于有人能把TCP/IP 协议讲的明明白白了</a></li>
+</ul>
+<h1 id="OSI-与-TCP-IP-诞生背景"><a href="#OSI-与-TCP-IP-诞生背景" class="headerlink" title="OSI 与 TCP/IP 诞生背景:"></a>OSI 与 TCP/IP 诞生背景:</h1><p>早期的网络协议没有统一标准化管理, 不同公司都推出属于自己的私有网络协议, 导致不同网络协议间不能相互兼容;<br>为<strong>解决网络通信协议兼容性</strong>问题, 国际标准化组织(<strong>ISO</strong>)制定了一个符合国际标准的<strong>通用网络通信协议族 – OSI协议族</strong>;</p>
+<h2 id="OSI-开放系统互联"><a href="#OSI-开放系统互联" class="headerlink" title="OSI: 开放系统互联"></a>OSI: 开放系统互联</h2><p>OSI 又名”开放系统互联”, 是 ISO 国际标准化组织博览众家之长, 所制订出的包含了”一堆”详细的, 复杂的, 繁琐的, 精确的网络通信协议的集合;<br>如上所述, OSI 是许多网络通信协议的<strong>集合</strong>, 由于其包含的协议过于详细和复杂, 不同协议有着自己不同的功能;<br>因此, 为了方便管理和维护, OSI 协议族根据协议共有的一些特性被分为了 <strong>7 类(层)</strong>, 并规定<strong>不同层代表不同的功能, 同时制定(分配)相应的协议完成指定层的功能</strong>;</p>
+<h2 id="TCP-IP-协议族"><a href="#TCP-IP-协议族" class="headerlink" title="TCP/IP 协议族"></a>TCP/IP 协议族</h2><p>OSI 国际标准提出后, 需要软件/硬件厂商去实现(OSI 协议族), 但是由于 OSI 协议族过于全面和完善, 实现成本太高, 实现过程复杂, 最终就导致鲜有厂商去按照 OSI 国际标准实现一套 OSI 协议族;<br>正所谓身处高位就容易忽略百姓疾苦, ISO 官方提出的标准过于全面和严格, 完全没有想到我们这些小公司根本没有人力财力去实现一套完备的 OSI; 好在民间不乏有高手存在, 他们实现了另一套通用网络通信协议族 – TCP/IP 协议族; 其同样能完成网络通信, 但实现的难度与 OSI 相比就可小太多了;<br>于是乎, 在长年竞争后, TCP/IP 协议族就完全统治了江山, 现在的因特网就是建立在 TCP/IP 协议族基础之上的;<br>早期的TCP/IP是自由发展, 后期有了属于自己的标准化组织, 叫做 <strong>IETF</strong>, 该组织所写的文档叫做 <strong>RFC</strong>;</p>
+<h2 id="TCP-IP-与-OSI-的关系"><a href="#TCP-IP-与-OSI-的关系" class="headerlink" title="TCP/IP 与 OSI 的关系"></a>TCP/IP 与 OSI 的关系</h2><p>尽管 OSI 协议族内所涵盖的一大堆协议没人去实现和使用了, 不过 ISO 给网络协议做的 7 个分类仍具有科学性和参考价值; 因为 ISO 自己的协议已经不占统治地位了, 只剩网络协议的分类模型硕果仅存, 于是这 7 个分类的地位<strong>由“国际标准”降格为“仅供参考”</strong>, 因此, 现在我们提到 OSI 时通常将其称为<strong>开放系统互联参考模型(OSI 参考模型)</strong>; 而 TCP/IP 协议族正是参考了 OSI 的分层思想而实现的;</p>
+<p>为什么不抛弃 OSI 的七层网络模型, 直接使用 TCP/IP 的四层网络模型呢?</p>
+<ol>
+<li>OSI 是 ISO (国际标准化组织) 制定的国际标准, 是 TCP/IP 协议族分层思想的参考基础(分类更加细致完善);</li>
+<li>OSI 不仅仅针对因特网, 而且网络类型也不只是因特网;</li>
+</ol>
+<blockquote>
+<p>个人理解: OSI 为制定通用网络协议提供了理论基础, 而 TCP/IP 则更像是 OSI 的”工业化产物”, 其更符合业界的使用场景; 因此, 我们在学习网络知识的时候, 一般都参照 OSI 模型进行学习, 但在实际使用时, 实际都是使用TCP/IP 协议族; 现阶段 OSI 参考模型的的每一层, 仅仅说明功能, 而不特指某种协议(ISO 自己指定的协议已经没人用了), 因特网的 4 层模型才具体说明协议;</p>
+</blockquote>
+<h1 id="TCP-IP-分层管理的必要性-优点"><a href="#TCP-IP-分层管理的必要性-优点" class="headerlink" title="TCP/IP 分层管理的必要性(优点):"></a>TCP/IP 分层管理的必要性(优点):</h1><ol>
+<li>把协议集合内不同协议间的复杂功能抽象成不同的层, 使得理解和实现都更加简单;</li>
+<li>方便改动, 只需规划各层的对外接口, 其内部可自由改动;</li>
+<li>分层后各层的职能划分更加清晰, 方便管理;</li>
+</ol>
+<h1 id="网络模型层级结构"><a href="#网络模型层级结构" class="headerlink" title="网络模型层级结构"></a>网络模型层级结构</h1><p><img src="/img/posts_img/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%B1%82%E7%BA%A7%E7%BB%93%E6%9E%84.png" srcset="/img/loading.gif" lazyload></p>
+<p>学习计算机网络时我们一般采用折中的办法, 中和 OSI(功能详细) 和 TCP/IP(实现简洁) 的优点, 采用一种只有五层协议的体系结构, 这样既简洁又能将概念阐述清楚;</p>
+<h2 id="各层介绍"><a href="#各层介绍" class="headerlink" title="各层介绍"></a>各层介绍</h2><ol>
+<li>应用层</li>
+</ol>
+<ul>
+<li>功能: (<strong>同一主机内</strong>)通过<strong>应用进程</strong>间的交互来完成特定网络应用;</li>
+<li>协议: 应用层协议 – 应用进程(<em>进程: 主机正在运行的程序</em>)间的<strong>通信和交互的规则</strong>; 应用层协议包括<strong>域名系统 DNS / 支持万维网应用的 HTTP 协议 / 支持电子邮件的 SMTP 协议</strong>等, 不同的网络应用需要不同的应用层协议;</li>
+<li>数据单元: 报文;</li>
+</ul>
+<ol start="2">
+<li>传输层</li>
+</ol>
+<ul>
+<li>功能: 负责为<strong>两台主机进程</strong>之间的通信提供<strong>通用的数据传输服务(传送应用层报文)</strong>; 由于一台主机可同时运行多个进程，因此传输层有<strong>复用</strong>和<strong>分用</strong>的功能; 复用: 指多个应用层进程可同时使用下面运输层的服务; 分用: 指传输层把收到的信息分别交付上面应用层中的相应进程(复用的逆过程);</li>
+<li>协议: TCP 协议, UDP 协议;</li>
+<li>数据单元: TCP 协议对应 <strong>TCP 报文段</strong>; UDP 协议对应<strong>用户数据包</strong>;</li>
+</ul>
+<ol start="3">
+<li>网络层</li>
+</ol>
+<ul>
+<li>功能: 在计算机网络中进行通信的两个计算机之间可能会经过多个数据链路, 通信子网等所谓的”中转站”, 网络层就是负责<strong>选择合适的网间路由和交换结点(确定数据包的传输路线), 确保数据及时传送</strong>;</li>
+<li>协议: IP 协议;</li>
+<li>数据单元: 网络层在发送数据时, 会把传输层产生的报文段或用户数据包封装成分组和包的形式进行传送(分成小块发送, 接收时合并), 因此最小的数据单元为<strong>数据包</strong>;</li>
+</ul>
+<ol start="4">
+<li>数据链路层</li>
+</ol>
+<ul>
+<li>功能: 两台主机间的数据传输发生在链路节点上, 数据链路层则是在<strong>两个相邻节点间</strong>传送数据时, 将网络层派发的 IP 数据包组装成<strong>帧</strong>进行传送; 每一帧包括数据和必要的控制信息 (帧内包括: 同步信息, 地址信息, 差错控制等); 数据链路层在接收数据时, 可通过接收帧的控制信息判断帧开始和结束的位置, 并从中提出数据部分继续传递给网络层; 控制信息还使接收端能够检测到所收到的帧中有无差错(复杂的协议还能实现纠错功能), 如果发现差错, 则能在数据链路层就丢弃存在差错的帧, 以避免继续在网络中传送从而浪费网络资源; </li>
+<li>协议: ARP 协议; RARP 协议; 等…</li>
+<li>数据单元: 帧; </li>
+</ul>
+<ol start="5">
+<li>物理层</li>
+</ol>
+<ul>
+<li>功能: 实现<strong>相邻计算机节点</strong>之间比特流的<strong>透明传送(屏蔽传输介质和物理设备的差异, 使得经实际电路传送后的比特流不发生变化)</strong>;</li>
+<li>数据单元: 比特;</li>
+</ul>
+<h2 id="各层对应的网络协议"><a href="#各层对应的网络协议" class="headerlink" title="各层对应的网络协议"></a>各层对应的网络协议</h2><p><img src="/img/posts_img/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%B1%82%E7%BA%A7%E5%AF%B9%E5%BA%94%E5%8D%8F%E8%AE%AE.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="TCP-IP-通信传输流过程"><a href="#TCP-IP-通信传输流过程" class="headerlink" title="TCP/IP 通信传输流过程"></a>TCP/IP 通信传输流过程</h1><h2 id="数据包组成"><a href="#数据包组成" class="headerlink" title="数据包组成"></a>数据包组成</h2><p>网络中传输的数据包由两部分组成: </p>
+<ol>
+<li>该层协议所用到的首部; (首部的结构由协议的具体规范详细定义, 数据包的首部包含了协议相关信息, 如协议内容, 发送目标地址等)</li>
+<li>上一层传过来的数据;</li>
+</ol>
+<p><img src="/img/posts_img/%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E5%B1%82%E9%97%B4%E6%95%B0%E6%8D%AE%E5%8C%85%E4%BC%A0%E9%80%92%E5%9B%BE%E8%A7%A3.png" srcset="/img/loading.gif" lazyload></p>
+<p>数据包从应用层往下走时, 要不断经历封装的过程, 而从链路层往上走时, 则不断经历解封的过程;<br>在相邻层之间数据传递过程中, 都会对所发送的数据附加一个首部, 在这个首部中包含了该层必要的信息, 如发送的目标地址以及协议相关信息;<br>通常, 为协议提供的信息为包首部, 所要发送的内容为数据; 在下一层的角度看, 从上一层收到的包全部都被认为是本层的数据;</p>
+<h2 id="TCP-IP-数据传输过程"><a href="#TCP-IP-数据传输过程" class="headerlink" title="TCP/IP 数据传输过程"></a>TCP/IP 数据传输过程</h2><p><img src="/img/posts_img/TCPIP%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93%E8%BF%87%E7%A8%8B.png" srcset="/img/loading.gif" lazyload></p>
+<ol>
+<li>应用程序处理<br>首先应用程序会进行编码处理(相当于 OSI 表示层); 编码转化后, 邮件不会立即被发送, 会等待建立通信连接,(相当于 OSI 会话层);</li>
+<li>TCP 模块的处理<br>TCP 根据应用的指示, 负责<strong>建立连接、发送数据以及断开连接</strong>; TCP 提供将应用层发来的数据顺利发送至对端的可靠传输; 为了实现这一功能, 需要<strong>在应用层数据的前端附加一个 TCP 首部</strong>;</li>
+<li>IP 模块的处理<br>IP 将 TCP 传过来的 TCP 首部和 TCP 数据合起来当做自己的数据, 并<strong>在 TCP 首部的前端加上自己的 IP 首部</strong>; IP 包生成后, 选择合适的网间路由和交换节点传送 IP 数据包;</li>
+<li>网络接口(以太网驱动)的处理 (数据链路层 + 物理层)<br>接收 IP 传过来的 IP 包并附加上以太网首部, 从而生成以太网数据包, 通过物理层传输给接收端;</li>
+<li>网络接口(以太网驱动)的处理 (数据链路层 + 物理层)<br>主机收到以太网数据包后, 首先<strong>从以太网包首部找到 MAC 地址</strong>判断是否为发送给自己的包, 若不是则丢弃数据;<br>如果是发送给自己的包, 则从以太网包首部中的类型确定数据类型, 再传给相应的模块, 如 IP、ARP 等;</li>
+<li>IP 模块的处理<br>IP 模块接收到数据后, <strong>从包首部中判断此 IP 地址是否与自己的 IP 地址匹配</strong>, 如果匹配则根据首部的协议类型将数据(去除协议首部后的数据包 / 解封的过程)发送给对应的模块, 如 TCP、UDP; 对于有路由器的情况, 接收端地址往往不是自己的地址, 此时要借助路由控制表获取应该送往的主机或路由器之后再进行转发数据;</li>
+<li>TCP 模块的处理<br>在 TCP 模块中, 首先会<strong>计算一下校验和</strong>, 判断数据是否被破坏, 然后<strong>检查是否在按照序号接收数据</strong>, 根据序号顺序重组数据, 最后检查端口号, 确定具体的应用程序; 数据被完整地接收以后, 会传给由端口号识别的应用程序;</li>
+<li>应用程序的处理<br>接收端应用程序会直接接收发送端发送的数据, 通过解析数据, 展示相应的内容;</li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                    
+                      <a class="hover-with-bg" href="/tags/HTTP/">HTTP</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/30/TCPIP%E5%8D%8F%E8%AE%AE%E5%9F%BA%E7%A1%80/">
+                        <span class="hidden-mobile">TCP/IP 协议基础</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":200})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.5.3/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.12.0/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.1.2/es5/tex-svg.js" ></script>
+
+  
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?d92bd432c38d1734448a75791fef174d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
