@@ -43,3 +43,8 @@ TCP/IP 协议中共有 5 种术语来表述数据的单位:
 
 
 # 传输层 --- TCP 与 UDP
+[传输层协议(TCP / UDP) & TCP 握手机制](https://wangjintian.com/2021/05/01/%E4%BC%A0%E8%BE%93%E5%B1%82-TCP%E4%B8%8EUDP/)
+内容概述:
+1. TCP & UDP 概念 / 区别;
+2. TCP 三次握手和四次挥手;
+3. TCP 控制机制(包括重发机制, 流量控制等);
