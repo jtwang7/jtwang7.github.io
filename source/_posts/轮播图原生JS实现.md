@@ -208,4 +208,4 @@ dotChangeCarousel() {
 12. requesetAnimationFrame() "红宝书第四版 P550-551"
 13. element.innerHTML 属性: P452-453
 14. 转义字符 `'&lt;'` 与 `'&gt;'`: 表示 '<' 和 '>'
-15. 浏览器回流
+15. 浏览器回流: https://segmentfault.com/a/1190000017491520
